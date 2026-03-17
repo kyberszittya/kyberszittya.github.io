@@ -23,6 +23,7 @@ jobs:
           # If your package.json is inside 'personal-page', 
           # you MUST specify the path here:
           path: ./personal-page 
+          node-version: 24
 
   deploy:
     needs: build

@@ -1,0 +1,22 @@
+---
+import '../styles/global.css';
+const { title = 'My Portfolio & Lectures' } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased max-w-4xl mx-auto p-6 md:p-12">
+    <nav class="mb-8 border-b border-slate-200 pb-4">
+      <a href="/" class="font-bold text-lg mr-4 text-blue-600 hover:text-blue-800">Home</a>
+      <a href="/lectures" class="font-bold text-lg text-blue-600 hover:text-blue-800">Lectures</a>
+    </nav>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

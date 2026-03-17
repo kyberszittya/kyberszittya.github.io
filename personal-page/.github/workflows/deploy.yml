@@ -1,39 +1,36 @@
-name: Build and Test
+name: Deploy Astro site to Pages
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        compiler: [gcc, clang]
-        exclude:
-          - os: windows-latest
-            compiler: clang # Use MSVC default for Windows
-
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Install Dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install -y libomp-dev cmake
+      - name: Install, build, and upload with Astro
+        uses: withastro/action@v3
+        with:
+          # If your package.json is inside 'personal-page', 
+          # you MUST specify the path here:
+          path: ./personal-page 
 
-    - name: Configure CMake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_OPENMP=ON
-
-    - name: Build
-      run: cmake --build build --config Release
-
-    - name: Run Tests
-      working-directory: build
-      run: ctest -C Release --output-on-failure
-
-    - name: Performance Regression (Optional)
-      if: runner.os == 'Linux'
-      run: ./build/benchmarks --benchmark_format=console
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,50 @@
+---
+import PageIntro from '../../components/PageIntro.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { backgroundResearch, focusResearch, researchAreas } from '../../data/profile';
+---
+
+<BaseLayout title="Research | Kyberszittya">
+  <PageIntro
+    kicker="Research"
+    title="Themes, models, and applications"
+    summary="Research directions spanning semantic modeling, cognitive systems, robotic interaction, and industrial intelligence."
+  />
+
+  <section class="dual-panel-grid">
+    <section class="glass-panel glass-panel-dark">
+      <p class="section-label">Research focus</p>
+      <h2>Focused research challenges</h2>
+      <ul class="feature-list">
+        {focusResearch.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="glass-panel glass-panel-dark">
+      <p class="section-label">Research background</p>
+      <h2>Background research challenges</h2>
+      <ul class="feature-list">
+        {backgroundResearch.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+  </section>
+
+  <section class="card-grid">
+    {researchAreas.map((area) => (
+      <article class="info-card">
+        <h2>{area.title}</h2>
+        <p>{area.description}</p>
+        <ul class="feature-list feature-list-light">
+          {area.highlights.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+        <a class="text-link" href={`/research/${area.slug}`}>Open topic page</a>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

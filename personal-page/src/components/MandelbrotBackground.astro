@@ -1,0 +1,122 @@
+<div class="mandelbrot-layer" aria-hidden="true">
+  <canvas id="mandelbrot-canvas" class="mandelbrot-canvas"></canvas>
+</div>
+
+<script is:inline>
+  (() => {
+    const canvas = document.getElementById('mandelbrot-canvas');
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+
+    const context = canvas.getContext('2d', { alpha: true });
+    if (!context) return;
+
+    let width = 0;
+    let height = 0;
+    let rafId = 0;
+    let lastFrame = 0;
+    const maxIterations = 56;
+
+    const palette = [
+      [13, 53, 102],
+      [33, 17, 102],
+      [72, 92, 224],
+      [101, 72, 224],
+      [152, 74, 225],
+      [72, 188, 224],
+      [147, 157, 224],
+    ];
+
+    const mix = (a, b, t) => a + (b - a) * t;
+
+    const sampleColor = (value) => {
+      const scaled = value * (palette.length - 1);
+      const index = Math.floor(scaled);
+      const nextIndex = Math.min(index + 1, palette.length - 1);
+      const t = scaled - index;
+      const start = palette[index];
+      const end = palette[nextIndex];
+
+      return [
+        Math.round(mix(start[0], end[0], t)),
+        Math.round(mix(start[1], end[1], t)),
+        Math.round(mix(start[2], end[2], t)),
+      ];
+    };
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const nextWidth = Math.max(420, Math.floor(window.innerWidth * 0.72));
+      const nextHeight = Math.max(320, Math.floor(window.innerHeight * 0.72));
+
+      width = nextWidth;
+      height = nextHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const render = (time = 0) => {
+      if (time - lastFrame < 90) {
+        rafId = requestAnimationFrame(render);
+        return;
+      }
+
+      lastFrame = time;
+      const image = context.createImageData(width, height);
+      const data = image.data;
+      const tick = time * 0.00012;
+      const zoom = 0.98 + Math.sin(tick * 1.2) * 0.04;
+      const centerX = -0.745 + Math.cos(tick * 0.8) * 0.014;
+      const centerY = 0.12 + Math.sin(tick * 1.05) * 0.012;
+      const scale = 2.45 / Math.min(width, height) / zoom;
+
+      for (let py = 0; py < height; py += 1) {
+        for (let px = 0; px < width; px += 1) {
+          const x0 = centerX + (px - width * 0.5) * scale;
+          const y0 = centerY + (py - height * 0.5) * scale;
+          let x = 0;
+          let y = 0;
+          let iteration = 0;
+
+          while (x * x + y * y <= 4 && iteration < maxIterations) {
+            const xTemp = x * x - y * y + x0;
+            y = 2 * x * y + y0;
+            x = xTemp;
+            iteration += 1;
+          }
+
+          const offset = (py * width + px) * 4;
+
+          if (iteration === maxIterations) {
+            data[offset] = 4;
+            data[offset + 1] = 10;
+            data[offset + 2] = 34;
+            data[offset + 3] = 205;
+            continue;
+          }
+
+          const smooth =
+            iteration + 1 - Math.log2(Math.log2(Math.max(x * x + y * y, 1.00001)));
+          const normalized = Math.max(0, Math.min(1, smooth / maxIterations));
+          const [r, g, b] = sampleColor(normalized);
+
+          data[offset] = r;
+          data[offset + 1] = g;
+          data[offset + 2] = b;
+          data[offset + 3] = Math.round(110 + normalized * 125);
+        }
+      }
+
+      context.putImageData(image, 0, 0);
+      rafId = requestAnimationFrame(render);
+    };
+
+    resize();
+    render();
+
+    window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('pagehide', () => cancelAnimationFrame(rafId), { once: true });
+  })();
+</script>

@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import { scholarProfile } from '../../data/profile';
+import { getPublications } from '../../lib/publications';
+
+const publications = getPublications();
+
+const grouped = publications.reduce<Record<string, typeof publications>>((acc, publication) => {
+  const key = publication.year ? String(publication.year) : 'Undated';
+  acc[key] ??= [];
+  acc[key].push(publication);
+  return acc;
+}, {});
+
+const years = Object.keys(grouped).sort((a, b) => {
+  if (a === 'Undated') return 1;
+  if (b === 'Undated') return -1;
+  return Number(b) - Number(a);
+});
+---
+
+<BaseLayout title="Publications | Kyberszittya">
+  <PageIntro
+    kicker="Publications"
+    title="Scholar profile and publication archive"
+    summary="This archive uses the Google Scholar profile as an external reference and renders publication entries directly from the local BibTeX file."
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Google Scholar</h2>
+      <p>
+        External profile reference:
+        <a class="text-link" href={scholarProfile.href} target="_blank" rel="noreferrer">{scholarProfile.label}</a>
+      </p>
+      <p>
+        This page uses the Scholar profile as the canonical external profile link and the local <code>cite.bibtex</code>
+        file for the detailed publication archive.
+      </p>
+    </section>
+
+    <section class="info-card">
+      <h2>Archive summary</h2>
+      <div class="stack-list compact">
+        <article class="stack-item">
+          <strong>{publications.length} entries</strong>
+          <p>Loaded from the BibTeX file in the repository root.</p>
+        </article>
+        <article class="stack-item">
+          <strong>Separate publication pages</strong>
+          <p>Each entry gets its own route for easier future expansion.</p>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  {years.map((year) => (
+    <section class="section-block">
+      <div class="section-heading">
+        <p class="section-label">Year</p>
+        <h2>{year}</h2>
+      </div>
+      <div class="card-grid">
+        {grouped[year].map((publication) => (
+          <article class="info-card">
+            <h3>{publication.title}</h3>
+            <p>{publication.authors.join(', ')}</p>
+            {publication.venue && <p><strong>Venue:</strong> {publication.venue}</p>}
+            <a class="text-link" href={`/publications/${publication.slug}`}>Open publication</a>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+</BaseLayout>

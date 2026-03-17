@@ -1,0 +1,78 @@
+---
+import PageIntro from '../components/PageIntro.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { education, experience, languages, scholarProfile, skills } from '../data/profile';
+import { getPublications } from '../lib/publications';
+
+const publications = getPublications().slice(0, 6);
+---
+
+<BaseLayout title="CV | Kyberszittya">
+  <PageIntro
+    kicker="CV"
+    title="Academic and professional profile"
+    summary="An overview of academic training, current affiliations, selected publications, and technical capabilities."
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Academic background</h2>
+      <div class="stack-list">
+        {education.degrees.map((degree) => (
+          <article class="stack-item">
+            <strong>{degree.title}</strong>
+            {degree.track && <p>{degree.track}</p>}
+            {degree.details.map((detail) => (
+              <span>{detail}</span>
+            ))}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h2>Professional affiliations</h2>
+      <div class="stack-list compact">
+        {experience.map((role) => (
+          <article class="stack-item">
+            <strong>{role.title}</strong>
+            <p>{role.org}</p>
+            <span>{role.period}</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  </section>
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Selected publications</h2>
+      <ul class="feature-list feature-list-light">
+        {publications.map((item) => (
+          <li>{item.title} {item.year ? `(${item.year})` : ''}</li>
+        ))}
+      </ul>
+      <p>
+        <a class="text-link" href="/publications">Open full publication archive</a>
+      </p>
+      <p>
+        <a class="text-link" href={scholarProfile.href} target="_blank" rel="noreferrer">Open Google Scholar profile</a>
+      </p>
+    </section>
+
+    <section class="info-card">
+      <h2>Technical expertise</h2>
+      <div class="chip-row">
+        {skills.map((skill) => (
+          <span class="chip chip-blue">{skill}</span>
+        ))}
+      </div>
+      <h3 class="section-subtitle">Languages</h3>
+      <div class="chip-row">
+        {languages.map((language) => (
+          <span class="chip">{language}</span>
+        ))}
+      </div>
+    </section>
+  </section>
+</BaseLayout>

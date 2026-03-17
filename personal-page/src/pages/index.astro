@@ -1,62 +1,74 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { hero, overviewLinks, researchAreas } from '../data/profile';
 ---
 
 <BaseLayout title="Kyberszittya | Researcher & Engineer">
-  <header class="mb-10 border-b border-slate-200 pb-6">
-    <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Kyberszittya</h1>
-    <p class="text-xl text-slate-600">Researcher in Autonomous Systems & Critical Infrastructure</p>
-  </header>
+  <section class="hero-panel">
+    <div class="hero-copy">
+      <p class="hero-kicker">{hero.handle}</p>
+      <h1 class="hero-title">{hero.name}</h1>
+      <p class="hero-role">{hero.role}</p>
+      <p class="hero-tagline">{hero.tagline}</p>
+      <p class="hero-summary">{hero.summary}</p>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-    <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-2xl font-bold mb-4 text-blue-700">Academic Background</h2>
-      <ul class="space-y-4 text-slate-700">
-        <li>
-          <strong>MSc in Computer Science</strong> (Critical Systems) <br/>
-          <span class="text-sm text-slate-500">Budapest University of Technology and Economics (BME)</span>
-        </li>
-        <li>
-          <strong>BSc in Computer Science</strong> <br/>
-          <span class="text-sm text-slate-500">Budapest University of Technology and Economics (BME)</span>
-        </li>
-        <li class="pt-2 border-t border-slate-100">
-          <strong>Current Role:</strong> Researcher at the Vehicle Research Centre, Széchenyi István University
-        </li>
-      </ul>
-    </section>
-
-    <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 class="text-2xl font-bold mb-4 text-blue-700">Languages & Interests</h2>
-      <p class="text-slate-700 mb-4"><strong>Interests:</strong> Robotics, Cyberpunk, Visual Arts, Japanese Culture</p>
-      <div class="flex flex-wrap gap-2">
-        <span class="px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full font-medium">Hungarian (Native)</span>
-        <span class="px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full font-medium">English (B2)</span>
-        <span class="px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full font-medium">German (B2)</span>
-        <span class="px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full font-medium">Japanese (Basic)</span>
-        <span class="px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full font-medium">Croatian (Basic)</span>
+      <div class="hero-actions">
+        <a href="/research" class="button-primary">Explore research</a>
+        <a href="/contact" class="button-secondary">Get in touch</a>
       </div>
-    </section>
-  </div>
+    </div>
 
-  <section class="mb-10">
-    <h2 class="text-2xl font-bold mb-4 text-blue-700">Technical Expertise</h2>
-    <div class="flex flex-wrap gap-2">
-      {['ROS & ROS2', 'Gazebo & LGSVL', 'DDS (Connext/FastRTPS)', 'FreeRTOS & Arduino', 'Neural Networks & RL', 'Verification & Validation', 'Model-Based Systems Engineering', 'UML & SysML'].map((skill) => (
-        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-md font-medium">{skill}</span>
-      ))}
+    <div class="hero-side">
+      <div class="hero-orbit hero-orbit-one"></div>
+      <div class="hero-orbit hero-orbit-two"></div>
+      <div class="hero-card-stack">
+        {hero.stats.map((stat) => (
+          <div class="stat-card">
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
-  <section class="bg-slate-900 text-slate-50 p-8 rounded-xl shadow-md">
-    <h2 class="text-2xl font-bold mb-4 text-blue-400">Current Research Challenges</h2>
-    <ul class="list-disc list-inside space-y-2 text-slate-300">
-      <li>Autonomous vehicle trajectory following</li>
-      <li>Precise geolocation-based localization</li>
-      <li>Decision processes of autonomous systems</li>
-      <li>Model-based environment generation</li>
-      <li>Specification-based monitoring of test environments</li>
-      <li>Simulator-based V&V of autonomous systems</li>
-    </ul>
+  <section class="section-block">
+    <div class="section-surface">
+      <div class="section-heading">
+        <p class="section-label">Overview</p>
+        <h2>Research, education, and creative directions</h2>
+      </div>
+      <div class="copy-grid">
+        {hero.intro.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="card-grid">
+    {overviewLinks.map((item) => (
+      <article class="info-card">
+        <h3>{item.label}</h3>
+        <p>{item.description}</p>
+        <a class="text-link" href={item.href}>Open {item.label}</a>
+      </article>
+    ))}
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading section-heading-on-dark">
+      <p class="section-label">Research highlights</p>
+      <h2>Current topic pages</h2>
+    </div>
+    <div class="card-grid">
+      {researchAreas.map((area) => (
+        <article class="info-card">
+          <h3>{area.title}</h3>
+          <p>{area.description}</p>
+          <a class="text-link" href={`/research/${area.slug}`}>Open topic page</a>
+        </article>
+      ))}
+    </div>
   </section>
 </BaseLayout>

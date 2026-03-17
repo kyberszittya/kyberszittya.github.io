@@ -1,0 +1,39 @@
+---
+import PageIntro from '../../components/PageIntro.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { education } from '../../data/profile';
+---
+
+<BaseLayout title="Finished Students | Kyberszittya">
+  <PageIntro
+    kicker="Education"
+    title="Finished students"
+    summary="A supervision overview for completed BSc and MSc student work."
+  />
+
+  <section class="card-grid">
+    <section class="info-card" id="bsc">
+      <h2>BSc</h2>
+      <div class="stack-list compact">
+        {education.students.bsc.map((student) => (
+          <article class="stack-item">
+            <strong>{student.name}</strong>
+            <p>{student.topic}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="info-card" id="msc">
+      <h2>MSc</h2>
+      <div class="stack-list compact">
+        {education.students.msc.map((student) => (
+          <article class="stack-item">
+            <strong>{student.name}</strong>
+            <p>{student.topic}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  </section>
+</BaseLayout>

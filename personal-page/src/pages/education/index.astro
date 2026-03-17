@@ -1,0 +1,49 @@
+---
+import PageIntro from '../../components/PageIntro.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { education } from '../../data/profile';
+---
+
+<BaseLayout title="Education | Kyberszittya">
+  <PageIntro
+    kicker="Education"
+    title="Teaching, lectures, and supervision"
+    summary="An overview of academic background, lecture materials, and supervised student work."
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Academic background</h2>
+      <div class="stack-list">
+        {education.degrees.map((degree) => (
+          <article class="stack-item">
+            <strong>{degree.title}</strong>
+            {degree.track && <p>{degree.track}</p>}
+            {degree.details.map((detail) => (
+              <span>{detail}</span>
+            ))}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h2>Lectures</h2>
+      <div class="stack-list">
+        {education.lectures.map((lecture) => (
+          <article class="stack-item">
+            <strong>{lecture.title}</strong>
+            <p>{lecture.description}</p>
+            <a class="text-link" href={lecture.href}>Open lecture materials</a>
+          </article>
+        ))}
+      </div>
+    </section>
+  </section>
+
+  <section class="info-card">
+    <h2>Finished students</h2>
+    <p>This area can grow into a fuller supervision archive as more project details are added.</p>
+    <a class="text-link" href="/education/students">Open finished students</a>
+  </section>
+</BaseLayout>

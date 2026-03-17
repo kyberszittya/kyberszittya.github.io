@@ -1,0 +1,22 @@
+---
+import PageIntro from '../components/PageIntro.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { contact } from '../data/profile';
+---
+
+<BaseLayout title="Contact | Kyberszittya">
+  <PageIntro
+    kicker="Contact"
+    title="Open for collaboration"
+    summary="Research partnerships, teaching opportunities, and interdisciplinary conversations are all welcome here."
+  />
+
+  <section class="card-grid">
+    {contact.map((entry) => (
+      <article class="info-card">
+        <h2>{entry.label}</h2>
+        <p>{entry.value}</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

@@ -1,5 +1,9 @@
 ---
 import '../styles/global.css';
+import MandelbrotBackground from '../components/MandelbrotBackground.astro';
+import NavMenu from '../components/NavMenu.astro';
+import { navigation } from '../data/navigation';
+
 const { title = 'My Portfolio & Lectures' } = Astro.props;
 ---
 <html lang="en">
@@ -10,13 +14,23 @@ const { title = 'My Portfolio & Lectures' } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-slate-50 text-slate-900 antialiased max-w-4xl mx-auto p-6 md:p-12">
-    <nav class="mb-8 border-b border-slate-200 pb-4">
-      <a href="/" class="font-bold text-lg mr-4 text-blue-600 hover:text-blue-800">Home</a>
-      <a href="/lectures" class="font-bold text-lg text-blue-600 hover:text-blue-800">Lectures</a>
-    </nav>
-    <main>
-      <slot />
-    </main>
+  <body class="site-shell">
+    <MandelbrotBackground />
+    <div class="page-glow page-glow-left" aria-hidden="true"></div>
+    <div class="page-glow page-glow-right" aria-hidden="true"></div>
+    <div class="site-frame">
+      <header class="topbar">
+        <a href="/" class="site-mark">
+          <span class="site-mark-kicker">Kyberszittya</span>
+          <span class="site-mark-title">Research and Robotics</span>
+        </a>
+        <NavMenu items={navigation} />
+      </header>
+      <main>
+        <slot />
+      </main>
+    </div>
+    <div class="page-grid" aria-hidden="true"></div>
+    <div class="page-noise" aria-hidden="true"></div>
   </body>
 </html>

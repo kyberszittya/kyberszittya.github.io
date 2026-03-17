@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import { scholarProfile } from '../../data/profile';
+import { getPublications } from '../../lib/publications';
+
+export function getStaticPaths() {
+  return getPublications().map((publication) => ({
+    params: { slug: publication.slug },
+    props: { publication },
+  }));
+}
+
+const { publication } = Astro.props;
+---
+
+<BaseLayout title={`${publication.title} | Publications | Kyberszittya`}>
+  <PageIntro
+    kicker="Publication"
+    title={publication.title}
+    summary={`Bibliographic entry${publication.year ? ` from ${publication.year}` : ''} rendered from the local BibTeX archive.`}
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Bibliographic details</h2>
+      <div class="stack-list compact">
+        <article class="stack-item">
+          <strong>Authors</strong>
+          <p>{publication.authors.join(', ') || 'Not provided'}</p>
+        </article>
+        <article class="stack-item">
+          <strong>Type</strong>
+          <p>{publication.type}</p>
+        </article>
+        {publication.venue && (
+          <article class="stack-item">
+            <strong>Venue</strong>
+            <p>{publication.venue}</p>
+          </article>
+        )}
+        {publication.year && (
+          <article class="stack-item">
+            <strong>Year</strong>
+            <p>{publication.year}</p>
+          </article>
+        )}
+        {publication.pages && (
+          <article class="stack-item">
+            <strong>Pages</strong>
+            <p>{publication.pages}</p>
+          </article>
+        )}
+        {publication.volume && (
+          <article class="stack-item">
+            <strong>Volume</strong>
+            <p>{publication.volume}</p>
+          </article>
+        )}
+        {publication.number && (
+          <article class="stack-item">
+            <strong>Number</strong>
+            <p>{publication.number}</p>
+          </article>
+        )}
+        {publication.publisher && (
+          <article class="stack-item">
+            <strong>Publisher</strong>
+            <p>{publication.publisher}</p>
+          </article>
+        )}
+        {publication.organization && (
+          <article class="stack-item">
+            <strong>Organization</strong>
+            <p>{publication.organization}</p>
+          </article>
+        )}
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h2>References</h2>
+      <p>
+        Google Scholar profile:
+        <a class="text-link" href={scholarProfile.href} target="_blank" rel="noreferrer">{scholarProfile.label}</a>
+      </p>
+      <p>
+        This page is generated from <code>cite.bibtex</code>, so updating that file will update the publication archive.
+      </p>
+      <a class="text-link" href="/publications">Back to all publications</a>
+    </section>
+  </section>
+</BaseLayout>

@@ -1,0 +1,29 @@
+---
+import PageIntro from '../components/PageIntro.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { arts } from '../data/profile';
+---
+
+<BaseLayout title="Arts | Kyberszittya">
+  <PageIntro
+    kicker="Arts"
+    title="Visual and conceptual interests"
+    summary="A space for cyberpunk visual language, robotics-inspired concepts, and future interdisciplinary art material."
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Overview</h2>
+      <p>{arts.summary}</p>
+    </section>
+
+    <section class="info-card">
+      <h2>Highlights</h2>
+      <ul class="feature-list feature-list-light">
+        {arts.highlights.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+  </section>
+</BaseLayout>

@@ -1,0 +1,92 @@
+---
+import type { NavItem } from '../data/navigation';
+
+type Props = {
+  items: NavItem[];
+};
+
+const { items } = Astro.props;
+---
+
+<nav class="site-nav">
+  <div class="nav-desktop" aria-label="Primary">
+    {items.map((item) => (
+      <div class:list={['nav-item', item.children && 'has-children']}>
+        <a class="nav-link" href={item.href ?? '#'}>
+          <span>{item.label}</span>
+          {item.children && <span class="nav-caret" aria-hidden="true">+</span>}
+        </a>
+
+        {item.children && (
+          <div class="nav-dropdown">
+            {item.description && <p class="nav-description">{item.description}</p>}
+            <div class="nav-dropdown-list">
+              {item.children.map((child) => (
+                <div class:list={['nav-subitem', child.children && 'has-children']}>
+                  <a class="nav-sublink" href={child.href ?? '#'}>
+                    <span>{child.label}</span>
+                    {child.children && <span class="nav-caret" aria-hidden="true">+</span>}
+                  </a>
+
+                  {child.children && (
+                    <div class="nav-subdropdown">
+                      {child.children.map((grandchild) => (
+                        <a class="nav-sublink is-grandchild" href={grandchild.href ?? '#'}>
+                          {grandchild.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <div class="nav-mobile" aria-label="Mobile primary">
+    {items.map((item) =>
+      item.children ? (
+        <details class="nav-mobile-group">
+          <summary>{item.label}</summary>
+          <div class="nav-mobile-panel">
+            {item.href && (
+              <a class="nav-mobile-link" href={item.href}>
+                Overview
+              </a>
+            )}
+            {item.children.map((child) =>
+              child.children ? (
+                <details class="nav-mobile-nested">
+                  <summary>{child.label}</summary>
+                  <div class="nav-mobile-panel nested">
+                    {child.href && (
+                      <a class="nav-mobile-link" href={child.href}>
+                        Overview
+                      </a>
+                    )}
+                    {child.children.map((grandchild) => (
+                      <a class="nav-mobile-link" href={grandchild.href ?? '#'}>
+                        {grandchild.label}
+                      </a>
+                    ))}
+                  </div>
+                </details>
+              ) : (
+                <a class="nav-mobile-link" href={child.href ?? '#'}>
+                  {child.label}
+                </a>
+              ),
+            )}
+          </div>
+        </details>
+      ) : (
+        <a class="nav-mobile-link standalone" href={item.href ?? '#'}>
+          {item.label}
+        </a>
+      ),
+    )}
+  </div>
+</nav>

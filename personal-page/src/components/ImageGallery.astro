@@ -1,0 +1,109 @@
+---
+type GalleryImage = {
+  src: string;
+  alt: string;
+};
+
+interface Props {
+  title?: string;
+  images: GalleryImage[];
+}
+
+const { title, images } = Astro.props;
+const galleryId = `gallery-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+{images.length > 0 && (
+  <section class="image-gallery" id={galleryId}>
+    {title && <h2 class="section-subtitle">{title}</h2>}
+    <div class="image-gallery-grid">
+      {images.map((image, index) => (
+        <button
+          type="button"
+          class="image-gallery-thumb"
+          data-gallery-thumb
+          data-gallery-index={index}
+          aria-label={`Open image ${index + 1} of ${images.length}`}
+        >
+          <img src={image.src} alt={image.alt} class="image-gallery-photo" loading="lazy" />
+        </button>
+      ))}
+    </div>
+
+    <div class="image-gallery-lightbox" data-gallery-lightbox hidden>
+      <button type="button" class="image-gallery-backdrop" data-gallery-close aria-label="Close gallery"></button>
+      <div class="image-gallery-dialog" role="dialog" aria-modal="true" aria-label={title ?? 'Image gallery'}>
+        <button type="button" class="image-gallery-control is-close" data-gallery-close aria-label="Close gallery">×</button>
+        <button type="button" class="image-gallery-control is-prev" data-gallery-prev aria-label="Previous image">‹</button>
+        <figure class="image-gallery-figure">
+          <img src="" alt="" class="image-gallery-active-image" data-gallery-active-image />
+          <figcaption class="image-gallery-caption">
+            <span data-gallery-counter></span>
+          </figcaption>
+        </figure>
+        <button type="button" class="image-gallery-control is-next" data-gallery-next aria-label="Next image">›</button>
+      </div>
+    </div>
+  </section>
+)}
+
+<script is:inline define:vars={{ galleryId, images }}>
+  (() => {
+    const root = document.getElementById(galleryId);
+    if (!root) return;
+
+    const items = images;
+    const thumbs = Array.from(root.querySelectorAll('[data-gallery-thumb]'));
+    const lightbox = root.querySelector('[data-gallery-lightbox]');
+    const activeImage = root.querySelector('[data-gallery-active-image]');
+    const counter = root.querySelector('[data-gallery-counter]');
+    const closeButtons = Array.from(root.querySelectorAll('[data-gallery-close]'));
+    const prevButton = root.querySelector('[data-gallery-prev]');
+    const nextButton = root.querySelector('[data-gallery-next]');
+
+    if (!lightbox || !activeImage || !counter || !prevButton || !nextButton) return;
+
+    let activeIndex = 0;
+
+    const render = () => {
+      const current = items[activeIndex];
+      if (!current) return;
+      activeImage.setAttribute('src', current.src);
+      activeImage.setAttribute('alt', current.alt);
+      counter.textContent = `${activeIndex + 1} / ${items.length}`;
+    };
+
+    const close = () => {
+      lightbox.setAttribute('hidden', '');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKeyDown);
+    };
+
+    const open = (index) => {
+      activeIndex = index;
+      render();
+      lightbox.removeAttribute('hidden');
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', onKeyDown);
+    };
+
+    const step = (delta) => {
+      activeIndex = (activeIndex + delta + items.length) % items.length;
+      render();
+    };
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowLeft') step(-1);
+      if (event.key === 'ArrowRight') step(1);
+    };
+
+    thumbs.forEach((thumb, index) => {
+      thumb.addEventListener('click', () => open(index));
+    });
+
+    closeButtons.forEach((button) => button.addEventListener('click', close));
+    prevButton.addEventListener('click', () => step(-1));
+    nextButton.addEventListener('click', () => step(1));
+  })();
+</script>

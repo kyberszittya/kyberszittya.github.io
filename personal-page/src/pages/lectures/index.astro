@@ -1,18 +1,30 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { education } from '../../data/profile';
 
 const lectures = (await getCollection('lectures')).sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
 );
+
+const subjects = Array.from(new Set(lectures.map((lecture) => lecture.data.subject))).sort((a, b) => a.localeCompare(b));
 ---
 
 <BaseLayout title="Lectures | Kyberszittya">
   <section class="section-block">
     <div class="section-heading">
       <p class="section-label" data-i18n="page.lectures.kicker">Education</p>
-      <h1 class="hero-title" data-i18n="page.lectures.title" style="font-size: clamp(2.4rem, 5vw, 3.8rem); color: #f8fbff;">Lectures</h1>
-      <p class="hero-summary" data-i18n="page.lectures.summary">Course materials, topics, and lecture notes published through the Astro content collection.</p>
+      <h1 class="hero-title" style="font-size: clamp(2.4rem, 5vw, 3.8rem); color: #f8fbff;">Subject materials</h1>
+      <p class="hero-summary">Teaching materials connected to full university subjects taught since 2022, currently offered in English and Hungarian.</p>
+      <div class="chip-row" style="margin-top: 1rem;">
+        <span class="chip chip-blue">{education.teachingProfile.period}</span>
+        {education.teachingProfile.languages.map((language) => (
+          <span class="chip">{language}</span>
+        ))}
+        {subjects.map((subject) => (
+          <span class="chip">{subject}</span>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -22,6 +34,16 @@ const lectures = (await getCollection('lectures')).sort(
         <p class="section-label">{lecture.data.subject}</p>
         <h2 style="font-size: 1.5rem;">{lecture.data.title}</h2>
         <p>{lecture.data.publishDate.toDateString()}</p>
+        {(lecture.data.neptunCode || lecture.data.mascot) && (
+          <div class="chip-row">
+            {lecture.data.neptunCode && <span class="chip chip-blue">Neptun: {lecture.data.neptunCode}</span>}
+            {lecture.data.mascot && (
+              <span class="chip">
+                {lecture.data.mascot.emoji ? `${lecture.data.mascot.emoji} ` : ''}{lecture.data.mascot.shortLabel ?? lecture.data.mascot.name}
+              </span>
+            )}
+          </div>
+        )}
         {lecture.data.tags && (
           <div class="chip-row">
             {lecture.data.tags.map((tag) => (

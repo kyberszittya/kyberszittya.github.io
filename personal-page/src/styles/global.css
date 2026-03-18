@@ -566,6 +566,205 @@ body {
   max-width: 52rem;
 }
 
+.lecture-article {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+.lecture-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(147, 157, 224, 0.18);
+}
+
+.lecture-title {
+  margin: 0 0 0.75rem;
+  color: #f8fbff;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+}
+
+.lecture-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #d5def8;
+  font-weight: 600;
+}
+
+.lecture-subject {
+  color: #8ed8f3;
+}
+
+.lecture-date {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(147, 157, 224, 0.12);
+  color: #eef4ff;
+}
+
+.lecture-prose {
+  color: #dbe5ff;
+}
+
+.lecture-prose :where(h1, h2, h3, h4) {
+  color: #f7fbff;
+}
+
+.lecture-prose :where(strong, code) {
+  color: #ffffff;
+}
+
+.mascot-card {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(147, 157, 224, 0.2);
+  border-radius: 1.2rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--mascot-accent, #48bce0) 18%, rgba(13, 53, 102, 0.85)), rgba(33, 17, 102, 0.78));
+}
+
+.mascot-image {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 1rem;
+  border: 1px solid rgba(147, 157, 224, 0.24);
+  box-shadow: 0 12px 28px rgba(16, 11, 55, 0.24);
+}
+
+.mascot-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mascot-accent, #48bce0) 36%, rgba(255, 255, 255, 0.08));
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.mascot-copy {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.mascot-copy strong {
+  color: #ffffff;
+}
+
+.mascot-copy p {
+  margin: 0;
+  color: #d5def8;
+}
+
+.image-gallery {
+  margin-top: 2rem;
+}
+
+.image-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.9rem;
+}
+
+.image-gallery-thumb {
+  display: block;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(147, 157, 224, 0.18);
+  background: rgba(147, 157, 224, 0.06);
+}
+
+.image-gallery-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.image-gallery-lightbox[hidden] {
+  display: none;
+}
+
+.image-gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+
+.image-gallery-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(6, 8, 22, 0.82);
+}
+
+.image-gallery-dialog {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  width: min(92vw, 1100px);
+  height: min(86vh, 820px);
+  margin: min(7vh, 3rem) auto;
+  padding: 1rem;
+}
+
+.image-gallery-figure {
+  margin: 0;
+  display: grid;
+  gap: 0.8rem;
+  justify-items: center;
+}
+
+.image-gallery-active-image {
+  display: block;
+  max-width: 100%;
+  max-height: min(72vh, 720px);
+  border-radius: 1.2rem;
+  border: 1px solid rgba(147, 157, 224, 0.18);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.38);
+}
+
+.image-gallery-caption {
+  color: #eef4ff;
+  font-weight: 700;
+}
+
+.image-gallery-control {
+  border: 1px solid rgba(147, 157, 224, 0.24);
+  border-radius: 999px;
+  background: rgba(13, 53, 102, 0.68);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 2rem;
+  width: 3.4rem;
+  height: 3.4rem;
+}
+
+.image-gallery-control.is-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  font-size: 1.8rem;
+}
+
 .section-heading h2,
 .page-title,
 .glass-panel h2,
@@ -953,6 +1152,15 @@ body {
 }
 
 @media (max-width: 720px) {
+  .mascot-card {
+    grid-template-columns: 1fr;
+  }
+
+  .mascot-image {
+    width: min(100%, 14rem);
+    height: auto;
+  }
+
   .mandelbrot-canvas {
     top: 6rem;
     right: -10vw;

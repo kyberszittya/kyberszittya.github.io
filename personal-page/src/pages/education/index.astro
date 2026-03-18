@@ -1,7 +1,49 @@
 ---
+import { getCollection } from 'astro:content';
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { education } from '../../data/profile';
+
+const lectures = await getCollection('lectures');
+
+const subjects = Array.from(
+  lectures
+    .reduce((map, lecture) => {
+      const current = map.get(lecture.data.subject);
+      const semesterLabels = lecture.data.semesters ?? [];
+      const languageLabels = lecture.data.teachingLanguages ?? education.teachingProfile.languages;
+
+      if (!current) {
+        map.set(lecture.data.subject, {
+          title: lecture.data.subject,
+          description:
+            lecture.data.subjectSummary ??
+            `Subject materials and teaching notes for ${lecture.data.subject}.`,
+          semesters: semesterLabels,
+          languages: languageLabels,
+          neptunCode: lecture.data.neptunCode,
+          mascot: lecture.data.mascot,
+          href: '/lectures',
+        });
+        return map;
+      }
+
+      const mergedSemesters = Array.from(new Set([...current.semesters, ...semesterLabels]));
+      const mergedLanguages = Array.from(new Set([...current.languages, ...languageLabels]));
+
+      map.set(lecture.data.subject, {
+        ...current,
+        description: lecture.data.subjectSummary ?? current.description,
+        semesters: mergedSemesters,
+        languages: mergedLanguages,
+        neptunCode: current.neptunCode ?? lecture.data.neptunCode,
+        mascot: current.mascot ?? lecture.data.mascot,
+      });
+
+      return map;
+    }, new Map<string, { title: string; description: string; semesters: string[]; languages: string[]; neptunCode?: string; mascot?: { name: string; shortLabel?: string; description?: string; accent?: string; emoji?: string }; href: string }>())
+    .values(),
+).sort((a, b) => a.title.localeCompare(b.title));
 ---
 
 <BaseLayout title="Education | Kyberszittya">
@@ -31,22 +73,67 @@ import { education } from '../../data/profile';
     </section>
 
     <section class="info-card">
-      <h2 data-i18n="page.education.lectures">Lectures</h2>
+      <h2>Teaching experience</h2>
       <div class="stack-list">
-        {education.lectures.map((lecture) => (
-          <article class="stack-item">
-            <strong>{lecture.title}</strong>
-            <p>{lecture.description}</p>
-            <a class="text-link" href={lecture.href} data-i18n="page.education.openLectures">Open lecture materials</a>
-          </article>
+        <article class="stack-item">
+          <strong>{education.teachingProfile.title}</strong>
+          <p>{education.teachingProfile.period}</p>
+          <span>{education.teachingProfile.description}</span>
+        </article>
+      </div>
+      <h3 class="section-subtitle">Teaching languages</h3>
+      <div class="chip-row">
+        {education.teachingProfile.languages.map((language) => (
+          <span class="chip chip-blue">{language}</span>
         ))}
       </div>
     </section>
   </section>
 
-  <section class="info-card">
-    <h2 data-i18n="page.education.finishedStudents">Finished students</h2>
-    <p data-i18n="page.education.finishedStudents.summary">This area can grow into a fuller supervision archive as more project details are added.</p>
-    <a class="text-link" href="/education/students" data-i18n="page.education.openFinishedStudents">Open finished students</a>
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Subjects</h2>
+      <div class="stack-list">
+        {subjects.map((subject) => (
+          <article class="stack-item">
+            <strong>{subject.title}</strong>
+            <span>{subject.description}</span>
+            {(subject.neptunCode || subject.mascot) && (
+              <div class="chip-row">
+                {subject.neptunCode && <span class="chip chip-blue">Neptun: {subject.neptunCode}</span>}
+                {subject.mascot && (
+                  <span class="chip">
+                    {subject.mascot.emoji ? `${subject.mascot.emoji} ` : ''}{subject.mascot.shortLabel ?? subject.mascot.name}
+                  </span>
+                )}
+              </div>
+            )}
+            {subject.semesters.length > 0 && (
+              <>
+                <p>Semesters</p>
+                <div class="chip-row">
+                  {subject.semesters.map((semester) => (
+                    <span class="chip chip-blue">{semester}</span>
+                  ))}
+                </div>
+              </>
+            )}
+            <p>Teaching languages</p>
+            <div class="chip-row">
+              {subject.languages.map((language) => (
+                <span class="chip">{language}</span>
+              ))}
+            </div>
+            <a class="text-link" href={subject.href}>Open subject materials</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h2 data-i18n="page.education.finishedStudents">Finished students</h2>
+      <p data-i18n="page.education.finishedStudents.summary">This area can grow into a fuller supervision archive as more project details are added.</p>
+      <a class="text-link" href="/education/students" data-i18n="page.education.openFinishedStudents">Open finished students</a>
+    </section>
   </section>
 </BaseLayout>

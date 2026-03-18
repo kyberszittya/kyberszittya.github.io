@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HyMeKo — Hypergraph Modeling & Computation Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #161622;
+  --bg-card-hover: #1c1c2e;
+  --accent-cyan: #00e5ff;
+  --accent-blue: #4d7cff;
+  --accent-violet: #9b6dff;
+  --accent-rose: #ff4d8a;
+  --accent-amber: #ffb84d;
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888a0;
+  --text-dim: #55556a;
+  --border: #222238;
+  --glow-cyan: rgba(0, 229, 255, 0.15);
+  --glow-violet: rgba(155, 109, 255, 0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-bg canvas {
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 40%, rgba(0, 229, 255, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 70% 60%, rgba(155, 109, 255, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(10, 10, 15, 1) 0%, transparent 50%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  background: rgba(0, 229, 255, 0.04);
+  animation: fadeUp 0.8s ease both;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hero-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 400;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.8s ease 0.1s both;
+}
+
+.hero-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  animation: fadeUp 0.8s ease 0.35s both;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.hero-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  animation: fadeUp 1s ease 0.6s both;
+}
+
+.hero-scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent-cyan), transparent);
+  animation: scrollPulse 2s ease infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ SECTION WRAPPER ============ */
+section {
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  margin-bottom: 1rem;
+  line-height: 1.15;
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  max-width: 640px;
+  font-weight: 300;
+  margin-bottom: 3rem;
+  font-size: 1.05rem;
+}
+
+/* ============ PIPELINE ============ */
+.pipeline {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.pipeline::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-violet), transparent);
+}
+
+.pipeline-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.pipeline-step {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.pipeline-step:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(0, 229, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.pipeline-step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--accent-cyan);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.pipeline-step-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.pipeline-step-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.pipeline-arrow {
+  position: absolute;
+  right: -1rem;
+  top: 50%;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+  transform: translateY(-50%);
+}
+
+/* ============ FEATURE GRID ============ */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2rem;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 0;
+  transition: height 0.35s ease;
+  border-radius: 0 0 3px 0;
+}
+
+.feature-card:hover { border-color: rgba(0, 229, 255, 0.15); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); }
+.feature-card:hover::after { height: 100%; }
+.feature-card:nth-child(1)::after { background: var(--accent-cyan); }
+.feature-card:nth-child(2)::after { background: var(--accent-violet); }
+.feature-card:nth-child(3)::after { background: var(--accent-blue); }
+.feature-card:nth-child(4)::after { background: var(--accent-rose); }
+.feature-card:nth-child(5)::after { background: var(--accent-amber); }
+.feature-card:nth-child(6)::after { background: var(--accent-cyan); }
+.feature-card:nth-child(7)::after { background: var(--accent-violet); }
+.feature-card:nth-child(8)::after { background: var(--accent-blue); }
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+}
+
+.feature-card:nth-child(1) .feature-icon { background: rgba(0, 229, 255, 0.1); color: var(--accent-cyan); }
+.feature-card:nth-child(2) .feature-icon { background: rgba(155, 109, 255, 0.1); color: var(--accent-violet); }
+.feature-card:nth-child(3) .feature-icon { background: rgba(77, 124, 255, 0.1); color: var(--accent-blue); }
+.feature-card:nth-child(4) .feature-icon { background: rgba(255, 77, 138, 0.1); color: var(--accent-rose); }
+.feature-card:nth-child(5) .feature-icon { background: rgba(255, 184, 77, 0.1); color: var(--accent-amber); }
+.feature-card:nth-child(6) .feature-icon { background: rgba(0, 229, 255, 0.1); color: var(--accent-cyan); }
+.feature-card:nth-child(7) .feature-icon { background: rgba(155, 109, 255, 0.1); color: var(--accent-violet); }
+.feature-card:nth-child(8) .feature-icon { background: rgba(77, 124, 255, 0.1); color: var(--accent-blue); }
+
+.feature-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.6rem;
+}
+
+.feature-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.feature-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.tag-complete { background: rgba(0, 229, 255, 0.1); color: var(--accent-cyan); border: 1px solid rgba(0, 229, 255, 0.15); }
+.tag-ready { background: rgba(155, 109, 255, 0.08); color: var(--accent-violet); border: 1px solid rgba(155, 109, 255, 0.15); }
+.tag-designed { background: rgba(255, 184, 77, 0.08); color: var(--accent-amber); border: 1px solid rgba(255, 184, 77, 0.15); }
+
+/* ============ CODE BLOCK ============ */
+.code-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .code-section { grid-template-columns: 1fr; }
+}
+
+.code-block {
+  background: #0d0d14;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+
+.code-dot:nth-child(1) { background: #ff5f57; }
+.code-dot:nth-child(2) { background: #febc2e; }
+.code-dot:nth-child(3) { background: #28c840; }
+
+.code-filename {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+
+.code-body {
+  padding: 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--text-secondary);
+}
+
+.code-body .kw { color: var(--accent-violet); }
+.code-body .fn { color: var(--accent-blue); }
+.code-body .str { color: #98c379; }
+.code-body .num { color: var(--accent-amber); }
+.code-body .cmt { color: var(--text-dim); font-style: italic; }
+.code-body .op { color: var(--accent-cyan); }
+.code-body .type { color: var(--accent-rose); }
+
+.code-desc {
+  padding-top: 1rem;
+}
+
+.code-desc h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.75rem;
+}
+
+.code-desc p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+
+/* ============ DOMAINS ============ */
+.domains-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .domains-grid { grid-template-columns: 1fr; }
+}
+
+.domain-cell {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  transition: background 0.3s ease;
+}
+
+.domain-cell:hover { background: var(--bg-card-hover); }
+
+.domain-emoji {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.domain-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.domain-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.55;
+}
+
+/* ============ ARCHITECTURE ============ */
+.arch-diagram {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.arch-diagram .hl { color: var(--accent-cyan); }
+.arch-diagram .h2 { color: var(--accent-violet); }
+.arch-diagram .h3 { color: var(--accent-blue); }
+.arch-diagram .h4 { color: var(--accent-amber); }
+
+/* ============ FOOTER ============ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--accent-cyan); }
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ============ ANIMATIONS ============ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-1 { transition-delay: 0.05s; }
+.stagger-2 { transition-delay: 0.1s; }
+.stagger-3 { transition-delay: 0.15s; }
+.stagger-4 { transition-delay: 0.2s; }
+.stagger-5 { transition-delay: 0.25s; }
+.stagger-6 { transition-delay: 0.3s; }
+.stagger-7 { transition-delay: 0.35s; }
+.stagger-8 { transition-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-bg">
+    <canvas id="heroCanvas"></canvas>
+  </div>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <div class="hero-badge">RESEARCH FRAMEWORK</div>
+    <h1 class="hero-title">Hy<em>Me</em>Ko</h1>
+    <p class="hero-sub">A compiler-based framework for describing, querying, and computing over directed hypergraphs — from structured text to sparse tensors, zero-copy IPC, and topology-aware neural networks.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">15.4K</div>
+        <div class="hero-stat-label">Lines of Rust</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">5</div>
+        <div class="hero-stat-label">Crates</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">8K+</div>
+        <div class="hero-stat-label">Test Lines</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">&lt;100μs</div>
+        <div class="hero-stat-label">IPC Latency</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    EXPLORE
+  </div>
+</header>
+
+<!-- ============ PIPELINE ============ -->
+<section>
+  <div class="reveal">
+    <div class="section-label">01 — Compilation Pipeline</div>
+    <h2 class="section-title">From text to tensors in one pass</h2>
+    <p class="section-desc">A .hymeko source file compiles through six deterministic stages into content-addressable sparse tensors — no interpretation, no runtime overhead.</p>
+  </div>
+  <div class="pipeline reveal">
+    <div class="pipeline-steps">
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">STAGE 01</div>
+        <div class="pipeline-step-title">SIMD Lexer</div>
+        <div class="pipeline-step-desc">AVX2 / SSE2 / Scalar tiered tokenization. Zero-copy tokens borrowed from the input buffer.</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">STAGE 02</div>
+        <div class="pipeline-step-title">LALR Parser</div>
+        <div class="pipeline-step-desc">LALRPOP-generated grammar produces a typed AST with signed references, annotations, and imports.</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">STAGE 03</div>
+        <div class="pipeline-step-title">Resolution</div>
+        <div class="pipeline-step-desc">String interning, scope resolution via B-tree index, and recursive multi-file import loading.</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">STAGE 04</div>
+        <div class="pipeline-step-title">IR Lowering</div>
+        <div class="pipeline-step-desc">Flat arena-based IR with linked-list children, jump tables, and O(1) type-specific lookup.</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">STAGE 05</div>
+        <div class="pipeline-step-title">Merkle Hash</div>
+        <div class="pipeline-step-desc">Blake3 content-addressable identity per declaration. O(1) structural change detection.</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">STAGE 06</div>
+        <div class="pipeline-step-title">Tensor Extraction</div>
+        <div class="pipeline-step-desc">Star expansion O(|E|·d) and clique expansion O(|E|·d²) into sparse COO / CSR formats.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SYNTAX ============ -->
+<section>
+  <div class="reveal">
+    <div class="section-label">02 — The Language</div>
+    <h2 class="section-title">Describe systems, query patterns</h2>
+    <p class="section-desc">The same LALR grammar that describes hypergraphs can describe patterns over them. A query is a partial description with wildcards.</p>
+  </div>
+  <div class="code-section">
+    <div class="code-block reveal stagger-1">
+      <div class="code-header">
+        <span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span>
+        <span class="code-filename">robot_4wh.hymeko</span>
+      </div>
+      <div class="code-body"><span class="cmt">// 4-wheel diff-drive robot description</span>
+<span class="fn">diff_robot</span> <span class="kw">use</span> kinematics.elements
+{
+    <span class="fn">base_link</span>: <span class="type">link</span> {
+        <span class="fn">mass</span> <span class="num">25.0</span>;
+        <span class="fn">link_geometry</span>: <span class="type">box</span> {
+            <span class="fn">dimension</span> [<span class="num">0.7</span>, <span class="num">0.5</span>, <span class="num">0.2</span>];
+        }
+    }
+
+    <span class="op">@</span><span class="fn">joint_fr</span>: <span class="type">conti_joint</span> {
+        <span class="op">+</span> base_link,
+          [[<span class="num">0.25</span>, <span class="num">0.25</span>, <span class="num">0.05</span>],
+           [<span class="num">-90.0</span>, <span class="num">0.0</span>, <span class="num">0.0</span>]]
+        <span class="op">-</span> wheel_fr,
+        <span class="op">-</span> AXIS_Z
+    }
+}</div>
+    </div>
+    <div class="code-desc reveal stagger-2">
+      <h3>Signed incidence semantics</h3>
+      <p>Nodes represent entities — links, sensors, layers. Edges (prefixed with <code>@</code>) represent multi-body relationships. The <code>+</code>, <code>-</code>, <code>~</code> operators encode directionality directly on the incidence connections.</p>
+      <p>In a robotic joint, <code>+</code> marks the parent link (source), <code>-</code> marks the child link (target) with an origin transform encoded as weights, and the axis is a separate <code>-</code> reference to an axis definition.</p>
+      <p>This 4-ary hyperedge captures what URDF flattens into XML attributes — the topology is the data.</p>
+
+      <div class="code-block" style="margin-top: 1.5rem;">
+        <div class="code-header">
+          <span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span>
+          <span class="code-filename">find_joints.hymeko — query</span>
+        </div>
+        <div class="code-body"><span class="cmt">// Find all continuous joints</span>
+<span class="cmt">// connecting any two links</span>
+<span class="fn">query</span> {
+    <span class="op">@</span><span class="fn">_</span> : <span class="type">conti_joint</span> {
+        <span class="op">+</span> <span class="fn">_</span> : <span class="type">link</span>,
+        <span class="op">-</span> <span class="fn">_</span> : <span class="type">link</span>
+    }
+}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAPABILITIES ============ -->
+<section>
+  <div class="reveal">
+    <div class="section-label">03 — Capabilities</div>
+    <h2 class="section-title">What the framework provides</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal stagger-1">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">SIMD-Accelerated Parsing</div>
+      <div class="feature-desc">Three lexer tiers (AVX2, SSE2, scalar) auto-selected at runtime. Zero-copy tokens borrowed from the input buffer. LALRPOP LALR(1) grammar with typed AST output.</div>
+      <span class="feature-tag tag-complete">COMPLETE</span>
+    </div>
+    <div class="feature-card reveal stagger-2">
+      <div class="feature-icon">🔷</div>
+      <div class="feature-title">Deterministic IR</div>
+      <div class="feature-desc">Flat arena with B-tree-ordered index, parent-child linked lists, DeclId→NodeId jump tables, and Blake3 Merkle hashing. Serializable via serde/CBOR.</div>
+      <span class="feature-tag tag-complete">COMPLETE</span>
+    </div>
+    <div class="feature-card reveal stagger-3">
+      <div class="feature-icon">📐</div>
+      <div class="feature-title">Tensor Pipeline</div>
+      <div class="feature-desc">Star expansion O(|E|·d) and clique expansion O(|E|·d²) into COO/CSR. Generic over incidence value types via the IncVal&lt;F&gt; trait. Rayon-parallel sort-reduce.</div>
+      <span class="feature-tag tag-complete">COMPLETE</span>
+    </div>
+    <div class="feature-card reveal stagger-4">
+      <div class="feature-icon">🔀</div>
+      <div class="feature-title">Message Passing</div>
+      <div class="feature-desc">Implicit clique step y = BWBᵀx without dense materialization. Gather/scatter with sign-aware incidence. Precomputed diagonal for self-loop removal.</div>
+      <span class="feature-tag tag-complete">COMPLETE</span>
+    </div>
+    <div class="feature-card reveal stagger-5">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Query Engine</div>
+      <div class="feature-desc">Arbitrary predicate trees evaluated against the IR. Inheritance, annotation, containment, and arc-topology matching. The .hymeko grammar IS the query language.</div>
+      <span class="feature-tag tag-ready">IMPLEMENTATION READY</span>
+    </div>
+    <div class="feature-card reveal stagger-6">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-title">Domain Transforms</div>
+      <div class="feature-desc">Query results feed into URDF, SDF, ROS2, PyTorch, and glTF emitters. Each domain is a pattern set + emitter — zero engine changes per new target.</div>
+      <span class="feature-tag tag-ready">IMPLEMENTATION READY</span>
+    </div>
+    <div class="feature-card reveal stagger-7">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Structural Entropy</div>
+      <div class="feature-desc">Normalized Laplacian, algebraic entropy from eigenvalues, and KL divergence between training states. Feeds into neural network loss as a regularization term.</div>
+      <span class="feature-tag tag-designed">DESIGNED</span>
+    </div>
+    <div class="feature-card reveal stagger-8">
+      <div class="feature-icon">🧠</div>
+      <div class="feature-title">HyperKAN</div>
+      <div class="feature-desc">Kolmogorov-Arnold Networks on hypergraph topology. NURBS activations on incidence connections learn exact conic sections. Topology compiled from .hymeko source.</div>
+      <span class="feature-tag tag-designed">DESIGNED</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ZERO-COPY ============ -->
+<section>
+  <div class="reveal">
+    <div class="section-label">04 — Zero-Copy Architecture</div>
+    <h2 class="section-title">No serialization, no copies, no overhead</h2>
+    <p class="section-desc">From SIMD lexer tokens through iceoryx2 shared memory to PyTorch sparse tensors — every byte is touched exactly once.</p>
+  </div>
+  <div class="arch-diagram reveal">
+<span class="hl">┌─────────────────────────────────────────────────────────────────────────┐</span>
+│                                                                         │
+│  <span class="hl">.hymeko source</span>                                                        │
+│       │                                                                 │
+│       ▼                                                                 │
+│  <span class="h2">SIMD Lexer</span> ──► tokens borrow directly from input buffer (zero alloc) │
+│       │                                                                 │
+│       ▼                                                                 │
+│  <span class="h2">LALRPOP Parser</span> ──► typed AST with &amp;'a str references                │
+│       │                                                                 │
+│       ▼                                                                 │
+│  <span class="h2">IR Lowering</span> ──► arena-based, deterministic, content-addressable       │
+│       │                                                                 │
+│       ├──────────────────────────────────┐                              │
+│       ▼                                  ▼                              │
+│  <span class="h3">Star/Clique COO</span>                   <span class="h3">CBOR Serialize</span>                   │
+│       │                                  │                              │
+│       ▼                                  ▼                              │
+│  <span class="h4">iceoryx2 shared memory</span>          <span class="h4">Persistent storage</span>                │
+│       │                                                                 │
+│       ▼                                                                 │
+│  <span class="hl">Arrow C Data Interface</span> ──► PyTorch sparse_coo_tensor (DLPack)         │
+│                                                                         │
+<span class="hl">└─────────────────────────────────────────────────────────────────────────┘</span></div>
+</section>
+
+<!-- ============ DOMAINS ============ -->
+<section>
+  <div class="reveal">
+    <div class="section-label">05 — Application Domains</div>
+    <h2 class="section-title">One framework, many fields</h2>
+    <p class="section-desc">The same compilation pipeline serves robotics, machine learning, cognitive systems, virtual reality, knowledge representation, and runtime event detection.</p>
+  </div>
+  <div class="domains-grid reveal">
+    <div class="domain-cell">
+      <span class="domain-emoji">🤖</span>
+      <div class="domain-name">Robotics</div>
+      <div class="domain-desc">Kinematic chains as multi-body hyperedges. Joints connect parent links, child links, axes, and frames in a single 4-ary incidence. Transforms to URDF, SDF, ROS2.</div>
+    </div>
+    <div class="domain-cell">
+      <span class="domain-emoji">🧬</span>
+      <div class="domain-name">Neural Architecture</div>
+      <div class="domain-desc">Network layers as nodes, connections as hyperedges. Structural entropy feedback regularizes training. HyperKAN learns on compiled incidence topology with NURBS activations.</div>
+    </div>
+    <div class="domain-cell">
+      <span class="domain-emoji">🧠</span>
+      <div class="domain-name">Cognitive Systems</div>
+      <div class="domain-desc">CogInfoCom framework integration. Cognitive entities, capabilities, and interactions modeled as labeled hypergraphs with ontological hierarchy.</div>
+    </div>
+    <div class="domain-cell">
+      <span class="domain-emoji">🌐</span>
+      <div class="domain-name">Virtual Reality</div>
+      <div class="domain-desc">Scene graphs and multi-body simulations. Kinematic constraints as hyperedges connecting rigid bodies, frames, and interaction points. Transforms to glTF.</div>
+    </div>
+    <div class="domain-cell">
+      <span class="domain-emoji">🗂️</span>
+      <div class="domain-name">Knowledge Graphs</div>
+      <div class="domain-desc">Many-to-many relationships expressed natively as hyperedges. Tensor representations enable spectral clustering, centrality, and community detection.</div>
+    </div>
+    <div class="domain-cell">
+      <span class="domain-emoji">⚡</span>
+      <div class="domain-name">Event Detection</div>
+      <div class="domain-desc">Directed hyperedges as event templates with precondition tails and consequence heads. Observer-based runtime activation with structural change tracking.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEARCH ============ -->
+<section>
+  <div class="reveal">
+    <div class="section-label">06 — Research Foundation</div>
+    <h2 class="section-title">Formally grounded</h2>
+    <p class="section-desc">HyMeKo is the implementation of a doctoral dissertation with four proven theses.</p>
+  </div>
+  <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+    <div class="feature-card reveal stagger-1" style="border-left: 2px solid var(--accent-cyan);">
+      <div class="feature-title" style="color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">THESIS 1</div>
+      <div class="feature-desc" style="margin-top: 0.5rem;">Cognitive aspects of intelligent robots can be described using hypergraphs. The LALR-based language is provably more concise than XML, JSON, and YAML.</div>
+    </div>
+    <div class="feature-card reveal stagger-2" style="border-left: 2px solid var(--accent-violet);">
+      <div class="feature-title" style="color: var(--accent-violet); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">THESIS 2</div>
+      <div class="feature-desc" style="margin-top: 0.5rem;">Labeled hypergraphs can be transformed into unique tensor representations via star and clique expansion. The transformation is universal and polynomial-time.</div>
+    </div>
+    <div class="feature-card reveal stagger-3" style="border-left: 2px solid var(--accent-blue);">
+      <div class="feature-title" style="color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">THESIS 3</div>
+      <div class="feature-desc" style="margin-top: 0.5rem;">Hypergraph descriptions can be transformed into domain-specific outputs via graph-filtering rules — unifying robotics, neural networks, VR, and cognitive systems.</div>
+    </div>
+    <div class="feature-card reveal stagger-4" style="border-left: 2px solid var(--accent-rose);">
+      <div class="feature-title" style="color: var(--accent-rose); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">THESIS 4</div>
+      <div class="feature-desc" style="margin-top: 0.5rem;">Structural entropy from hypergraph tensor representations can regularize neural network training, improving convergence stability and accuracy.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-name">HyMeKo Framework</div>
+    <div class="footer-links">
+      <a href="#">Documentation</a>
+      <a href="#">GitHub</a>
+      <a href="#">Publications</a>
+      <a href="#">Dissertation</a>
+    </div>
+    <div class="footer-copy">Csaba Hajdu · Széchenyi István University · 2025–2026</div>
+  </div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Hero canvas — animated hypergraph nodes
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, nodes = [], edges = [];
+  const NODE_COUNT = 40;
+  const EDGE_COUNT = 25;
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth * devicePixelRatio;
+    h = canvas.height = canvas.offsetHeight * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+
+  function init() {
+    resize();
+    nodes = [];
+    edges = [];
+    const cw = canvas.offsetWidth, ch = canvas.offsetHeight;
+    for (let i = 0; i < NODE_COUNT; i++) {
+      nodes.push({
+        x: Math.random() * cw,
+        y: Math.random() * ch,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: 2 + Math.random() * 2.5,
+        hue: Math.random() > 0.5 ? 187 : 260,
+      });
+    }
+    for (let i = 0; i < EDGE_COUNT; i++) {
+      const count = 2 + Math.floor(Math.random() * 3);
+      const members = [];
+      for (let j = 0; j < count; j++) {
+        members.push(Math.floor(Math.random() * NODE_COUNT));
+      }
+      edges.push({ members, alpha: 0.06 + Math.random() * 0.08 });
+    }
+  }
+
+  function draw() {
+    const cw = canvas.offsetWidth, ch = canvas.offsetHeight;
+    ctx.clearRect(0, 0, cw, ch);
+
+    // Draw hyperedges as filled convex hulls
+    edges.forEach(edge => {
+      if (edge.members.length < 2) return;
+      const pts = edge.members.map(i => nodes[i]);
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.closePath();
+      ctx.fillStyle = `hsla(${pts[0].hue}, 80%, 60%, ${edge.alpha})`;
+      ctx.fill();
+    });
+
+    // Draw connections
+    edges.forEach(edge => {
+      for (let i = 0; i < edge.members.length; i++) {
+        for (let j = i + 1; j < edge.members.length; j++) {
+          const a = nodes[edge.members[i]], b = nodes[edge.members[j]];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if (dist > 300) continue;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `hsla(187, 70%, 50%, ${0.06 * (1 - dist / 300)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    });
+
+    // Draw and update nodes
+    nodes.forEach(n => {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > cw) n.vx *= -1;
+      if (n.y < 0 || n.y > ch) n.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${n.hue}, 70%, 65%, 0.6)`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  init();
+  draw();
+})();
+</script>
+</body>
+</html>

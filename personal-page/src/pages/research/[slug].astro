@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import { researchAreas } from '../../data/profile';
+import { dissertation, researchAreas } from '../../data/profile';
+import { researchDetails } from '../../data/researchDetails';
 
 export function getStaticPaths() {
   return researchAreas.map((area) => ({
@@ -11,6 +12,7 @@ export function getStaticPaths() {
 }
 
 const { area } = Astro.props;
+const detail = researchDetails[area.slug as keyof typeof researchDetails];
 ---
 
 <BaseLayout title={`${area.title} | Research | Kyberszittya`}>
@@ -34,7 +36,91 @@ const { area } = Astro.props;
           <li>{item}</li>
         ))}
       </ul>
+      {area.slug === 'hymeko' && (
+        <p>
+          <a class="text-link" href="/dissertation">Open related dissertation overview</a>
+          {' '}or{' '}
+          <a class="text-link" href={dissertation.pdfHref} target="_blank" rel="noreferrer">read the dissertation PDF</a>
+        </p>
+      )}
       <a class="text-link" href="/research" data-i18n="page.researchTopic.back">Back to all research themes</a>
     </section>
   </section>
+
+  {detail && (
+    <>
+      <section class="section-block">
+        <div class="section-surface">
+          <div class="section-heading">
+            <p class="section-label">System overview</p>
+            <h2>{area.title} as a research framework</h2>
+          </div>
+          <div class="copy-grid">
+            {detail.overview.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="card-grid-wide">
+        <section class="info-card">
+          <h2>Core pipeline</h2>
+          <ul class="feature-list feature-list-light">
+            {detail.pipeline.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="info-card">
+          <h2>Dissertation connection</h2>
+          <p>{detail.dissertationNote}</p>
+          <p>
+            <a class="text-link" href="/dissertation">Open dissertation overview</a>
+          </p>
+          <p>
+            <a class="text-link" href={dissertation.pdfHref} target="_blank" rel="noreferrer">Open dissertation PDF</a>
+          </p>
+        </section>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading section-heading-on-dark">
+          <p class="section-label">Capabilities</p>
+          <h2>What the framework is designed to support</h2>
+        </div>
+        <div class="card-grid">
+          {detail.capabilities.map((capability) => (
+            <article class="info-card">
+              <h3>{capability.title}</h3>
+              <p>{capability.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="card-grid-wide">
+        <section class="info-card">
+          <h2>Application domains</h2>
+          <ul class="feature-list feature-list-light">
+            {detail.domains.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="info-card">
+          <h2>Current status</h2>
+          <div class="stack-list compact">
+            {detail.status.map((item) => (
+              <article class="stack-item">
+                <span>{item}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+      </section>
+    </>
+  )}
 </BaseLayout>

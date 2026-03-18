@@ -164,13 +164,13 @@ export const education = {
       details: ['Budapest University of Technology and Economics (BME)'],
     },
   ],
-  lectures: [
-    {
-      title: 'Autonomous systems verification and validation',
-      description: 'Simulation-based assurance, test environment design, and specification-driven evaluation.',
-      href: '/lectures',
-    },
-  ],
+  teachingProfile: {
+    title: 'University subject teaching',
+    period: '2022 - Present',
+    description:
+      'Since 2022, my teaching activity has been organized primarily around full university subjects rather than standalone lectures, combining course design, subject maintenance, and teaching materials.',
+    languages: ['English', 'Hungarian'],
+  },
   students: {
     bsc: [
       { name: 'BSc student project placeholder', topic: 'Add finished BSc supervisees here as content grows.' },
@@ -204,6 +204,7 @@ export const dissertation = {
   degree: 'PhD dissertation',
   institution: 'Szechenyi Istvan University, Multidisciplinary Doctoral School of Engineering',
   evaluation: 'Excellent (Summa Cum Laude)',
+  pdfHref: '/dissertation/Doktori_final.pdf',
   summary:
     'A dissertation centered on hypergraph-based semantic modeling for cognitive systems and robotics, connecting formal structure, knowledge representation, and autonomous behavior.',
   highlights: [

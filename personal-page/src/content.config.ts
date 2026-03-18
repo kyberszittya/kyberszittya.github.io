@@ -16,7 +16,19 @@ const lectures = defineCollection({
     title: z.string(),
     subject: z.string(),
     publishDate: z.date(),
+    neptunCode: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    subjectSummary: z.string().optional(),
+    semesters: z.array(z.string()).optional(),
+    teachingLanguages: z.array(z.string()).optional(),
+    mascot: z.object({
+      name: z.string(),
+      shortLabel: z.string().optional(),
+      description: z.string().optional(),
+      accent: z.string().optional(),
+      emoji: z.string().optional(),
+      image: z.string().optional(),
+    }).optional(),
   })
 });
 

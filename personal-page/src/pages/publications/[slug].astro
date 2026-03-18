@@ -12,66 +12,71 @@ export function getStaticPaths() {
 }
 
 const { publication } = Astro.props;
+const publicationSummary = `Bibliographic entry${publication.year ? ` from ${publication.year}` : ''} rendered from the local BibTeX archive.`;
 ---
 
 <BaseLayout title={`${publication.title} | Publications | Kyberszittya`}>
   <PageIntro
     kicker="Publication"
     title={publication.title}
-    summary={`Bibliographic entry${publication.year ? ` from ${publication.year}` : ''} rendered from the local BibTeX archive.`}
+    summary={publicationSummary}
+    kickerKey="page.publication.kicker"
   />
 
   <section class="card-grid-wide">
     <section class="info-card">
-      <h2>Bibliographic details</h2>
+      <p>
+        <a class="title-link" href={publication.externalUrl} target="_blank" rel="noreferrer">{publication.title}</a>
+      </p>
+      <h2 data-i18n="page.publication.details">Bibliographic details</h2>
       <div class="stack-list compact">
         <article class="stack-item">
-          <strong>Authors</strong>
+          <strong data-i18n="page.publication.authors">Authors</strong>
           <p>{publication.authors.join(', ') || 'Not provided'}</p>
         </article>
         <article class="stack-item">
-          <strong>Type</strong>
+          <strong data-i18n="page.publication.type">Type</strong>
           <p>{publication.type}</p>
         </article>
         {publication.venue && (
           <article class="stack-item">
-            <strong>Venue</strong>
+            <strong data-i18n="page.publication.venue">Venue</strong>
             <p>{publication.venue}</p>
           </article>
         )}
         {publication.year && (
           <article class="stack-item">
-            <strong>Year</strong>
+            <strong data-i18n="page.publication.year">Year</strong>
             <p>{publication.year}</p>
           </article>
         )}
         {publication.pages && (
           <article class="stack-item">
-            <strong>Pages</strong>
+            <strong data-i18n="page.publication.pages">Pages</strong>
             <p>{publication.pages}</p>
           </article>
         )}
         {publication.volume && (
           <article class="stack-item">
-            <strong>Volume</strong>
+            <strong data-i18n="page.publication.volume">Volume</strong>
             <p>{publication.volume}</p>
           </article>
         )}
         {publication.number && (
           <article class="stack-item">
-            <strong>Number</strong>
+            <strong data-i18n="page.publication.number">Number</strong>
             <p>{publication.number}</p>
           </article>
         )}
         {publication.publisher && (
           <article class="stack-item">
-            <strong>Publisher</strong>
+            <strong data-i18n="page.publication.publisher">Publisher</strong>
             <p>{publication.publisher}</p>
           </article>
         )}
         {publication.organization && (
           <article class="stack-item">
-            <strong>Organization</strong>
+            <strong data-i18n="page.publication.organization">Organization</strong>
             <p>{publication.organization}</p>
           </article>
         )}
@@ -79,15 +84,18 @@ const { publication } = Astro.props;
     </section>
 
     <section class="info-card">
-      <h2>References</h2>
+      <h2 data-i18n="page.publication.references">References</h2>
       <p>
-        Google Scholar profile:
+        <a class="text-link" href={publication.externalUrl} target="_blank" rel="noreferrer">{publication.externalLabel}</a>
+      </p>
+      <p>
+        <span data-i18n="page.publication.scholarProfile">Google Scholar profile:</span>
         <a class="text-link" href={scholarProfile.href} target="_blank" rel="noreferrer">{scholarProfile.label}</a>
       </p>
-      <p>
+      <p data-i18n="page.publication.generatedFrom">
         This page is generated from <code>cite.bibtex</code>, so updating that file will update the publication archive.
       </p>
-      <a class="text-link" href="/publications">Back to all publications</a>
+      <a class="text-link" href="/publications" data-i18n="page.publication.back">Back to all publications</a>
     </section>
   </section>
 </BaseLayout>

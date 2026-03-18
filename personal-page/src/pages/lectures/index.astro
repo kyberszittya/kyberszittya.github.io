@@ -10,9 +10,9 @@ const lectures = (await getCollection('lectures')).sort(
 <BaseLayout title="Lectures | Kyberszittya">
   <section class="section-block">
     <div class="section-heading">
-      <p class="section-label">Education</p>
-      <h1 class="hero-title" style="font-size: clamp(2.4rem, 5vw, 3.8rem); color: #f8fbff;">Lectures</h1>
-      <p class="hero-summary">Course materials, topics, and lecture notes published through the Astro content collection.</p>
+      <p class="section-label" data-i18n="page.lectures.kicker">Education</p>
+      <h1 class="hero-title" data-i18n="page.lectures.title" style="font-size: clamp(2.4rem, 5vw, 3.8rem); color: #f8fbff;">Lectures</h1>
+      <p class="hero-summary" data-i18n="page.lectures.summary">Course materials, topics, and lecture notes published through the Astro content collection.</p>
     </div>
   </section>
 
@@ -29,7 +29,7 @@ const lectures = (await getCollection('lectures')).sort(
             ))}
           </div>
         )}
-        <a class="text-link" href={`/lectures/${lecture.id}`}>Read lecture</a>
+        <a class="text-link" href={`/lectures/${lecture.id}`} data-i18n="page.lectures.read">Read lecture</a>
       </article>
     ))}
   </section>

@@ -9,12 +9,15 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
     kicker="Research"
     title="Themes, models, and applications"
     summary="Research directions spanning semantic modeling, cognitive systems, robotic interaction, and industrial intelligence."
+    kickerKey="page.research.kicker"
+    titleKey="page.research.title"
+    summaryKey="page.research.summary"
   />
 
   <section class="dual-panel-grid">
     <section class="glass-panel glass-panel-dark">
-      <p class="section-label">Research focus</p>
-      <h2>Focused research challenges</h2>
+      <p class="section-label" data-i18n="research.focus.kicker">Research focus</p>
+      <h2 data-i18n="research.focus.title">Focused research challenges</h2>
       <ul class="feature-list">
         {focusResearch.map((item) => (
           <li>{item}</li>
@@ -23,8 +26,8 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
     </section>
 
     <section class="glass-panel glass-panel-dark">
-      <p class="section-label">Research background</p>
-      <h2>Background research challenges</h2>
+      <p class="section-label" data-i18n="research.background.kicker">Research background</p>
+      <h2 data-i18n="research.background.title">Background research challenges</h2>
       <ul class="feature-list">
         {backgroundResearch.map((item) => (
           <li>{item}</li>
@@ -43,7 +46,7 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
             <li>{item}</li>
           ))}
         </ul>
-        <a class="text-link" href={`/research/${area.slug}`}>Open topic page</a>
+        <a class="text-link" href={`/research/${area.slug}`} data-i18n="common.openTopicPage">Open topic page</a>
       </article>
     ))}
   </section>

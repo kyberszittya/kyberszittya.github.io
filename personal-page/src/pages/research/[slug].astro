@@ -14,12 +14,12 @@ const { area } = Astro.props;
 ---
 
 <BaseLayout title={`${area.title} | Research | Kyberszittya`}>
-  <PageIntro kicker="Research topic" title={area.title} summary={area.description} />
+  <PageIntro kicker="Research topic" title={area.title} summary={area.description} kickerKey="page.researchTopic.kicker" />
 
   <section class="card-grid-wide">
     <section class="info-card">
-      <h2>Overview</h2>
-      <p>
+      <h2 data-i18n="page.researchTopic.overview">Overview</h2>
+      <p data-i18n="page.researchTopic.overviewBody">
         {area.title} represents one of the active directions in this research portfolio. This page is designed as a
         dedicated space for future project descriptions, publication lists, methods, and collaborations related to the
         topic.
@@ -28,13 +28,13 @@ const { area } = Astro.props;
     </section>
 
     <section class="info-card">
-      <h2>Current focus</h2>
+      <h2 data-i18n="page.researchTopic.currentFocus">Current focus</h2>
       <ul class="feature-list feature-list-light">
         {area.highlights.map((item) => (
           <li>{item}</li>
         ))}
       </ul>
-      <a class="text-link" href="/research">Back to all research themes</a>
+      <a class="text-link" href="/research" data-i18n="page.researchTopic.back">Back to all research themes</a>
     </section>
   </section>
 </BaseLayout>

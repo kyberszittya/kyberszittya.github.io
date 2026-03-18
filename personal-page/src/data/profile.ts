@@ -4,14 +4,15 @@ export const hero = {
   role: 'Assistant Lecturer & Researcher',
   tagline: 'Researcher in Cognitive Systems, Artificial Intelligence and Robotics',
   summary:
-    'I build semantic, cognitive, and robotic systems that connect formal models with real-world autonomous behavior.',
+    'I build semantic, cognitive, and robotic systems that connect formal models with real-world autonomous behavior based on hypergraph models.',
   intro: [
     'Welcome to my personal page. My work focuses on cognitive systems, artificial intelligence, and robotics, with a strong emphasis on hypergraph-based semantic models and their use in autonomous platforms.',
     'I am currently an Assistant Lecturer at Szechenyi Istvan University and a Researcher at Obuda University in Hungary. My interests span advanced cognitive models, intelligent robotic systems, and the specification-driven analysis of complex environments.',
     'This site brings together my research directions, education activities, supervised students, and selected creative interests in one place.',
   ],
   stats: [
-    { value: '10+', label: 'research themes' },
+    { value: '211', label: 'citations' },
+    { value: '7', label: 'h-index' },
     { value: '2', label: 'active affiliations' },
     { value: 'AI + Robotics', label: 'core domain' },
   ],
@@ -111,6 +112,11 @@ export const overviewLinks = [
     description: 'Academic background, affiliations, publications, and technical profile.',
   },
   {
+    label: 'Dissertation',
+    href: '/dissertation',
+    description: 'Doctoral thesis overview, research framing, and core contribution highlights.',
+  },
+  {
     label: 'Research',
     href: '/research',
     description: 'Themes, focus areas, and dedicated subpages for each research direction.',
@@ -193,12 +199,96 @@ export const scholarProfile = {
   href: 'https://scholar.google.com/citations?user=QdCAR8MAAAAJ&hl=hu',
 };
 
+export const dissertation = {
+  title: 'Hypergraph-Based Semantic Models in Cognitive and Robotic Systems',
+  degree: 'PhD dissertation',
+  institution: 'Szechenyi Istvan University, Multidisciplinary Doctoral School of Engineering',
+  evaluation: 'Excellent (Summa Cum Laude)',
+  summary:
+    'A dissertation centered on hypergraph-based semantic modeling for cognitive systems and robotics, connecting formal structure, knowledge representation, and autonomous behavior.',
+  highlights: [
+    'Hypergraph-based semantic representations for cognitive and robotic systems',
+    'Bridging formal models with embodied autonomous behavior',
+    'Specification-oriented interpretation of complex environments and agent actions',
+  ],
+};
+
+export const socialLinks = [
+  {
+    label: 'GitHub',
+    value: 'kyberszittya',
+    href: 'https://github.com/kyberszittya',
+  },
+  {
+    label: 'Twitter/X',
+    value: '@kyberszittya',
+    href: 'https://x.com/kyberszittya',
+  },
+  {
+    label: 'ResearchGate',
+    value: 'Csaba Hajdu',
+    href: 'https://www.researchgate.net/profile/Csaba-Hajdu?ev=hdr_xprf',
+  },
+  {
+    label: 'Facebook',
+    value: 'kyberszittya',
+    href: 'https://www.facebook.com/kyberszittya/',
+  },
+  {
+    label: 'ORCID',
+    value: '0000-0002-1058-7525',
+    href: 'https://orcid.org/0000-0002-1058-7525',
+  },
+  {
+    label: 'Google Scholar',
+    value: 'Scholar profile',
+    href: 'https://scholar.google.com/citations?user=QdCAR8MAAAAJ',
+  },
+];
+
+export const scholarMetrics = {
+  citations: {
+    all: 211,
+    since2021: 198,
+  },
+  hIndex: {
+    all: 7,
+    since2021: 7,
+  },
+  i10Index: {
+    all: 5,
+    since2021: 5,
+  },
+  note: 'Metrics provided manually from the Google Scholar profile.',
+  sourceLabel: 'Google Scholar profile',
+  sourceHref: 'https://scholar.google.com/citations?user=QdCAR8MAAAAJ',
+};
+
+export const emailContacts = [
+  {
+    label: 'Szechenyi Istvan University',
+    value: 'hajdu.csaba@ga.sze.hu',
+    href: 'mailto:hajdu.csaba@ga.sze.hu',
+  },
+  {
+    label: 'Obuda University',
+    value: 'hajdu.csaba@uni-obuda.hu',
+    href: 'mailto:hajdu.csaba@uni-obuda.hu',
+  },
+];
+
 export const skills = [
   'ROS & ROS2',
   'Gazebo & LGSVL',
   'DDS (Connext/FastRTPS)',
+  'IceOryx',
   'FreeRTOS & Arduino',
   'Neural Networks & RL',
+  'PyTorch & TensorFlow',
+  'Python', 'C++', 'Java', 'C#',
+  'Unity',
+  'Rust', 'Next.js',
+  'Docker', 'Robotic systems',
   'Verification & Validation',
   'Model-Based Systems Engineering',
   'UML & SysML',
@@ -220,7 +310,6 @@ export const arts = {
 };
 
 export const contact = [
-  { label: 'Research collaborations', value: 'Available for joint academic and applied research projects.' },
-  { label: 'Teaching and mentoring', value: 'Open to course development, supervision, and invited lectures.' },
-  { label: 'General inquiries', value: 'Use this section to add email, office, or social links later.' },
+  { label: 'Research collaborations', value: 'Available for joint academic and applied research projects.' },  
+  { label: 'General inquiries', value: 'Reach out through the platforms below for academic, professional, or creative conversations.' },
 ];

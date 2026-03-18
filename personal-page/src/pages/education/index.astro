@@ -9,11 +9,14 @@ import { education } from '../../data/profile';
     kicker="Education"
     title="Teaching, lectures, and supervision"
     summary="An overview of academic background, lecture materials, and supervised student work."
+    kickerKey="page.education.kicker"
+    titleKey="page.education.title"
+    summaryKey="page.education.summary"
   />
 
   <section class="card-grid-wide">
     <section class="info-card">
-      <h2>Academic background</h2>
+      <h2 data-i18n="page.cv.academicBackground">Academic background</h2>
       <div class="stack-list">
         {education.degrees.map((degree) => (
           <article class="stack-item">
@@ -28,13 +31,13 @@ import { education } from '../../data/profile';
     </section>
 
     <section class="info-card">
-      <h2>Lectures</h2>
+      <h2 data-i18n="page.education.lectures">Lectures</h2>
       <div class="stack-list">
         {education.lectures.map((lecture) => (
           <article class="stack-item">
             <strong>{lecture.title}</strong>
             <p>{lecture.description}</p>
-            <a class="text-link" href={lecture.href}>Open lecture materials</a>
+            <a class="text-link" href={lecture.href} data-i18n="page.education.openLectures">Open lecture materials</a>
           </article>
         ))}
       </div>
@@ -42,8 +45,8 @@ import { education } from '../../data/profile';
   </section>
 
   <section class="info-card">
-    <h2>Finished students</h2>
-    <p>This area can grow into a fuller supervision archive as more project details are added.</p>
-    <a class="text-link" href="/education/students">Open finished students</a>
+    <h2 data-i18n="page.education.finishedStudents">Finished students</h2>
+    <p data-i18n="page.education.finishedStudents.summary">This area can grow into a fuller supervision archive as more project details are added.</p>
+    <a class="text-link" href="/education/students" data-i18n="page.education.openFinishedStudents">Open finished students</a>
   </section>
 </BaseLayout>

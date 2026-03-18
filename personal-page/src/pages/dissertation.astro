@@ -1,0 +1,36 @@
+---
+import PageIntro from '../components/PageIntro.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { dissertation } from '../data/profile';
+---
+
+<BaseLayout title="Dissertation | Kyberszittya">
+  <PageIntro
+    kicker="Dissertation"
+    title={dissertation.title}
+    summary={dissertation.summary}
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Overview</h2>
+      <div class="stack-list compact">
+        <article class="stack-item">
+          <strong>{dissertation.degree}</strong>
+          <span>{dissertation.institution}</span>
+          <span>{dissertation.evaluation}</span>
+        </article>
+      </div>
+      <p>{dissertation.summary}</p>
+    </section>
+
+    <section class="info-card">
+      <h2>Core highlights</h2>
+      <ul class="feature-list feature-list-light">
+        {dissertation.highlights.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+  </section>
+</BaseLayout>

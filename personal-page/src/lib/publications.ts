@@ -14,6 +14,8 @@ export type Publication = {
   organization?: string;
   volume?: string;
   number?: string;
+  externalUrl: string;
+  externalLabel: string;
 };
 
 function stripOuterDelimiters(value: string) {
@@ -81,12 +83,20 @@ export function getPublications(): Publication[] {
     if (trimmed === '}') {
       const yearValue = current.fields.year ? Number.parseInt(stripOuterDelimiters(current.fields.year), 10) : null;
       const venueField = current.fields.journal ?? current.fields.booktitle ?? '';
+      const title = stripOuterDelimiters(current.fields.title ?? current.key);
+      const doi = current.fields.doi ? stripOuterDelimiters(current.fields.doi) : '';
+      const url = current.fields.url ? stripOuterDelimiters(current.fields.url) : '';
+      const externalUrl =
+        url ||
+        (doi ? `https://doi.org/${doi.replace(/^https?:\/\/doi\.org\//i, '')}` : '') ||
+        `https://scholar.google.com/scholar?q=${encodeURIComponent(title)}`;
+      const externalLabel = url ? 'Article link' : doi ? 'DOI' : 'Google Scholar search';
 
       publications.push({
         key: current.key,
         slug: makeSlug(current.key),
         type: current.type,
-        title: stripOuterDelimiters(current.fields.title ?? current.key),
+        title,
         authors: parseAuthors(current.fields.author ?? ''),
         year: Number.isNaN(yearValue ?? NaN) ? null : yearValue,
         venue: stripOuterDelimiters(venueField),
@@ -95,6 +105,8 @@ export function getPublications(): Publication[] {
         organization: current.fields.organization ? stripOuterDelimiters(current.fields.organization) : undefined,
         volume: current.fields.volume ? stripOuterDelimiters(current.fields.volume) : undefined,
         number: current.fields.number ? stripOuterDelimiters(current.fields.number) : undefined,
+        externalUrl,
+        externalLabel,
       });
 
       current = undefined;

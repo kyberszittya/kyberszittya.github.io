@@ -9,16 +9,19 @@ import { arts } from '../data/profile';
     kicker="Arts"
     title="Visual and conceptual interests"
     summary="A space for cyberpunk visual language, robotics-inspired concepts, and future interdisciplinary art material."
+    kickerKey="page.arts.kicker"
+    titleKey="page.arts.title"
+    summaryKey="page.arts.summary"
   />
 
   <section class="card-grid-wide">
     <section class="info-card">
-      <h2>Overview</h2>
+      <h2 data-i18n="page.arts.overview">Overview</h2>
       <p>{arts.summary}</p>
     </section>
 
     <section class="info-card">
-      <h2>Highlights</h2>
+      <h2 data-i18n="page.arts.highlights">Highlights</h2>
       <ul class="feature-list feature-list-light">
         {arts.highlights.map((item) => (
           <li>{item}</li>

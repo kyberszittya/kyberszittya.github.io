@@ -1,12 +1,15 @@
 ---
 import '../styles/global.css';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import MandelbrotBackground from '../components/MandelbrotBackground.astro';
 import NavMenu from '../components/NavMenu.astro';
+import { defaultLanguage, translations } from '../data/i18n';
 import { navigation } from '../data/navigation';
 
 const { title = 'My Portfolio & Lectures' } = Astro.props;
+const translationsJson = JSON.stringify(translations);
 ---
-<html lang="en">
+<html lang={defaultLanguage}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -15,6 +18,8 @@ const { title = 'My Portfolio & Lectures' } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="site-shell">
+    <div class="page-hue-shift page-hue-shift-blue" aria-hidden="true"></div>
+    <div class="page-hue-shift page-hue-shift-violet" aria-hidden="true"></div>
     <MandelbrotBackground />
     <div class="page-glow page-glow-left" aria-hidden="true"></div>
     <div class="page-glow page-glow-right" aria-hidden="true"></div>
@@ -22,8 +27,9 @@ const { title = 'My Portfolio & Lectures' } = Astro.props;
       <header class="topbar">
         <a href="/" class="site-mark">
           <span class="site-mark-kicker">Kyberszittya</span>
-          <span class="site-mark-title">Research and Robotics</span>
+          <span class="site-mark-title" data-i18n="site.title">Research and Robotics</span>
         </a>
+        <LanguageSwitcher />
         <NavMenu items={navigation} />
       </header>
       <main>
@@ -32,5 +38,37 @@ const { title = 'My Portfolio & Lectures' } = Astro.props;
     </div>
     <div class="page-grid" aria-hidden="true"></div>
     <div class="page-noise" aria-hidden="true"></div>
+    <script is:inline define:vars={{ translationsJson, defaultLanguage }}>
+      const translations = JSON.parse(translationsJson);
+      const storageKey = 'site-language';
+
+      const applyLanguage = (language) => {
+        const dictionary = translations[language] ?? translations[defaultLanguage];
+        document.documentElement.lang = language;
+
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (!key || !dictionary[key]) return;
+          node.textContent = dictionary[key];
+        });
+
+        document.querySelectorAll('[data-lang-button]').forEach((button) => {
+          const isActive = button.getAttribute('data-lang-button') === language;
+          button.classList.toggle('is-active', isActive);
+        });
+      };
+
+      const saved = localStorage.getItem(storageKey);
+      const initialLanguage = saved && translations[saved] ? saved : defaultLanguage;
+      applyLanguage(initialLanguage);
+
+      document.querySelectorAll('[data-lang-button]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const nextLanguage = button.getAttribute('data-lang-button') || defaultLanguage;
+          localStorage.setItem(storageKey, nextLanguage);
+          applyLanguage(nextLanguage);
+        });
+      });
+    </script>
   </body>
 </html>

@@ -13,7 +13,7 @@ const { items } = Astro.props;
     {items.map((item) => (
       <div class:list={['nav-item', item.children && 'has-children']}>
         <a class="nav-link" href={item.href ?? '#'}>
-          <span>{item.label}</span>
+          <span data-i18n={item.key}>{item.label}</span>
           {item.children && <span class="nav-caret" aria-hidden="true">+</span>}
         </a>
 
@@ -24,14 +24,14 @@ const { items } = Astro.props;
               {item.children.map((child) => (
                 <div class:list={['nav-subitem', child.children && 'has-children']}>
                   <a class="nav-sublink" href={child.href ?? '#'}>
-                    <span>{child.label}</span>
+                    <span data-i18n={child.key}>{child.label}</span>
                     {child.children && <span class="nav-caret" aria-hidden="true">+</span>}
                   </a>
 
                   {child.children && (
                     <div class="nav-subdropdown">
                       {child.children.map((grandchild) => (
-                        <a class="nav-sublink is-grandchild" href={grandchild.href ?? '#'}>
+                        <a class="nav-sublink is-grandchild" href={grandchild.href ?? '#'} data-i18n={grandchild.key}>
                           {grandchild.label}
                         </a>
                       ))}
@@ -50,32 +50,32 @@ const { items } = Astro.props;
     {items.map((item) =>
       item.children ? (
         <details class="nav-mobile-group">
-          <summary>{item.label}</summary>
+          <summary><span data-i18n={item.key}>{item.label}</span></summary>
           <div class="nav-mobile-panel">
             {item.href && (
-              <a class="nav-mobile-link" href={item.href}>
+              <a class="nav-mobile-link" href={item.href} data-i18n="nav.mobile.overview">
                 Overview
               </a>
             )}
             {item.children.map((child) =>
               child.children ? (
                 <details class="nav-mobile-nested">
-                  <summary>{child.label}</summary>
+                  <summary><span data-i18n={child.key}>{child.label}</span></summary>
                   <div class="nav-mobile-panel nested">
                     {child.href && (
-                      <a class="nav-mobile-link" href={child.href}>
+                      <a class="nav-mobile-link" href={child.href} data-i18n="nav.mobile.overview">
                         Overview
                       </a>
                     )}
                     {child.children.map((grandchild) => (
-                      <a class="nav-mobile-link" href={grandchild.href ?? '#'}>
+                      <a class="nav-mobile-link" href={grandchild.href ?? '#'} data-i18n={grandchild.key}>
                         {grandchild.label}
                       </a>
                     ))}
                   </div>
                 </details>
               ) : (
-                <a class="nav-mobile-link" href={child.href ?? '#'}>
+                <a class="nav-mobile-link" href={child.href ?? '#'} data-i18n={child.key}>
                   {child.label}
                 </a>
               ),
@@ -83,7 +83,7 @@ const { items } = Astro.props;
           </div>
         </details>
       ) : (
-        <a class="nav-mobile-link standalone" href={item.href ?? '#'}>
+        <a class="nav-mobile-link standalone" href={item.href ?? '#'} data-i18n={item.key}>
           {item.label}
         </a>
       ),

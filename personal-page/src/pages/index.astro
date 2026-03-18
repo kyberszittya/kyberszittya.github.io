@@ -1,7 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { hero, overviewLinks, researchAreas } from '../data/profile';
----
+import { dissertation, emailContacts, hero, overviewLinks, researchAreas, scholarMetrics, socialLinks } from '../data/profile';
+
+const heroSocialLinks = socialLinks.filter((item) =>
+  ['GitHub', 'Twitter/X', 'Google Scholar', 'ResearchGate', 'ORCID'].includes(item.label),
+);
+--- 
 
 <BaseLayout title="Kyberszittya | Researcher & Engineer">
   <section class="hero-panel">
@@ -10,11 +14,24 @@ import { hero, overviewLinks, researchAreas } from '../data/profile';
       <h1 class="hero-title">{hero.name}</h1>
       <p class="hero-role">{hero.role}</p>
       <p class="hero-tagline">{hero.tagline}</p>
-      <p class="hero-summary">{hero.summary}</p>
+      <p class="hero-summary" data-i18n="home.hero.summary">{hero.summary}</p>
 
       <div class="hero-actions">
-        <a href="/research" class="button-primary">Explore research</a>
-        <a href="/contact" class="button-secondary">Get in touch</a>
+        <a href="/research" class="button-primary" data-i18n="home.hero.ctaResearch">Explore research</a>
+        <a href="/contact" class="button-secondary" data-i18n="home.hero.ctaContact">Get in touch</a>
+      </div>
+
+      <div class="hero-social-strip">
+        {heroSocialLinks.map((item) => (
+          <a class="hero-social-link" href={item.href} target="_blank" rel="noreferrer" aria-label={item.label}>
+            {item.label === 'GitHub' && <span class="social-badge github" aria-hidden="true">GH</span>}
+            {item.label === 'Twitter/X' && <span class="social-badge x" aria-hidden="true">X</span>}
+            {item.label === 'ResearchGate' && <span class="social-badge researchgate" aria-hidden="true">RG</span>}
+            {item.label === 'Google Scholar' && <span class="social-badge scholar" aria-hidden="true">GS</span>}
+            {item.label === 'ORCID' && <span class="social-badge orcid" aria-hidden="true">ID</span>}
+            <span>{item.label}</span>
+          </a>
+        ))}
       </div>
     </div>
 
@@ -22,10 +39,10 @@ import { hero, overviewLinks, researchAreas } from '../data/profile';
       <div class="hero-orbit hero-orbit-one"></div>
       <div class="hero-orbit hero-orbit-two"></div>
       <div class="hero-card-stack">
-        {hero.stats.map((stat) => (
-          <div class="stat-card">
+        {hero.stats.map((stat, index) => (
+          <div class="stat-card" style={`--float-delay: ${index * 1.1}s; --float-distance: ${10 + index * 4}px;`}>
             <strong>{stat.value}</strong>
-            <span>{stat.label}</span>
+            <span data-i18n={['profile.stat.citations', 'profile.stat.hindex', 'profile.stat.affiliations', 'profile.stat.domain'][index]}>{stat.label}</span>
           </div>
         ))}
       </div>
@@ -35,15 +52,77 @@ import { hero, overviewLinks, researchAreas } from '../data/profile';
   <section class="section-block">
     <div class="section-surface">
       <div class="section-heading">
-        <p class="section-label">Overview</p>
-        <h2>Research, education, and creative directions</h2>
+        <p class="section-label" data-i18n="home.overview.kicker">Overview</p>
+        <h2 data-i18n="home.overview.title">Research, education, and creative directions</h2>
       </div>
       <div class="copy-grid">
-        {hero.intro.map((paragraph) => (
-          <p>{paragraph}</p>
+        {hero.intro.map((paragraph, index) => (
+          <p data-i18n={`home.intro.${index}`}>{paragraph}</p>
         ))}
       </div>
     </div>
+  </section>
+
+  <section class="card-grid-wide">
+    <article class="info-card">
+      <p class="section-label" data-i18n="home.contact.kicker">Main contact</p>
+      <h2 data-i18n="home.contact.title">University email addresses</h2>
+      <div class="stack-list compact">
+        {emailContacts.map((entry, index) => (
+          <article class="stack-item">
+            <strong data-i18n={index === 0 ? 'profile.email.sze' : 'profile.email.obuda'}>{entry.label}</strong>
+            <a class="text-link" href={entry.href}>{entry.value}</a>
+          </article>
+        ))}
+      </div>
+    </article>
+
+    <article class="info-card">
+      <p class="section-label" data-i18n="home.metrics.kicker">Scholar metrics</p>
+      <h2 data-i18n="home.metrics.title">Research visibility at a glance</h2>
+      <div class="stack-list compact">
+        <article class="stack-item">
+          <strong data-i18n="metrics.citations">Citations</strong>
+          <p data-i18n="metrics.citations.value">{scholarMetrics.citations.all} total, {scholarMetrics.citations.since2021} since 2021</p>
+        </article>
+        <article class="stack-item">
+          <strong data-i18n="metrics.hindex">h-index</strong>
+          <p data-i18n="metrics.hindex.value">{scholarMetrics.hIndex.all} total, {scholarMetrics.hIndex.since2021} since 2021</p>
+        </article>
+        <article class="stack-item">
+          <strong data-i18n="metrics.i10index">i10-index</strong>
+          <p data-i18n="metrics.i10index.value">{scholarMetrics.i10Index.all} total, {scholarMetrics.i10Index.since2021} since 2021</p>
+        </article>
+      </div>
+    </article>
+  </section>
+
+  <section class="card-grid-wide">
+    <article class="info-card">
+      <p class="section-label">Dissertation</p>
+      <h2>{dissertation.title}</h2>
+      <p>{dissertation.summary}</p>
+      <div class="stack-list compact">
+        <article class="stack-item">
+          <strong>{dissertation.degree}</strong>
+          <span>{dissertation.institution}</span>
+          <span>{dissertation.evaluation}</span>
+        </article>
+      </div>
+      <p>
+        <a class="text-link" href="/dissertation">Open dissertation overview</a>
+      </p>
+    </article>
+
+    <article class="info-card">
+      <p class="section-label">Academic reach</p>
+      <h2>Where to find my work</h2>
+      <div class="chip-row">
+        {heroSocialLinks.map((item) => (
+          <a class="chip chip-link" href={item.href} target="_blank" rel="noreferrer">{item.label}</a>
+        ))}
+      </div>
+    </article>
   </section>
 
   <section class="card-grid">
@@ -51,22 +130,22 @@ import { hero, overviewLinks, researchAreas } from '../data/profile';
       <article class="info-card">
         <h3>{item.label}</h3>
         <p>{item.description}</p>
-        <a class="text-link" href={item.href}>Open {item.label}</a>
+        <a class="text-link" href={item.href}><span data-i18n="common.open">Open</span> {item.label}</a>
       </article>
     ))}
   </section>
 
   <section class="section-block">
     <div class="section-heading section-heading-on-dark">
-      <p class="section-label">Research highlights</p>
-      <h2>Current topic pages</h2>
+      <p class="section-label" data-i18n="home.researchHighlights.kicker">Research highlights</p>
+      <h2 data-i18n="home.researchHighlights.title">Current topic pages</h2>
     </div>
     <div class="card-grid">
       {researchAreas.map((area) => (
         <article class="info-card">
           <h3>{area.title}</h3>
           <p>{area.description}</p>
-          <a class="text-link" href={`/research/${area.slug}`}>Open topic page</a>
+          <a class="text-link" href={`/research/${area.slug}`} data-i18n="common.openTopicPage">Open topic page</a>
         </article>
       ))}
     </div>

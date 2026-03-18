@@ -1,7 +1,31 @@
 ---
+import { getCollection } from 'astro:content';
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { education } from '../../data/profile';
+
+const students = await getCollection('students');
+
+const studentGroups = students.reduce(
+  (groups, student) => {
+    const [degree = 'other'] = student.id.split('/');
+    if (degree === 'bsc' || degree === 'msc') {
+      groups[degree].push(student);
+    }
+    return groups;
+  },
+  {
+    bsc: [] as typeof students,
+    msc: [] as typeof students,
+  },
+);
+
+for (const degree of ['bsc', 'msc'] as const) {
+  studentGroups[degree].sort((a, b) => {
+    const yearDiff = (b.data.graduationYear ?? 0) - (a.data.graduationYear ?? 0);
+    if (yearDiff !== 0) return yearDiff;
+    return a.data.name.localeCompare(b.data.name);
+  });
+}
 ---
 
 <BaseLayout title="Finished Students | Kyberszittya">
@@ -18,10 +42,13 @@ import { education } from '../../data/profile';
     <section class="info-card" id="bsc">
       <h2>BSc</h2>
       <div class="stack-list compact">
-        {education.students.bsc.map((student) => (
+        {studentGroups.bsc.map((student) => (
           <article class="stack-item">
-            <strong>{student.name}</strong>
-            <p>{student.topic}</p>
+            <strong>
+              <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
+            </strong>
+            <p>{student.data.researchTopic}</p>
+            {student.data.graduationYear && <span>Graduation year: {student.data.graduationYear}</span>}
           </article>
         ))}
       </div>
@@ -30,10 +57,13 @@ import { education } from '../../data/profile';
     <section class="info-card" id="msc">
       <h2>MSc</h2>
       <div class="stack-list compact">
-        {education.students.msc.map((student) => (
+        {studentGroups.msc.map((student) => (
           <article class="stack-item">
-            <strong>{student.name}</strong>
-            <p>{student.topic}</p>
+            <strong>
+              <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
+            </strong>
+            <p>{student.data.researchTopic}</p>
+            {student.data.graduationYear && <span>Graduation year: {student.data.graduationYear}</span>}
           </article>
         ))}
       </div>

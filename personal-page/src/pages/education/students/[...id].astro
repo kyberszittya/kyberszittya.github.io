@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageIntro from '../../../components/PageIntro.astro';
+
+export async function getStaticPaths() {
+  const students = await getCollection('students');
+  return students.map((student) => ({
+    params: { id: student.id },
+    props: { student },
+  }));
+}
+
+const { student } = Astro.props;
+const { Content } = await render(student);
+const [degree = 'Student', yearFolder = ''] = student.id.split('/');
+const degreeLabel = degree.toUpperCase();
+---
+
+<BaseLayout title={`${student.data.name} | Student`}>
+  <PageIntro
+    kicker="Education"
+    title={student.data.name}
+    summary={student.data.researchTopic}
+    kickerKey="page.students.kicker"
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2>Student overview</h2>
+      <div class="stack-list compact">
+        <article class="stack-item">
+          <strong>Degree</strong>
+          <span>{degreeLabel}</span>
+        </article>
+        {student.data.graduationYear && (
+          <article class="stack-item">
+            <strong>Graduation year</strong>
+            <span>{student.data.graduationYear}</span>
+          </article>
+        )}
+        {yearFolder && (
+          <article class="stack-item">
+            <strong>Folder year</strong>
+            <span>{yearFolder}</span>
+          </article>
+        )}
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h2>Topic summary</h2>
+      <p>{student.data.researchTopic}</p>
+      <a class="text-link" href="/education/students">Back to finished students</a>
+    </section>
+  </section>
+
+  <section class="info-card">
+    <h2>Notes</h2>
+    <div class="prose prose-invert max-w-none lecture-prose">
+      <Content />
+    </div>
+  </section>
+</BaseLayout>

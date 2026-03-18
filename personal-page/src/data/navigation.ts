@@ -35,6 +35,7 @@ export const navigation: NavItem[] = [
     description: 'Courses, mentoring, and student supervision',
     children: [
       { key: 'nav.education.lectures', label: 'Lectures', href: '/lectures' },
+      { key: 'nav.education.thesis-faq', label: 'Thesis FAQ', href: '/education/thesis-faq' },
       {
         key: 'nav.education.finished-students',
         label: 'Finished students',

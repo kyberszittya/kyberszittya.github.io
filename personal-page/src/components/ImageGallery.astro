@@ -2,46 +2,80 @@
 type GalleryImage = {
   src: string;
   alt: string;
+  type?: 'image' | 'pdf';
 };
 
 interface Props {
   title?: string;
   images: GalleryImage[];
+  className?: string;
+  maxRows?: number;
 }
 
-const { title, images } = Astro.props;
+const { title, images, className = '', maxRows } = Astro.props;
 const galleryId = `gallery-${Math.random().toString(36).slice(2, 10)}`;
+const galleryClasses = ['image-gallery', className, maxRows ? 'has-max-rows' : ''].filter(Boolean).join(' ');
+const galleryStyle = maxRows ? `--gallery-max-rows: ${maxRows};` : undefined;
 ---
 
 {images.length > 0 && (
-  <section class="image-gallery" id={galleryId}>
+  <section class={galleryClasses} id={galleryId} style={galleryStyle}>
     {title && <h2 class="section-subtitle">{title}</h2>}
-    <div class="image-gallery-grid">
-      {images.map((image, index) => (
-        <button
-          type="button"
-          class="image-gallery-thumb"
-          data-gallery-thumb
-          data-gallery-index={index}
-          aria-label={`Open image ${index + 1} of ${images.length}`}
-        >
-          <img src={image.src} alt={image.alt} class="image-gallery-photo" loading="lazy" />
+    <div class="image-gallery-rail">
+      {maxRows && (
+        <button type="button" class="image-gallery-rail-control is-prev" data-gallery-rail-prev aria-label="Scroll gallery left">
+          &#8249;
         </button>
-      ))}
+      )}
+      <div class="image-gallery-grid" data-gallery-grid>
+        {images.map((image, index) => (
+          <button
+            type="button"
+            class="image-gallery-thumb"
+            data-gallery-thumb
+            data-gallery-index={index}
+            aria-label={`Open image ${index + 1} of ${images.length}`}
+          >
+            {image.type === 'pdf' ? (
+              <div class="image-gallery-pdf-thumb">
+                <canvas
+                  class="image-gallery-pdf-canvas"
+                  data-pdf-preview
+                  data-pdf-src={image.src}
+                  data-pdf-alt={image.alt}
+                ></canvas>
+                <div class="image-gallery-pdf-overlay">
+                  <span class="image-gallery-pdf-badge">PDF</span>
+                  <strong>{image.alt}</strong>
+                  <span>Open poster preview</span>
+                </div>
+              </div>
+            ) : (
+              <img src={image.src} alt={image.alt} class="image-gallery-photo" loading="lazy" />
+            )}
+          </button>
+        ))}
+      </div>
+      {maxRows && (
+        <button type="button" class="image-gallery-rail-control is-next" data-gallery-rail-next aria-label="Scroll gallery right">
+          &#8250;
+        </button>
+      )}
     </div>
 
     <div class="image-gallery-lightbox" data-gallery-lightbox hidden>
       <button type="button" class="image-gallery-backdrop" data-gallery-close aria-label="Close gallery"></button>
       <div class="image-gallery-dialog" role="dialog" aria-modal="true" aria-label={title ?? 'Image gallery'}>
-        <button type="button" class="image-gallery-control is-close" data-gallery-close aria-label="Close gallery">×</button>
-        <button type="button" class="image-gallery-control is-prev" data-gallery-prev aria-label="Previous image">‹</button>
+        <button type="button" class="image-gallery-control is-close" data-gallery-close aria-label="Close gallery">&times;</button>
+        <button type="button" class="image-gallery-control is-prev" data-gallery-prev aria-label="Previous image">&#8249;</button>
         <figure class="image-gallery-figure">
           <img src="" alt="" class="image-gallery-active-image" data-gallery-active-image />
+          <iframe src="" title="" class="image-gallery-active-pdf" data-gallery-active-pdf></iframe>
           <figcaption class="image-gallery-caption">
             <span data-gallery-counter></span>
           </figcaption>
         </figure>
-        <button type="button" class="image-gallery-control is-next" data-gallery-next aria-label="Next image">›</button>
+        <button type="button" class="image-gallery-control is-next" data-gallery-next aria-label="Next image">&#8250;</button>
       </div>
     </div>
   </section>
@@ -54,22 +88,37 @@ const galleryId = `gallery-${Math.random().toString(36).slice(2, 10)}`;
 
     const items = images;
     const thumbs = Array.from(root.querySelectorAll('[data-gallery-thumb]'));
+    const grid = root.querySelector('[data-gallery-grid]');
     const lightbox = root.querySelector('[data-gallery-lightbox]');
     const activeImage = root.querySelector('[data-gallery-active-image]');
+    const activePdf = root.querySelector('[data-gallery-active-pdf]');
     const counter = root.querySelector('[data-gallery-counter]');
     const closeButtons = Array.from(root.querySelectorAll('[data-gallery-close]'));
     const prevButton = root.querySelector('[data-gallery-prev]');
     const nextButton = root.querySelector('[data-gallery-next]');
+    const railPrevButton = root.querySelector('[data-gallery-rail-prev]');
+    const railNextButton = root.querySelector('[data-gallery-rail-next]');
 
-    if (!lightbox || !activeImage || !counter || !prevButton || !nextButton) return;
+    if (!lightbox || !activeImage || !activePdf || !counter || !prevButton || !nextButton) return;
 
     let activeIndex = 0;
 
     const render = () => {
       const current = items[activeIndex];
       if (!current) return;
-      activeImage.setAttribute('src', current.src);
-      activeImage.setAttribute('alt', current.alt);
+      if (current.type === 'pdf') {
+        activeImage.setAttribute('hidden', '');
+        activeImage.removeAttribute('src');
+        activePdf.removeAttribute('hidden');
+        activePdf.setAttribute('src', `${current.src}#page=1&toolbar=0&navpanes=0&scrollbar=0&view=FitH&zoom=page-fit&pagemode=none`);
+        activePdf.setAttribute('title', current.alt);
+      } else {
+        activePdf.setAttribute('hidden', '');
+        activePdf.removeAttribute('src');
+        activeImage.removeAttribute('hidden');
+        activeImage.setAttribute('src', current.src);
+        activeImage.setAttribute('alt', current.alt);
+      }
       counter.textContent = `${activeIndex + 1} / ${items.length}`;
     };
 
@@ -105,5 +154,56 @@ const galleryId = `gallery-${Math.random().toString(36).slice(2, 10)}`;
     closeButtons.forEach((button) => button.addEventListener('click', close));
     prevButton.addEventListener('click', () => step(-1));
     nextButton.addEventListener('click', () => step(1));
+
+    const scrollRail = (direction) => {
+      if (!grid) return;
+      const amount = Math.max(grid.clientWidth * 0.82, 320);
+      grid.scrollBy({ left: amount * direction, behavior: 'smooth' });
+    };
+
+    railPrevButton?.addEventListener('click', () => scrollRail(-1));
+    railNextButton?.addEventListener('click', () => scrollRail(1));
   })();
+</script>
+
+<script type="module">
+  import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
+
+  const previews = Array.from(document.querySelectorAll('[data-pdf-preview]'));
+
+  for (const preview of previews) {
+    if (!(preview instanceof HTMLCanvasElement)) continue;
+    if (preview.dataset.rendered === 'true') continue;
+
+    const src = preview.dataset.pdfSrc;
+    if (!src) continue;
+
+    try {
+      const loadingTask = pdfjsLib.getDocument({
+        url: src,
+        disableWorker: true,
+      });
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1 });
+      const targetWidth = 420;
+      const scale = targetWidth / viewport.width;
+      const scaledViewport = page.getViewport({ scale });
+      const context = preview.getContext('2d');
+
+      if (!context) continue;
+
+      preview.width = Math.floor(scaledViewport.width);
+      preview.height = Math.floor(scaledViewport.height);
+
+      await page.render({
+        canvasContext: context,
+        viewport: scaledViewport,
+      }).promise;
+
+      preview.dataset.rendered = 'true';
+    } catch {
+      preview.dataset.rendered = 'error';
+    }
+  }
 </script>

@@ -31,8 +31,12 @@ const subjects = Array.from(new Set(lectures.map((lecture) => lecture.data.subje
   <section class="card-grid">
     {lectures.map((lecture) => (
       <article class="info-card">
-        <p class="section-label">{lecture.data.subject}</p>
-        <h2 style="font-size: 1.5rem;">{lecture.data.title}</h2>
+        <p class="section-label">
+          <a class="text-link lecture-card-link" href={`/lectures/${lecture.id}`}>{lecture.data.subject}</a>
+        </p>
+        <h2 style="font-size: 1.5rem;">
+          <a class="title-link lecture-card-title-link" href={`/lectures/${lecture.id}`}>{lecture.data.title}</a>
+        </h2>
         <p>{lecture.data.publishDate.toDateString()}</p>
         {(lecture.data.neptunCode || lecture.data.mascot) && (
           <div class="chip-row">

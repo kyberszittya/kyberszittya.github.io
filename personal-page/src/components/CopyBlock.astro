@@ -1,0 +1,44 @@
+---
+interface Props {
+  title?: string;
+  code: string;
+  language?: string;
+}
+
+const { title, code, language = 'text' } = Astro.props;
+const copyId = `copy-block-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<section class="copy-block" id={copyId}>
+  <div class="copy-block-header">
+    {title ? <h3 class="copy-block-title">{title}</h3> : <span class="copy-block-title">{language}</span>}
+    <button type="button" class="copy-block-button" data-copy-button>Copy</button>
+  </div>
+  <pre class={`copy-block-pre language-${language}`}><code data-copy-source>{code}</code></pre>
+</section>
+
+<script is:inline define:vars={{ copyId }}>
+  (() => {
+    const root = document.getElementById(copyId);
+    if (!root) return;
+    const button = root.querySelector('[data-copy-button]');
+    const source = root.querySelector('[data-copy-source]');
+    if (!button || !source) return;
+
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(source.textContent ?? '');
+        const previous = button.textContent;
+        button.textContent = 'Copied';
+        window.setTimeout(() => {
+          button.textContent = previous ?? 'Copy';
+        }, 1400);
+      } catch {
+        button.textContent = 'Copy failed';
+        window.setTimeout(() => {
+          button.textContent = 'Copy';
+        }, 1400);
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  images: string[];
+  className?: string;
+}
+
+const { images, className = '' } = Astro.props;
+const slideshowId = `slideshow-${Math.random().toString(36).slice(2, 10)}`;
+const duration = Math.max(images.length * 6, 12);
+---
+
+<section class={`background-slideshow ${className}`.trim()} id={slideshowId} style={`--slideshow-duration: ${duration}s; --slideshow-count: ${Math.max(images.length, 1)};`}>
+  <div class="background-slideshow-media" aria-hidden="true">
+    {images.map((image, index) => (
+      <div
+        class={`background-slideshow-layer${images.length <= 1 ? ' is-static' : ''}`}
+        style={`--slide-index: ${index}; background-image: linear-gradient(180deg, rgba(6, 11, 32, 0.26), rgba(7, 11, 32, 0.82)), url('${image}');`}
+      ></div>
+    ))}
+  </div>
+  <div class="background-slideshow-overlay">
+    <slot />
+  </div>
+</section>

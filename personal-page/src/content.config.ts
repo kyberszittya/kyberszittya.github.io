@@ -17,6 +17,7 @@ const lectures = defineCollection({
     subject: z.string(),
     publishDate: z.date(),
     neptunCode: z.string().optional(),
+    courseWebsite: z.string().url().optional(),
     tags: z.array(z.string()).optional(),
     subjectSummary: z.string().optional(),
     semesters: z.array(z.string()).optional(),
@@ -37,8 +38,21 @@ const students = defineCollection({
   schema: z.object({
     name: z.string(),
     researchTopic: z.string(),
+    graduationYear: z.number().int().optional(),
     active: z.boolean().default(true),
   })
 });
 
-export const collections = { blog, lectures, students };
+const experience = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/experience" }),
+  schema: z.object({
+    title: z.string(),
+    organization: z.string(),
+    period: z.string(),
+    startDate: z.date(),
+    current: z.boolean().default(false),
+    category: z.enum(['affiliation', 'experience']).default('affiliation'),
+  })
+});
+
+export const collections = { blog, lectures, students, experience };

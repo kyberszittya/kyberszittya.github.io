@@ -1,0 +1,59 @@
+---
+import PageIntro from '../../components/PageIntro.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Thesis FAQ | Kyberszittya">
+  <PageIntro
+    kicker="Education"
+    title="Thesis FAQ and key guidance"
+    summary="A short orientation page for thesis work, practical expectations, and the most important things to know before starting."
+    kickerKey="page.thesisFaq.kicker"
+    titleKey="page.thesisFaq.title"
+    summaryKey="page.thesisFaq.summary"
+  />
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2 data-i18n="page.thesisFaq.start">Before starting</h2>
+      <ul class="feature-list feature-list-light">
+        <li>Choose a topic that is narrow enough to finish well, but meaningful enough to demonstrate real engineering or research value.</li>
+        <li>Clarify the expected outcome early: literature review, prototype, experiment, software artifact, dataset, or system integration.</li>
+        <li>Agree on the language of the work and presentation in advance, especially if the topic is developed in both Hungarian and English contexts.</li>
+        <li>Start collecting references from the beginning so the final writing phase is not separated from the technical work.</li>
+      </ul>
+    </section>
+
+    <section class="info-card">
+      <h2 data-i18n="page.thesisFaq.workflow">Working together</h2>
+      <ul class="feature-list feature-list-light">
+        <li>Keep progress visible through short updates, versioned files, and clearly named milestones.</li>
+        <li>Bring partial drafts early. It is much easier to improve a rough chapter or prototype than to repair a full late-stage submission.</li>
+        <li>Document decisions, assumptions, and open questions while working, not only at the end.</li>
+        <li>When software is involved, keep the repository runnable and reproducible so evaluation and continuation stay straightforward.</li>
+      </ul>
+    </section>
+  </section>
+
+  <section class="card-grid-wide">
+    <section class="info-card">
+      <h2 data-i18n="page.thesisFaq.delivery">Deliverables and expectations</h2>
+      <ul class="feature-list feature-list-light">
+        <li>The written thesis should explain the problem, context, method, implementation, evaluation, and conclusions in a coherent structure.</li>
+        <li>Figures, tables, and experimental results should support the argument, not just decorate it.</li>
+        <li>Code, experiments, and references should be organized so another person can understand what was done and why.</li>
+        <li>A strong thesis shows both technical execution and reflective thinking about limitations, tradeoffs, and future work.</li>
+      </ul>
+    </section>
+
+    <section class="info-card">
+      <h2 data-i18n="page.thesisFaq.tips">Most important things to know</h2>
+      <ul class="feature-list feature-list-light">
+        <li>Do not leave writing to the final weeks. Write continuously alongside the implementation.</li>
+        <li>Make the scope realistic. A finished and well-evaluated smaller system is better than an oversized unfinished one.</li>
+        <li>Back up everything: text, code, figures, data, and notes.</li>
+        <li>Ask questions early when something is unclear. Small uncertainties tend to become large delays if they remain implicit.</li>
+      </ul>
+    </section>
+  </section>
+</BaseLayout>

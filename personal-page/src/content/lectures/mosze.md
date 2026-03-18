@@ -3,6 +3,7 @@ title: "Modern Szoftverfjlesztési Eszközök (MOSZE)"
 subject: "Modern Szoftverfjlesztési Eszközök (MOSZE)"
 publishDate: 2026-03-17
 neptunCode: "XXXXXX"
+courseWebsite: "https://sze-it-mosze.github.io/"
 subjectSummary: "Full subject materials for Modern Software Development Tools, including course-level topics, engineering workflows, and supporting notes."
 semesters: ["2025/26/II", "2025/26/I", "2024/25/I", "2023/24/I", "2022/23/I"]
 teachingLanguages: ["Hungarian"]
@@ -18,6 +19,8 @@ tags: ["Software development", "Virtualization", "Containerization", "CI/CD", "V
 
 # - Modern Szoftverfjlesztési Eszközök (MOSZE)
 This page contains the full subject materials for Modern Software Development Tools, including course-level topics, engineering workflows, and supporting notes. The subject is offered in Hungarian, covering a range of topics relevant to modern software development in the context of autonomous systems.
+
+Official course site: [sze-it-mosze.github.io](https://sze-it-mosze.github.io/)
 
 Themes
 - **Introduction**: Overview of modern software development tools and their importance in the context of autonomous systems.

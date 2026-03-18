@@ -1,0 +1,22 @@
+---
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+
+const iconMap: Record<string, { className: string; glyph: string }> = {
+  GitHub: { className: 'github', glyph: 'GH' },
+  'Twitter/X': { className: 'x', glyph: 'X' },
+  ResearchGate: { className: 'researchgate', glyph: 'RG' },
+  Facebook: { className: 'facebook', glyph: 'f' },
+  ORCID: { className: 'orcid', glyph: 'iD' },
+  'Google Scholar': { className: 'scholar', glyph: 'GS' },
+};
+
+const icon = iconMap[label] ?? { className: 'default', glyph: label.slice(0, 2).toUpperCase() };
+---
+
+<span class={`social-icon ${icon.className}`} aria-hidden="true">
+  <span>{icon.glyph}</span>
+</span>

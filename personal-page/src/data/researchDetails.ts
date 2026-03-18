@@ -51,9 +51,23 @@ export const researchDetails = {
       'Knowledge representation and many-to-many relational modeling without collapsing everything into pairwise graphs.',
       'Virtual reality, event detection, and multi-body simulation structures that benefit from directed hypergraph semantics.',
     ],
-    status: [
-      'Parser, scope resolution, IR lowering, hashing, tensor pipeline, engine, serialization, Python bindings, and IPC daemon are described as implemented components.',
-      'Query interpretation, domain transforms, structural entropy tooling, NURBS activation layers, and HyperKAN-oriented extensions are presented as designed next steps.',
+    currentSteps: [
+      'Parser, scope resolution, and deterministic IR lowering are already established as the compilation backbone.',
+      'Merkle hashing, canonical program identity, and serialization provide stable structural tracking and exchange.',
+      'Tensor generation pipelines, sparse formats, and message-passing-oriented computation are part of the current framework direction.',
+      'Python bindings and daemon-oriented IPC support integration with external computational workflows.',
+    ],
+    futureSteps: [
+      'Query interpretation and query-as-description workflows can extend HyMeKo into a richer structural retrieval engine.',
+      'Domain transforms for robotics, simulation, and neural architectures can turn compiled hypergraphs into downstream artifacts.',
+      'Structural entropy tooling can connect hypergraph change analysis with learning and model evaluation.',
+      'NURBS-based activation layers and HyperKAN-oriented architectures can build directly on the compiled hypergraph substrate.',
+    ],
+    repositories: [
+      { label: 'hymeko_framework_rust', href: 'https://github.com/kyberszittya/hymeko_framework_rust' },
+      { label: 'hymeko_python', href: 'https://github.com/kyberszittya/hymeko_python' },
+      { label: 'himeko_hypergraph', href: 'https://github.com/kyberszittya/himeko_hypergraph' },
+      { label: 'himeko_lang', href: 'https://github.com/kyberszittya/himeko_lang' },
     ],
     dissertationNote:
       'HyMeKo is closely connected to the dissertation, especially in the formal treatment of hypergraph description language design, semantic modeling, and tensor-oriented transformation.',

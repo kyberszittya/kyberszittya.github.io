@@ -1,10 +1,14 @@
 ---
+import { getCollection, render } from 'astro:content';
 import PageIntro from '../components/PageIntro.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { dissertation, education, experience, languages, scholarProfile, skills } from '../data/profile';
+import { dissertation, education, languages, scholarProfile, skills } from '../data/profile';
 import { getPublications } from '../lib/publications';
 
 const publications = getPublications().slice(0, 6);
+const experienceEntries = (await getCollection('experience')).sort(
+  (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime(),
+);
 ---
 
 <BaseLayout title="CV | Kyberszittya">
@@ -54,13 +58,21 @@ const publications = getPublications().slice(0, 6);
     <section class="info-card">
       <h2 data-i18n="page.cv.professionalAffiliations">Professional affiliations</h2>
       <div class="stack-list compact">
-        {experience.map((role) => (
-          <article class="stack-item">
-            <strong>{role.title}</strong>
-            <p>{role.org}</p>
-            <span>{role.period}</span>
-          </article>
-        ))}
+        {await Promise.all(
+          experienceEntries.map(async (role) => {
+            const { Content } = await render(role);
+            return (
+              <article class="stack-item">
+                <strong>{role.data.title}</strong>
+                <p>{role.data.organization}</p>
+                <span>{role.data.period}</span>
+                <div class="cv-entry-copy">
+                  <Content />
+                </div>
+              </article>
+            );
+          }),
+        )}
       </div>
     </section>
   </section>

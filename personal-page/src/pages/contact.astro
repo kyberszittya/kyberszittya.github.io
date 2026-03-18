@@ -1,6 +1,7 @@
 ---
 import PageIntro from '../components/PageIntro.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import { contact, emailContacts, scholarMetrics, socialLinks } from '../data/profile';
 ---
 
@@ -68,8 +69,7 @@ import { contact, emailContacts, scholarMetrics, socialLinks } from '../data/pro
         {socialLinks.map((item) => (
           <article class="stack-item">
             <strong class="social-heading">
-              {item.label === 'ResearchGate' && <span class="social-badge researchgate" aria-hidden="true">RG</span>}
-              {item.label === 'Google Scholar' && <span class="social-badge scholar" aria-hidden="true">GS</span>}
+              <SocialIcon label={item.label} />
               <span>{item.label}</span>
             </strong>
             <p>{item.value}</p>

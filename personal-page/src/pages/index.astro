@@ -40,7 +40,7 @@ const heroSocialLinks = socialLinks.filter((item) =>
       <div class="hero-orbit hero-orbit-two"></div>
       <div class="hero-card-stack">
         {hero.stats.map((stat, index) => (
-          <div class="stat-card" style={`--float-delay: ${index * 1.1}s; --float-distance: ${10 + index * 4}px;`}>
+          <div class={`stat-card stat-card-${index + 1}`}>
             <strong>{stat.value}</strong>
             <span data-i18n={['profile.stat.citations', 'profile.stat.hindex', 'profile.stat.affiliations', 'profile.stat.domain'][index]}>{stat.label}</span>
           </div>
@@ -112,6 +112,24 @@ const heroSocialLinks = socialLinks.filter((item) =>
       <p>
         <a class="text-link" href="/dissertation">Open dissertation overview</a>
       </p>
+    </article>
+
+    <article class="info-card">
+      <p class="section-label">Featured research</p>
+      <h2>HyMeKo</h2>
+      <p>
+        Hypergraph-based semantic modeling for representing knowledge, behavior, and cognitive structure across robotics and intelligent systems.
+      </p>
+      <div class="stack-list compact">
+        <article class="stack-item">
+          <strong>Research link</strong>
+          <a class="text-link" href="/research/hymeko">Open HyMeKo page</a>
+        </article>
+        <article class="stack-item">
+          <strong>Dissertation link</strong>
+          <a class="text-link" href="/dissertation">Open dissertation overview</a>
+        </article>
+      </div>
     </article>
 
     <article class="info-card">

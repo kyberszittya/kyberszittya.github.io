@@ -2,6 +2,9 @@
 title: "Mesterséges intelligencia (MI)"
 subject: "Mesterséges intelligencia (MI)"
 publishDate: 2026-03-17
+hostUniversity: "Széchenyi István University"
+hostDepartment: "Department of Informatics"
+degreeProgram: "Informatics BSc"
 subjectSummary: "Subject materials for Artificial Intelligence, including course-level topics, engineering workflows, and supporting notes."
 semesters: ["2025/26/II", "2024/25/II", "2023/24/II"]
 teachingLanguages: ["Hungarian"]

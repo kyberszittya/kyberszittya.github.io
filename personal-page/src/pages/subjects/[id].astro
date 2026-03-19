@@ -1,0 +1,143 @@
+---
+import { readdir } from 'node:fs/promises';
+import { extname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { getCollection, render } from 'astro:content';
+import BackgroundSlideshow from '../../components/BackgroundSlideshow.astro';
+import ImageGallery from '../../components/ImageGallery.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// 1. The Build Engine: Tells Astro which pages to generate
+export async function getStaticPaths() {
+  const subjectsCollection = await getCollection('subjects');
+  return subjectsCollection.map((subjectEntry) => ({
+    params: { id: subjectEntry.id },
+    props: { subjectEntry },
+  }));
+}
+
+// 2. The Renderer: Extracts the data for the current URL
+const { subjectEntry } = Astro.props;
+const { Content } = await render(subjectEntry);
+
+const publicRoot = fileURLToPath(new URL('../../../public', import.meta.url));
+let mascotGallery: string[] = [];
+let backgroundGallery: string[] = [];
+
+if (subjectEntry.data.mascot?.image) {
+  const publicDir = join(publicRoot, subjectEntry.data.mascot.image.replace(/^\//, '').split('/').slice(0, -1).join('/'));
+
+  try {
+    const files = await readdir(publicDir);
+    mascotGallery = files
+      .filter((file) => ['.png', '.jpg', '.jpeg', '.webp'].includes(extname(file).toLowerCase()))
+      .sort((a, b) => a.localeCompare(b))
+      .map((file) => `${subjectEntry.data.mascot?.image?.split('/').slice(0, -1).join('/')}/${file}`);
+  } catch {
+    mascotGallery = subjectEntry.data.mascot.image ? [subjectEntry.data.mascot.image] : [];
+  }
+}
+
+const backgroundDir = join(publicRoot, 'subjects', 'backgrounds', subjectEntry.id);
+
+try {
+  const files = await readdir(backgroundDir);
+  backgroundGallery = files
+    .filter((file) => ['.png', '.jpg', '.jpeg', '.webp'].includes(extname(file).toLowerCase()))
+    .sort((a, b) => a.localeCompare(b))
+    .map((file) => `/subjects/backgrounds/${subjectEntry.id}/${file}`);
+} catch {
+  backgroundGallery = [];
+}
+
+const mascotGalleryItems = mascotGallery.map((image, index) => ({
+  src: image,
+  alt: `${subjectEntry.data.mascot?.name ?? subjectEntry.data.subject} gallery image ${index + 1}`,
+}));
+---
+
+<BaseLayout title={subjectEntry.data.title}>
+  <article class="glass-panel glass-panel-dark lecture-article">
+    <BackgroundSlideshow images={backgroundGallery} className="lecture-showcase">
+      <header class="lecture-header lecture-header-on-showcase">
+        <h1 class="lecture-title">{subjectEntry.data.title}</h1>
+        <div class="lecture-meta-row">
+          <span><span data-i18n="page.lecture.subject">Subject:</span> <strong class="lecture-subject">{subjectEntry.data.subject}</strong></span>
+          <time class="lecture-date">{subjectEntry.data.publishDate.toDateString()}</time>
+        </div>
+        {(subjectEntry.data.neptunCode || subjectEntry.data.hostUniversity || subjectEntry.data.hostDepartment || subjectEntry.data.degreeProgram || subjectEntry.data.semesters || subjectEntry.data.teachingLanguages) && (
+          <div class="subject-info-stack">
+            {(subjectEntry.data.neptunCode || subjectEntry.data.hostUniversity || subjectEntry.data.hostDepartment) && (
+              <div class="subject-info-group">
+                <p class="subject-info-label">Subject information</p>
+                <div class="chip-row">
+                  {subjectEntry.data.neptunCode && <span class="chip chip-blue">Neptun: {subjectEntry.data.neptunCode}</span>}
+                  <span class="chip">{subjectEntry.data.hostUniversity}</span>
+                  <span class="chip">{subjectEntry.data.hostDepartment}</span>
+                </div>
+              </div>
+            )}
+            <div class="subject-info-group">
+              <p class="subject-info-label">Degree program</p>
+              <div class="chip-row">
+                <span class="chip chip-blue">{subjectEntry.data.degreeProgram}</span>
+              </div>
+            </div>
+            {subjectEntry.data.semesters && subjectEntry.data.semesters.length > 0 && (
+              <div class="subject-info-group">
+                <p class="subject-info-label">Semesters</p>
+                <div class="chip-row">
+                  {subjectEntry.data.semesters.map((semester) => (
+                    <span class="chip">{semester}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {subjectEntry.data.teachingLanguages && subjectEntry.data.teachingLanguages.length > 0 && (
+              <div class="subject-info-group">
+                <p class="subject-info-label">Teaching languages</p>
+                <div class="chip-row">
+                  {subjectEntry.data.teachingLanguages.map((language) => (
+                    <span class="chip">{language}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {subjectEntry.data.courseWebsite && (
+          <p class="lecture-course-website">
+            <a class="button-secondary" href={subjectEntry.data.courseWebsite} target="_blank" rel="noreferrer">
+              Open subject website
+            </a>
+          </p>
+        )}
+        {subjectEntry.data.mascot && (
+          <section class="mascot-card" style={subjectEntry.data.mascot.accent ? `--mascot-accent: ${subjectEntry.data.mascot.accent};` : undefined}>
+            {subjectEntry.data.mascot.image && (
+              <img
+                class="mascot-image"
+                src={subjectEntry.data.mascot.image}
+                alt={subjectEntry.data.mascot.name}
+                loading="lazy"
+              />
+            )}
+            <div class="mascot-badge" aria-hidden="true">
+              {subjectEntry.data.mascot.emoji ?? subjectEntry.data.mascot.shortLabel ?? subjectEntry.data.mascot.name.slice(0, 2).toUpperCase()}
+            </div>
+            <div class="mascot-copy">
+              <strong>{subjectEntry.data.mascot.name}</strong>
+              {subjectEntry.data.mascot.description && <p>{subjectEntry.data.mascot.description}</p>}
+            </div>
+          </section>
+        )}
+      </header>
+    </BackgroundSlideshow>
+    
+    <div class="prose prose-invert max-w-none lecture-prose">
+      <Content />
+    </div>
+
+    <ImageGallery title="Mascot gallery" images={mascotGalleryItems} />
+  </article>
+</BaseLayout>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { collectBannerImages } from '../lib/bannerImages';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import MandelbrotBackground from '../components/MandelbrotBackground.astro';
 import NavMenu from '../components/NavMenu.astro';
@@ -9,6 +10,7 @@ import { emailContacts, socialLinks } from '../data/profile';
 
 const { title = 'My Portfolio & Lectures' } = Astro.props;
 const translationsJson = JSON.stringify(translations);
+const bannerImages = await collectBannerImages(Astro.url.pathname);
 ---
 <html lang={defaultLanguage}>
   <head>
@@ -21,6 +23,16 @@ const translationsJson = JSON.stringify(translations);
   <body class="site-shell">
     <div class="page-hue-shift page-hue-shift-blue" aria-hidden="true"></div>
     <div class="page-hue-shift page-hue-shift-violet" aria-hidden="true"></div>
+    {bannerImages.length > 0 && (
+      <div class="page-banner-layer" aria-hidden="true">
+        {bannerImages.map((image, index) => (
+          <div
+            class={`page-banner-image${bannerImages.length <= 1 ? ' is-static' : ''}`}
+            style={`--slide-index: ${index}; --page-banner-count: ${Math.max(bannerImages.length, 1)}; background-image: linear-gradient(180deg, rgba(6, 11, 32, 0.28), rgba(7, 11, 32, 0.76)), url('${image}');`}
+          ></div>
+        ))}
+      </div>
+    )}
     <MandelbrotBackground />
     <div class="page-glow page-glow-left" aria-hidden="true"></div>
     <div class="page-glow page-glow-right" aria-hidden="true"></div>

@@ -4,44 +4,56 @@ import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { education } from '../../data/profile';
 
-const lectures = await getCollection('lectures');
+const subjectsCollection = await getCollection('subjects');
 
 const subjects = Array.from(
-  lectures
-    .reduce((map, lecture) => {
-      const current = map.get(lecture.data.subject);
-      const semesterLabels = lecture.data.semesters ?? [];
-      const languageLabels = lecture.data.teachingLanguages ?? education.teachingProfile.languages;
+  subjectsCollection
+    .reduce((map, subjectEntry) => {
+      const current = map.get(subjectEntry.data.subject);
+      const semesterLabels = subjectEntry.data.semesters ?? [];
+      const languageLabels = subjectEntry.data.teachingLanguages ?? education.teachingProfile.languages;
+      const hostUniversities = [subjectEntry.data.hostUniversity];
+      const hostDepartments = [subjectEntry.data.hostDepartment];
+      const degreePrograms = [subjectEntry.data.degreeProgram];
 
       if (!current) {
-        map.set(lecture.data.subject, {
-          title: lecture.data.subject,
+        map.set(subjectEntry.data.subject, {
+          title: subjectEntry.data.subject,
           description:
-            lecture.data.subjectSummary ??
-            `Subject materials and teaching notes for ${lecture.data.subject}.`,
+            subjectEntry.data.subjectSummary ??
+            `Subject materials and teaching notes for ${subjectEntry.data.subject}.`,
           semesters: semesterLabels,
           languages: languageLabels,
-          neptunCode: lecture.data.neptunCode,
-          mascot: lecture.data.mascot,
-          href: '/lectures',
+          hostUniversities,
+          hostDepartments,
+          degreePrograms,
+          neptunCode: subjectEntry.data.neptunCode,
+          mascot: subjectEntry.data.mascot,
+          href: '/subjects',
         });
         return map;
       }
 
       const mergedSemesters = Array.from(new Set([...current.semesters, ...semesterLabels]));
       const mergedLanguages = Array.from(new Set([...current.languages, ...languageLabels]));
+      const mergedHostUniversities = Array.from(new Set([...current.hostUniversities, ...hostUniversities]));
+      const mergedHostDepartments = Array.from(new Set([...current.hostDepartments, ...hostDepartments]));
+      const mergedDegreePrograms = Array.from(new Set([...current.degreePrograms, ...degreePrograms]));
 
-      map.set(lecture.data.subject, {
+      map.set(subjectEntry.data.subject, {
         ...current,
-        description: lecture.data.subjectSummary ?? current.description,
+        description: subjectEntry.data.subjectSummary ?? current.description,
         semesters: mergedSemesters,
         languages: mergedLanguages,
-        neptunCode: current.neptunCode ?? lecture.data.neptunCode,
-        mascot: current.mascot ?? lecture.data.mascot,
+        hostUniversities: mergedHostUniversities,
+        hostDepartments: mergedHostDepartments,
+        degreePrograms: mergedDegreePrograms,
+        neptunCode: current.neptunCode ?? subjectEntry.data.neptunCode,
+        mascot: current.mascot ?? subjectEntry.data.mascot,
       });
 
       return map;
-    }, new Map<string, { title: string; description: string; semesters: string[]; languages: string[]; neptunCode?: string; mascot?: { name: string; shortLabel?: string; description?: string; accent?: string; emoji?: string }; href: string }>())
+    }, new Map<string, { title: string; description: string; semesters: string[]; languages: string[]; hostUniversities: string[]; hostDepartments: string[]; degreePrograms: string[]; neptunCode?: string; mascot?: { name: string; shortLabel?: string; description?: string; accent?: string; emoji?: string }; href: string }>())
     .values(),
 ).sort((a, b) => a.title.localeCompare(b.title));
 ---
@@ -49,8 +61,8 @@ const subjects = Array.from(
 <BaseLayout title="Education | Kyberszittya">
   <PageIntro
     kicker="Education"
-    title="Teaching, lectures, and supervision"
-    summary="An overview of academic background, lecture materials, and supervised student work."
+    title="Teaching, subjects, and supervision"
+    summary="An overview of academic background, subject materials, and supervised student work."
     kickerKey="page.education.kicker"
     titleKey="page.education.title"
     summaryKey="page.education.summary"
@@ -108,21 +120,42 @@ const subjects = Array.from(
                 )}
               </div>
             )}
+            <div class="subject-info-group">
+              <p class="subject-info-label">Subject information</p>
+              <div class="chip-row">
+                {subject.hostUniversities.map((hostUniversity) => (
+                  <span class="chip">{hostUniversity}</span>
+                ))}
+                {subject.hostDepartments.map((hostDepartment) => (
+                  <span class="chip">{hostDepartment}</span>
+                ))}
+              </div>
+            </div>
+            <div class="subject-info-group">
+              <p class="subject-info-label">Degree program</p>
+              <div class="chip-row">
+                {subject.degreePrograms.map((degreeProgram) => (
+                  <span class="chip chip-blue">{degreeProgram}</span>
+                ))}
+              </div>
+            </div>
             {subject.semesters.length > 0 && (
-              <>
-                <p>Semesters</p>
+              <div class="subject-info-group">
+                <p class="subject-info-label">Semesters</p>
                 <div class="chip-row">
                   {subject.semesters.map((semester) => (
                     <span class="chip chip-blue">{semester}</span>
                   ))}
                 </div>
-              </>
+              </div>
             )}
-            <p>Teaching languages</p>
-            <div class="chip-row">
-              {subject.languages.map((language) => (
-                <span class="chip">{language}</span>
-              ))}
+            <div class="subject-info-group">
+              <p class="subject-info-label">Teaching languages</p>
+              <div class="chip-row">
+                {subject.languages.map((language) => (
+                  <span class="chip">{language}</span>
+                ))}
+              </div>
             </div>
             <a class="text-link" href={subject.href}>Open subject materials</a>
           </article>

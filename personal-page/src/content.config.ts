@@ -10,12 +10,15 @@ const blog = defineCollection({
   })
 });
 
-const lectures = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/lectures" }),
+const subjects = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/subjects" }),
   schema: z.object({
     title: z.string(),
     subject: z.string(),
     publishDate: z.date(),
+    hostUniversity: z.string(),
+    hostDepartment: z.string(),
+    degreeProgram: z.string(),
     neptunCode: z.string().optional(),
     courseWebsite: z.string().url().optional(),
     tags: z.array(z.string()).optional(),
@@ -75,4 +78,4 @@ const tdk = defineCollection({
   })
 });
 
-export const collections = { blog, lectures, students, experience, tdk };
+export const collections = { blog, subjects, students, experience, tdk };

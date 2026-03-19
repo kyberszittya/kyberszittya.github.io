@@ -2,6 +2,9 @@
 title: "Modern Szoftverfejlesztési Eszközök (MOSZE)"
 subject: "Modern Szoftverfejlesztési Eszközök (MOSZE)"
 publishDate: 2026-03-17
+hostUniversity: "Széchenyi István University"
+hostDepartment: "Department of Informatics"
+degreeProgram: "Informatics BSc"
 neptunCode: "XXXXXX"
 courseWebsite: "https://sze-it-mosze.github.io/"
 subjectSummary: "Full subject materials for Modern Software Development Tools, including course-level topics, engineering workflows, and supporting notes."
@@ -12,7 +15,7 @@ mascot:
   shortLabel: "MOSZEmese"
   description: "A cute looking djinn woman who performs everyday software technology tasks. Acts like an overworked but highly efficient enthusiastic software developer with some unknown magic or yet unknown tools added."
   accent: "#48BCE0"
-  image: "/lectures/mascots/mosze/mosze-mascot-01.png"
+  image: "/subjects/mascots/mosze/mosze-mascot-01.png"
   emoji: "🧞‍♀️"
 tags: ["Software development", "Virtualization", "Containerization", "CI/CD", "Version control", "Testing frameworks", "Monitoring tools", "Autonomous systems"]
 ---

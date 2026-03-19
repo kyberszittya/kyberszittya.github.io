@@ -1641,6 +1641,23 @@ body {
     radial-gradient(circle at top right, rgba(72, 188, 224, 0.08), transparent 30%);
 }
 
+.art-gallery-stack {
+  display: grid;
+  gap: var(--fib-5);
+}
+
+.art-gallery-section h2 {
+  margin: 0;
+  color: #f7fbff;
+}
+
+.art-gallery-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .subject-layout {
   display: grid;
   gap: var(--fib-5);

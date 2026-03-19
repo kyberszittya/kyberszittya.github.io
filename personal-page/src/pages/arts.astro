@@ -1,7 +1,12 @@
 ---
 import PageIntro from '../components/PageIntro.astro';
+import ImageGallery from '../components/ImageGallery.astro';
+import PageSectionNav from '../components/PageSectionNav.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { arts } from '../data/profile';
+import { getArtGalleryGroups } from '../lib/artGallery';
+
+const artGroups = getArtGalleryGroups();
 ---
 
 <BaseLayout title="Arts | Kyberszittya">
@@ -14,19 +19,66 @@ import { arts } from '../data/profile';
     summaryKey="page.arts.summary"
   />
 
-  <section class="card-grid-wide">
-    <section class="info-card">
-      <h2 data-i18n="page.arts.overview">Overview</h2>
-      <p>{arts.summary}</p>
-    </section>
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="Art collections"
+      ariaLabel="Art collection navigation"
+      entries={artGroups.map((group) => ({ href: `#${group.id}`, label: `${group.title} (${group.imageCount})` }))}
+    />
 
-    <section class="info-card">
-      <h2 data-i18n="page.arts.highlights">Highlights</h2>
-      <ul class="feature-list feature-list-light">
-        {arts.highlights.map((item) => (
-          <li>{item}</li>
+    <div class="page-multi-content">
+      <section class="card-grid-wide">
+        <section class="info-card">
+          <h2 data-i18n="page.arts.overview">Overview</h2>
+          <p>{arts.summary}</p>
+        </section>
+
+        <section class="info-card">
+          <h2 data-i18n="page.arts.highlights">Highlights</h2>
+          <ul class="feature-list feature-list-light">
+            {arts.highlights.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+      </section>
+
+      <section class="card-grid-wide">
+        <section class="info-card">
+          <h2>Gallery archive</h2>
+          <div class="stack-list compact">
+            <article class="stack-item">
+              <strong>{artGroups.length} collections</strong>
+              <p>Grouped directly from the `public/art` folder structure.</p>
+            </article>
+            <article class="stack-item">
+              <strong>{artGroups.reduce((sum, group) => sum + group.imageCount, 0)} images</strong>
+              <p>Available in the gallery lightbox and grouped by visual theme.</p>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <div class="art-gallery-stack">
+        {artGroups.map((group) => (
+          <section class="info-card art-gallery-section" id={group.id}>
+            <div class="art-gallery-header">
+              <div>
+                <p class="section-label">Collection</p>
+                <h2>{group.title}</h2>
+              </div>
+              <span class="chip chip-blue">{group.imageCount} pieces</span>
+            </div>
+            <div class="subject-card-divider" aria-hidden="true"></div>
+            <ImageGallery
+              title={`${group.title} gallery`}
+              images={group.images}
+              className="image-gallery-showcase image-gallery-page"
+              maxRows={2}
+            />
+          </section>
         ))}
-      </ul>
-    </section>
+      </div>
+    </div>
   </section>
 </BaseLayout>

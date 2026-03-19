@@ -5,6 +5,7 @@ import MandelbrotBackground from '../components/MandelbrotBackground.astro';
 import NavMenu from '../components/NavMenu.astro';
 import { defaultLanguage, translations } from '../data/i18n';
 import { navigation } from '../data/navigation';
+import { emailContacts, socialLinks } from '../data/profile';
 
 const { title = 'My Portfolio & Lectures' } = Astro.props;
 const translationsJson = JSON.stringify(translations);
@@ -35,6 +36,31 @@ const translationsJson = JSON.stringify(translations);
       <main>
         <slot />
       </main>
+      <footer class="site-footer">
+        <div class="site-footer-copy">
+          <p class="site-footer-kicker">Kyberszittya</p>
+          <p class="site-footer-title">Research, education, and cognitive robotics</p>
+          <p class="site-footer-text">
+            Semantic systems, hypergraph-based modeling, teaching materials, and academic collaboration.
+          </p>
+        </div>
+        <div class="site-footer-links">
+          <div class="site-footer-group">
+            <strong>Contact</strong>
+            {emailContacts.map((item) => (
+              <a class="site-footer-link" href={item.href}>{item.value}</a>
+            ))}
+          </div>
+          <div class="site-footer-group">
+            <strong>Profiles</strong>
+            {socialLinks
+              .filter((item) => ['GitHub', 'Google Scholar', 'ResearchGate', 'ORCID'].includes(item.label))
+              .map((item) => (
+                <a class="site-footer-link" href={item.href} target="_blank" rel="noreferrer">{item.label}</a>
+              ))}
+          </div>
+        </div>
+      </footer>
     </div>
     <div class="page-grid" aria-hidden="true"></div>
     <div class="page-noise" aria-hidden="true"></div>

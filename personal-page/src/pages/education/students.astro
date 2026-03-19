@@ -5,6 +5,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const students = await getCollection('students');
 
+const getStudentYear = (student: (typeof students)[number]) =>
+  String(student.data.graduationYear ?? student.id.split('/')[1] ?? 'unknown');
+
+const availableYears = Array.from(new Set(students.map(getStudentYear)))
+  .filter((year) => year !== 'unknown')
+  .sort((a, b) => Number(b) - Number(a));
+
 const studentGroups = students.reduce(
   (groups, student) => {
     const [degree = 'other'] = student.id.split('/');
@@ -38,12 +45,36 @@ for (const degree of ['bsc', 'msc'] as const) {
     summaryKey="page.students.summary"
   />
 
+  <section class="info-card student-filter-panel">
+    <div class="student-filter-header">
+      <div>
+        <p class="section-eyebrow" data-i18n="page.students.filter.kicker">Filter</p>
+        <h2 class="section-title" data-i18n="page.students.filter.title">Filter by year</h2>
+      </div>
+      <button type="button" class="chip-link student-filter-reset" data-student-filter-reset data-i18n="page.students.filter.reset">
+        Reset
+      </button>
+    </div>
+    <div class="student-filter-list" data-student-filter-controls>
+      {availableYears.map((year) => (
+        <label class="student-filter-chip">
+          <input type="checkbox" value={year} checked data-student-filter-checkbox />
+          <span>{year}</span>
+        </label>
+      ))}
+    </div>
+  </section>
+
   <section class="card-grid">
     <section class="info-card" id="bsc">
       <h2>BSc</h2>
-      <div class="stack-list compact">
+      <div class="stack-list compact" data-student-list>
         {studentGroups.bsc.map((student) => (
-          <article class:list={['stack-item', !student.data.active && 'graduated-card']}>
+          <article
+            class:list={['stack-item', !student.data.active && 'graduated-card']}
+            data-student-card
+            data-student-year={getStudentYear(student)}
+          >
             <strong>
               {!student.data.active && <span class="graduation-glyph" aria-hidden="true"></span>}
               <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
@@ -60,9 +91,13 @@ for (const degree of ['bsc', 'msc'] as const) {
 
     <section class="info-card" id="msc">
       <h2>MSc</h2>
-      <div class="stack-list compact">
+      <div class="stack-list compact" data-student-list>
         {studentGroups.msc.map((student) => (
-          <article class:list={['stack-item', !student.data.active && 'graduated-card']}>
+          <article
+            class:list={['stack-item', !student.data.active && 'graduated-card']}
+            data-student-card
+            data-student-year={getStudentYear(student)}
+          >
             <strong>
               {!student.data.active && <span class="graduation-glyph" aria-hidden="true"></span>}
               <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
@@ -77,4 +112,39 @@ for (const degree of ['bsc', 'msc'] as const) {
       </div>
     </section>
   </section>
+
+  <script is:inline>
+    const checkboxes = Array.from(document.querySelectorAll('[data-student-filter-checkbox]'));
+    const cards = Array.from(document.querySelectorAll('[data-student-card]'));
+    const resetButton = document.querySelector('[data-student-filter-reset]');
+
+    const applyStudentYearFilter = () => {
+      const activeYears = new Set(
+        checkboxes
+          .filter((checkbox) => checkbox instanceof HTMLInputElement && checkbox.checked)
+          .map((checkbox) => checkbox instanceof HTMLInputElement ? checkbox.value : ''),
+      );
+
+      cards.forEach((card) => {
+        if (!(card instanceof HTMLElement)) return;
+        const year = card.dataset.studentYear ?? '';
+        card.hidden = activeYears.size > 0 && !activeYears.has(year);
+      });
+    };
+
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', applyStudentYearFilter);
+    });
+
+    resetButton?.addEventListener('click', () => {
+      checkboxes.forEach((checkbox) => {
+        if (checkbox instanceof HTMLInputElement) {
+          checkbox.checked = true;
+        }
+      });
+      applyStudentYearFilter();
+    });
+
+    applyStudentYearFilter();
+  </script>
 </BaseLayout>

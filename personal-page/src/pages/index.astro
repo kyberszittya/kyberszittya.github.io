@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { dissertation, emailContacts, hero, overviewLinks, researchAreas, scholarMetrics, socialLinks } from '../data/profile';
 
 const students = await getCollection('students');
-const studentCount = students.length;
 const graduatedStudentCount = students.filter((student) => !student.data.active).length;
 const completedStudentCount = students.filter((student) => !student.data.active).length;
 const graduatedStudentPercentage = completedStudentCount > 0
@@ -21,10 +20,10 @@ const heroStats = [
   { value: '2', label: 'active affiliations', key: 'profile.stat.affiliations' },
   { value: 'AI + Robotics', label: 'core domain', key: 'profile.stat.domain' },
 ];
---- 
+---
 
 <BaseLayout title="Kyberszittya | Researcher & Engineer">
-  <section class="hero-panel">
+  <section class="hero-panel hero-panel-fibonacci">
     <div class="hero-copy">
       <p class="hero-kicker">{hero.handle}</p>
       <h1 class="hero-title">{hero.name}</h1>
@@ -52,6 +51,12 @@ const heroStats = [
     </div>
 
     <div class="hero-side">
+      <div class="hero-fibonacci-shell" aria-hidden="true">
+        <span class="hero-fibonacci-arc hero-fibonacci-arc-1"></span>
+        <span class="hero-fibonacci-arc hero-fibonacci-arc-2"></span>
+        <span class="hero-fibonacci-arc hero-fibonacci-arc-3"></span>
+        <span class="hero-fibonacci-arc hero-fibonacci-arc-4"></span>
+      </div>
       <div class="hero-orbit hero-orbit-one"></div>
       <div class="hero-orbit hero-orbit-two"></div>
       <div class="hero-card-stack">
@@ -65,13 +70,13 @@ const heroStats = [
     </div>
   </section>
 
-  <section class="section-block">
-    <div class="section-surface">
+  <section class="section-block section-row section-row-cyan">
+    <div class="section-surface section-surface-golden">
       <div class="section-heading">
         <p class="section-label" data-i18n="home.overview.kicker">Overview</p>
         <h2 data-i18n="home.overview.title">Research, education, and creative directions</h2>
       </div>
-      <div class="copy-grid">
+      <div class="copy-grid copy-grid-golden">
         {hero.intro.map((paragraph, index) => (
           <p data-i18n={`home.intro.${index}`}>{paragraph}</p>
         ))}
@@ -79,7 +84,7 @@ const heroStats = [
     </div>
   </section>
 
-  <section class="card-grid-wide">
+  <section class="card-grid-wide card-grid-golden card-grid-golden-wide section-row section-row-blue">
     <article class="info-card">
       <p class="section-label" data-i18n="home.contact.kicker">Main contact</p>
       <h2 data-i18n="home.contact.title">University email addresses</h2>
@@ -113,7 +118,7 @@ const heroStats = [
     </article>
   </section>
 
-  <section class="card-grid-wide">
+  <section class="card-grid-wide card-grid-golden card-grid-golden-wide section-row section-row-violet">
     <article class="info-card">
       <p class="section-label">Dissertation</p>
       <h2>{dissertation.title}</h2>
@@ -148,18 +153,26 @@ const heroStats = [
       </div>
     </article>
 
-    <article class="info-card">
-      <p class="section-label">Academic reach</p>
-      <h2>Where to find my work</h2>
-      <div class="chip-row">
+  </section>
+
+  <section class="floating-reach-band section-row section-row-magenta">
+    <article class="info-card info-card-hero-reach info-card-hero-reach-wide">
+      <div class="floating-reach-copy">
+        <p class="section-label">Academic reach</p>
+        <h2>Where to find my work</h2>
+        <p class="floating-reach-summary">
+          Profiles, code, citations, and academic presence collected in one place for quick access.
+        </p>
+      </div>
+      <div class="chip-row chip-row-large chip-row-dock">
         {heroSocialLinks.map((item) => (
-          <a class="chip chip-link" href={item.href} target="_blank" rel="noreferrer">{item.label}</a>
+          <a class="chip chip-link chip-link-large chip-link-dock" href={item.href} target="_blank" rel="noreferrer">{item.label}</a>
         ))}
       </div>
     </article>
   </section>
 
-  <section class="card-grid">
+  <section class="card-grid card-grid-golden section-row section-row-indigo">
     {overviewLinks.map((item) => (
       <article class="info-card">
         <h3>{item.label}</h3>
@@ -169,12 +182,12 @@ const heroStats = [
     ))}
   </section>
 
-  <section class="section-block">
+  <section class="section-block section-row section-row-cyan-soft">
     <div class="section-heading section-heading-on-dark">
       <p class="section-label" data-i18n="home.researchHighlights.kicker">Research highlights</p>
       <h2 data-i18n="home.researchHighlights.title">Current topic pages</h2>
     </div>
-    <div class="card-grid">
+    <div class="card-grid card-grid-golden">
       {researchAreas.map((area) => (
         <article class="info-card">
           <h3>{area.title}</h3>

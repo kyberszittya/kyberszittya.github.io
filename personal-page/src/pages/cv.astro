@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import PageSectionNav from '../components/PageSectionNav.astro';
 import PageIntro from '../components/PageIntro.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { dissertation, education, languages, scholarProfile, skills } from '../data/profile';
@@ -21,8 +22,22 @@ const experienceEntries = (await getCollection('experience')).sort(
     summaryKey="page.cv.summary"
   />
 
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="CV sections"
+      ariaLabel="CV section navigation"
+      entries={[
+        { href: '#cv-academic-background', label: 'Academic background' },
+        { href: '#cv-dissertation', label: 'Dissertation' },
+        { href: '#cv-professional-affiliations', label: 'Professional affiliations' },
+        { href: '#cv-selected-publications', label: 'Selected publications' },
+        { href: '#cv-technical-expertise', label: 'Technical expertise' },
+      ]}
+    />
+
+    <div class="page-multi-content">
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="cv-academic-background">
       <h2 data-i18n="page.cv.academicBackground">Academic background</h2>
       <div class="stack-list">
         {education.degrees.map((degree) => (
@@ -37,7 +52,7 @@ const experienceEntries = (await getCollection('experience')).sort(
       </div>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="cv-dissertation">
       <h2>Dissertation</h2>
       <div class="stack-list compact">
         <article class="stack-item">
@@ -55,7 +70,7 @@ const experienceEntries = (await getCollection('experience')).sort(
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="cv-professional-affiliations">
       <h2 data-i18n="page.cv.professionalAffiliations">Professional affiliations</h2>
       <div class="stack-list compact">
         {await Promise.all(
@@ -78,7 +93,7 @@ const experienceEntries = (await getCollection('experience')).sort(
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="cv-selected-publications">
       <h2 data-i18n="page.cv.selectedPublications">Selected publications</h2>
       <ul class="feature-list feature-list-light">
         {publications.map((item) => (
@@ -93,7 +108,7 @@ const experienceEntries = (await getCollection('experience')).sort(
       </p>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="cv-technical-expertise">
       <h2 data-i18n="page.cv.technicalExpertise">Technical expertise</h2>
       <div class="chip-row">
         {skills.map((skill) => (
@@ -107,5 +122,7 @@ const experienceEntries = (await getCollection('experience')).sort(
         ))}
       </div>
     </section>
+  </section>
+    </div>
   </section>
 </BaseLayout>

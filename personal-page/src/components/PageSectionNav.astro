@@ -1,0 +1,35 @@
+---
+type NavEntry = {
+  href: string;
+  label: string;
+};
+
+type Props = {
+  title: string;
+  kicker?: string;
+  ariaLabel: string;
+  entries: NavEntry[];
+  className?: string;
+};
+
+const {
+  title,
+  kicker = 'Navigate',
+  ariaLabel,
+  entries,
+  className = '',
+} = Astro.props;
+---
+
+<aside class:list={['info-card', 'page-section-nav', className]}>
+  <p class="page-section-nav-kicker">{kicker}</p>
+  <h2 class="page-section-nav-title">{title}</h2>
+  <div class="student-filter-divider page-section-nav-divider" aria-hidden="true"></div>
+  <nav aria-label={ariaLabel}>
+    <div class="page-section-nav-list">
+      {entries.map((entry) => (
+        <a class="page-section-nav-link" href={entry.href}>{entry.label}</a>
+      ))}
+    </div>
+  </nav>
+</aside>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageSectionNav from '../../components/PageSectionNav.astro';
 import { education } from '../../data/profile';
 
 const subjectsCollection = (await getCollection('subjects')).sort(
@@ -164,6 +165,11 @@ const groupedAvailableTags = (() => {
 
   return groups;
 })();
+
+const subjectNavItems = subjects.map((subject) => ({
+  id: `subject-${subject.id}`,
+  label: subject.title,
+}));
 ---
 
 <BaseLayout title="Subjects | Kyberszittya">
@@ -185,6 +191,13 @@ const groupedAvailableTags = (() => {
   </section>
 
   <section class="subject-layout">
+    <PageSectionNav
+      title="Subjects"
+      ariaLabel="Subject navigation"
+      entries={subjectNavItems.map((item) => ({ href: `#${item.id}`, label: item.label }))}
+      className="page-section-nav-subjects"
+    />
+
     <aside class="info-card student-filter-panel subject-filter-sidebar">
       <div class="student-filter-header">
         <div>
@@ -227,6 +240,7 @@ const groupedAvailableTags = (() => {
       {subjects.map((subject) => (
         <article
           class="info-card"
+          id={`subject-${subject.id}`}
           data-subject-card
           data-subject-tags={subject.tags.join('|')}
         >

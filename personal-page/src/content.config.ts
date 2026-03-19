@@ -38,6 +38,10 @@ const students = defineCollection({
   schema: z.object({
     name: z.string(),
     researchTopic: z.string(),
+    program: z.string().optional(),
+    startSemester: z.string().optional(),
+    endSemester: z.string().optional(),
+    note: z.string().optional(),
     graduationYear: z.number().int().optional(),
     active: z.boolean().default(true),
   })
@@ -55,4 +59,20 @@ const experience = defineCollection({
   })
 });
 
-export const collections = { blog, lectures, students, experience };
+const tdk = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/tdk" }),
+  schema: z.object({
+    title: z.string(),
+    studentName: z.string(),
+    placement: z.string(),
+    year: z.number().int(),
+    degree: z.enum(['bsc', 'msc']).optional(),
+    studentHref: z.string().optional(),
+    workTitle: z.string().optional(),
+    summary: z.string(),
+    sourceNote: z.string().optional(),
+    graduated: z.boolean().default(false),
+  })
+});
+
+export const collections = { blog, lectures, students, experience, tdk };

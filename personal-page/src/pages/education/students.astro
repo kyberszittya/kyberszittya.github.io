@@ -28,11 +28,11 @@ for (const degree of ['bsc', 'msc'] as const) {
 }
 ---
 
-<BaseLayout title="Finished Students | Kyberszittya">
+<BaseLayout title="Student Supervision | Kyberszittya">
   <PageIntro
     kicker="Education"
-    title="Finished students"
-    summary="A supervision overview for completed BSc and MSc student work."
+    title="Student supervision"
+    summary="An overview of supervised BSc and MSc student work, including active and graduated students."
     kickerKey="page.students.kicker"
     titleKey="page.students.title"
     summaryKey="page.students.summary"
@@ -43,12 +43,16 @@ for (const degree of ['bsc', 'msc'] as const) {
       <h2>BSc</h2>
       <div class="stack-list compact">
         {studentGroups.bsc.map((student) => (
-          <article class="stack-item">
+          <article class:list={['stack-item', !student.data.active && 'graduated-card']}>
             <strong>
+              {!student.data.active && <span class="graduation-glyph" aria-hidden="true"></span>}
               <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
             </strong>
             <p>{student.data.researchTopic}</p>
+            {student.data.program && <span>{student.data.program}</span>}
             {student.data.graduationYear && <span>Graduation year: {student.data.graduationYear}</span>}
+            {student.data.active && <span class="ongoing-label" data-i18n="student.status.ongoing">Ongoing</span>}
+            {!student.data.active && <span class="graduation-label" data-i18n="student.status.graduated">Graduated</span>}
           </article>
         ))}
       </div>
@@ -58,12 +62,16 @@ for (const degree of ['bsc', 'msc'] as const) {
       <h2>MSc</h2>
       <div class="stack-list compact">
         {studentGroups.msc.map((student) => (
-          <article class="stack-item">
+          <article class:list={['stack-item', !student.data.active && 'graduated-card']}>
             <strong>
+              {!student.data.active && <span class="graduation-glyph" aria-hidden="true"></span>}
               <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
             </strong>
             <p>{student.data.researchTopic}</p>
+            {student.data.program && <span>{student.data.program}</span>}
             {student.data.graduationYear && <span>Graduation year: {student.data.graduationYear}</span>}
+            {student.data.active && <span class="ongoing-label" data-i18n="student.status.ongoing">Ongoing</span>}
+            {!student.data.active && <span class="graduation-label" data-i18n="student.status.graduated">Graduated</span>}
           </article>
         ))}
       </div>

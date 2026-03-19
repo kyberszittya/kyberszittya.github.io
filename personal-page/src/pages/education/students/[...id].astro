@@ -26,13 +26,41 @@ const degreeLabel = degree.toUpperCase();
   />
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class:list={['info-card', !student.data.active && 'graduated-card']}>
       <h2>Student overview</h2>
       <div class="stack-list compact">
+        {!student.data.active && (
+          <article class="stack-item graduated-card">
+            <strong><span class="graduation-glyph" aria-hidden="true"></span><span data-i18n="student.status.graduated">Graduated</span></strong>
+          </article>
+        )}
+        {student.data.active && (
+          <article class="stack-item">
+            <strong><span class="ongoing-glyph" aria-hidden="true"></span><span data-i18n="student.status.ongoing">Ongoing</span></strong>
+          </article>
+        )}
         <article class="stack-item">
           <strong>Degree</strong>
           <span>{degreeLabel}</span>
         </article>
+        {student.data.program && (
+          <article class="stack-item">
+            <strong>Program</strong>
+            <span>{student.data.program}</span>
+          </article>
+        )}
+        {student.data.startSemester && (
+          <article class="stack-item">
+            <strong>Start semester</strong>
+            <span>{student.data.startSemester}</span>
+          </article>
+        )}
+        {student.data.endSemester && (
+          <article class="stack-item">
+            <strong>End semester</strong>
+            <span>{student.data.endSemester}</span>
+          </article>
+        )}
         {student.data.graduationYear && (
           <article class="stack-item">
             <strong>Graduation year</strong>
@@ -51,7 +79,8 @@ const degreeLabel = degree.toUpperCase();
     <section class="info-card">
       <h2>Topic summary</h2>
       <p>{student.data.researchTopic}</p>
-      <a class="text-link" href="/education/students">Back to finished students</a>
+      {student.data.note && <p><strong>Note:</strong> {student.data.note}</p>}
+      <a class="text-link" href="/education/students">Back to student supervision</a>
     </section>
   </section>
 

@@ -1,6 +1,6 @@
 ---
-title: "Modern Szoftverfjlesztési Eszközök (MOSZE)"
-subject: "Modern Szoftverfjlesztési Eszközök (MOSZE)"
+title: "Modern Szoftverfejlesztési Eszközök (MOSZE)"
+subject: "Modern Szoftverfejlesztési Eszközök (MOSZE)"
 publishDate: 2026-03-17
 neptunCode: "XXXXXX"
 courseWebsite: "https://sze-it-mosze.github.io/"
@@ -10,7 +10,7 @@ teachingLanguages: ["Hungarian"]
 mascot:
   name: "Mosz Emese"
   shortLabel: "MOSZEmese"
-  description: "A cute looking djinn woman who performs everyday software technology tasks."
+  description: "A cute looking djinn woman who performs everyday software technology tasks. Acts like an overworked but highly efficient enthusiastic software developer with some unknown magic or yet unknown tools added."
   accent: "#48BCE0"
   image: "/lectures/mascots/mosze/mosze-mascot-01.png"
   emoji: "🧞‍♀️"

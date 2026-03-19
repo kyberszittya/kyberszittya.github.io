@@ -607,6 +607,10 @@ body {
   animation-name: card-float-four;
 }
 
+.hero-card-stack .stat-card:nth-child(5) {
+  animation-name: card-float-five;
+}
+
 .stat-card strong {
   color: #ffffff;
   font-size: 1.35rem;
@@ -1205,6 +1209,60 @@ body {
   color: #f3f6ff;
 }
 
+.graduated-card {
+  border-color: rgba(72, 188, 224, 0.34);
+  background:
+    linear-gradient(135deg, rgba(72, 188, 224, 0.18), rgba(101, 72, 224, 0.24)),
+    rgba(13, 53, 102, 0.28);
+}
+
+.graduation-glyph {
+  display: inline-flex;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-right: 0.55rem;
+  background: linear-gradient(135deg, #48bce0, #984ae1);
+  transform: rotate(45deg);
+  border-radius: 0.12rem;
+  box-shadow: 0 0 16px rgba(72, 188, 224, 0.26);
+}
+
+.graduation-label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.32rem 0.7rem;
+  border: 1px solid rgba(72, 188, 224, 0.32);
+  border-radius: 999px;
+  background: rgba(72, 188, 224, 0.12);
+  color: #eef8ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.ongoing-glyph {
+  display: inline-flex;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-right: 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #48bce0, #488ce0);
+  box-shadow: 0 0 16px rgba(72, 140, 224, 0.24);
+}
+
+.ongoing-label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.32rem 0.7rem;
+  border: 1px solid rgba(72, 140, 224, 0.32);
+  border-radius: 999px;
+  background: rgba(72, 140, 224, 0.12);
+  color: #eef4ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
 .section-subtitle {
   margin: 1.5rem 0 0.9rem;
   color: #f3f6ff;
@@ -1452,6 +1510,17 @@ body {
 
   50% {
     transform: translate3d(0, -20px, 0);
+  }
+}
+
+@keyframes card-float-five {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -14px, 0);
   }
 }
 

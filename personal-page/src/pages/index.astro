@@ -1,10 +1,26 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { dissertation, emailContacts, hero, overviewLinks, researchAreas, scholarMetrics, socialLinks } from '../data/profile';
 
+const students = await getCollection('students');
+const studentCount = students.length;
+const graduatedStudentCount = students.filter((student) => !student.data.active).length;
+const completedStudentCount = students.filter((student) => !student.data.active).length;
+const graduatedStudentPercentage = completedStudentCount > 0
+  ? Math.round((graduatedStudentCount / completedStudentCount) * 100)
+  : 0;
 const heroSocialLinks = socialLinks.filter((item) =>
   ['GitHub', 'Twitter/X', 'Google Scholar', 'ResearchGate', 'ORCID'].includes(item.label),
 );
+
+const heroStats = [
+  { value: '211', label: 'citations', key: 'profile.stat.citations' },
+  { value: '7', label: 'h-index', key: 'profile.stat.hindex' },
+  { value: `${graduatedStudentCount} · ${graduatedStudentPercentage}%`, label: 'graduated students', key: 'profile.stat.graduatedStudents' },
+  { value: '2', label: 'active affiliations', key: 'profile.stat.affiliations' },
+  { value: 'AI + Robotics', label: 'core domain', key: 'profile.stat.domain' },
+];
 --- 
 
 <BaseLayout title="Kyberszittya | Researcher & Engineer">
@@ -39,10 +55,10 @@ const heroSocialLinks = socialLinks.filter((item) =>
       <div class="hero-orbit hero-orbit-one"></div>
       <div class="hero-orbit hero-orbit-two"></div>
       <div class="hero-card-stack">
-        {hero.stats.map((stat, index) => (
+        {heroStats.map((stat, index) => (
           <div class={`stat-card stat-card-${index + 1}`}>
             <strong>{stat.value}</strong>
-            <span data-i18n={['profile.stat.citations', 'profile.stat.hindex', 'profile.stat.affiliations', 'profile.stat.domain'][index]}>{stat.label}</span>
+            <span data-i18n={stat.key}>{stat.label}</span>
           </div>
         ))}
       </div>

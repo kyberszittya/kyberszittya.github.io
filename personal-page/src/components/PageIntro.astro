@@ -6,15 +6,49 @@ type Props = {
   kickerKey?: string;
   titleKey?: string;
   summaryKey?: string;
+  inlineKicker?: boolean;
+  className?: string;
+  sectionClassName?: string;
+  stats?: { value: string; label: string }[];
 };
 
-const { kicker, title, summary, kickerKey, titleKey, summaryKey } = Astro.props;
+const {
+  kicker,
+  title,
+  summary,
+  kickerKey,
+  titleKey,
+  summaryKey,
+  inlineKicker = false,
+  className = '',
+  sectionClassName = '',
+  stats = [],
+} = Astro.props;
 ---
 
-<section class="section-block">
-  <div class="page-intro section-surface">
-    <p class="section-label" data-i18n={kickerKey}>{kicker}</p>
-    <h1 class="page-title" data-i18n={titleKey}>{title}</h1>
+<section class:list={['section-block', sectionClassName]}>
+  <div class:list={['page-intro', 'section-surface', className]}>
+    {inlineKicker ? (
+      <div class="page-intro-heading-inline">
+        <p class="section-label page-intro-inline-kicker" data-i18n={kickerKey}>{kicker}</p>
+        <h1 class="page-title page-title-inline" data-i18n={titleKey}>{title}</h1>
+      </div>
+    ) : (
+      <>
+        <p class="section-label" data-i18n={kickerKey}>{kicker}</p>
+        <h1 class="page-title" data-i18n={titleKey}>{title}</h1>
+      </>
+    )}
     <p class="hero-summary" data-i18n={summaryKey}>{summary}</p>
+    {stats.length > 0 && (
+      <div class="page-intro-stats" aria-label="Page highlights">
+        {stats.map((item) => (
+          <article class="page-intro-stat">
+            <strong>{item.value}</strong>
+            <span>{item.label}</span>
+          </article>
+        ))}
+      </div>
+    )}
   </div>
 </section>

@@ -18,6 +18,14 @@ const totalArtImages = artGroups.reduce((sum, group) => sum + group.imageCount, 
     kickerKey="page.arts.kicker"
     titleKey="page.arts.title"
     summaryKey="page.arts.summary"
+    inlineKicker={true}
+    className="page-intro-translucent art-page-intro"
+    sectionClassName="page-intro-overlap-shell"
+    stats={[
+      { value: `${artGroups.length}`, label: 'collections' },
+      { value: `${totalArtImages}`, label: 'images' },
+      { value: `${arts.highlights.length}`, label: 'visual motifs' },
+    ]}
   />
 
   <section class="page-multi-layout art-page-layout">
@@ -64,13 +72,15 @@ const totalArtImages = artGroups.reduce((sum, group) => sum + group.imageCount, 
                   <div class="art-gallery-header">
                     <div>
                       <p class="section-label">Collection</p>
-                      <h2>{group.title}</h2>
+                      <h2 class="art-gallery-title-line">
+                        <span class="art-gallery-title-main">{group.title}</span>
+                        <span class="art-gallery-title-sub">gallery</span>
+                      </h2>
                     </div>
                     <span class="chip chip-blue">{group.imageCount} pieces</span>
                   </div>
                   <div class="subject-card-divider" aria-hidden="true"></div>
                   <ImageGallery
-                    title={`${group.title} gallery`}
                     images={group.images}
                     className="image-gallery-showcase image-gallery-page"
                   />

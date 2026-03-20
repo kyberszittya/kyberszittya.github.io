@@ -66,6 +66,12 @@ const subjects = Array.from(
     kickerKey="page.education.kicker"
     titleKey="page.education.title"
     summaryKey="page.education.summary"
+    inlineKicker={true}
+    stats={[
+      { value: `${education.degrees.length}`, label: 'degrees represented' },
+      { value: `${subjects.length}`, label: 'subjects' },
+      { value: `${education.teachingProfile.languages.length}`, label: 'teaching languages' },
+    ]}
   />
 
   <section class="card-grid-wide">

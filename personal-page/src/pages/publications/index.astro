@@ -20,10 +20,44 @@ const years = Object.keys(grouped).sort((a, b) => {
   return Number(b) - Number(a);
 });
 
-const publicationNavEntries = years.map((year) => ({
-  href: `#publication-year-${year.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-  label: year,
-}));
+const slugifyYear = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+const periodEntries = new Map<string, { order: number; entries: { href: string; label: string }[] }>();
+
+for (const year of years) {
+  const href = `#publication-year-${slugifyYear(year)}`;
+
+  if (year === 'Undated') {
+    periodEntries.set('Undated', {
+      order: -1,
+      entries: [{ href, label: year }],
+    });
+    continue;
+  }
+
+  const numericYear = Number(year);
+  const periodStart = Math.floor(numericYear / 5) * 5;
+  const periodEnd = periodStart + 4;
+  const periodLabel = `${periodStart}-${periodEnd}`;
+  const existing = periodEntries.get(periodLabel);
+
+  if (existing) {
+    existing.entries.push({ href, label: year });
+  } else {
+    periodEntries.set(periodLabel, {
+      order: periodStart,
+      entries: [{ href, label: year }],
+    });
+  }
+}
+
+const publicationNavGroups = Array.from(periodEntries.entries())
+  .sort((a, b) => b[1].order - a[1].order)
+  .map(([label, value], index) => ({
+    label,
+    entries: value.entries,
+    open: index === 0 || label === 'Undated',
+  }));
 ---
 
 <BaseLayout title="Publications | Kyberszittya">
@@ -34,16 +68,24 @@ const publicationNavEntries = years.map((year) => ({
     kickerKey="page.publications.kicker"
     titleKey="page.publications.title"
     summaryKey="page.publications.summary"
+    inlineKicker={true}
+    stats={[
+      { value: `${publications.length}`, label: 'entries loaded' },
+      { value: `${years.filter((year) => year !== 'Undated').length}`, label: 'dated years' },
+      { value: `${publicationNavGroups.length}`, label: 'archive periods' },
+    ]}
   />
 
-  <section class="page-multi-layout">
-    <PageSectionNav
-      title="Publication years"
-      ariaLabel="Publication year navigation"
-      entries={publicationNavEntries}
-    />
+  <section class="page-multi-layout page-rail-layout publications-layout">
+    <aside class="page-rail page-rail-left publications-rail">
+      <PageSectionNav
+        title="Publication years"
+        ariaLabel="Publication year navigation"
+        groups={publicationNavGroups}
+      />
+    </aside>
 
-    <div class="page-multi-content">
+    <div class="page-multi-content page-rail-content publications-content">
       <section class="card-grid-wide">
         <section class="info-card">
           <h2 data-i18n="page.publications.scholar">Google Scholar</h2>
@@ -76,7 +118,7 @@ const publicationNavEntries = years.map((year) => ({
         {years.map((year, index) => (
           <section
             class="section-block publication-year-section"
-            id={`publication-year-${year.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+            id={`publication-year-${slugifyYear(year)}`}
           >
             <details class="publication-year-accordion info-card" open={index < 2}>
               <summary class="publication-year-summary">

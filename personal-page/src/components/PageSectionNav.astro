@@ -4,11 +4,18 @@ type NavEntry = {
   label: string;
 };
 
+type NavGroup = {
+  label: string;
+  entries: NavEntry[];
+  open?: boolean;
+};
+
 type Props = {
   title: string;
   kicker?: string;
   ariaLabel: string;
-  entries: NavEntry[];
+  entries?: NavEntry[];
+  groups?: NavGroup[];
   className?: string;
 };
 
@@ -16,7 +23,8 @@ const {
   title,
   kicker = 'Navigate',
   ariaLabel,
-  entries,
+  entries = [],
+  groups = [],
   className = '',
 } = Astro.props;
 ---
@@ -26,10 +34,28 @@ const {
   <h2 class="page-section-nav-title">{title}</h2>
   <div class="student-filter-divider page-section-nav-divider" aria-hidden="true"></div>
   <nav aria-label={ariaLabel}>
-    <div class="page-section-nav-list">
-      {entries.map((entry) => (
-        <a class="page-section-nav-link" href={entry.href}>{entry.label}</a>
-      ))}
-    </div>
+    {groups.length > 0 ? (
+      <div class="page-section-nav-groups">
+        {groups.map((group) => (
+          <details class="page-section-nav-group" open={group.open ?? false}>
+            <summary class="page-section-nav-group-summary">
+              <span>{group.label}</span>
+              <span class="page-section-nav-group-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="page-section-nav-list page-section-nav-list-grouped">
+              {group.entries.map((entry) => (
+                <a class="page-section-nav-link" href={entry.href}>{entry.label}</a>
+              ))}
+            </div>
+          </details>
+        ))}
+      </div>
+    ) : (
+      <div class="page-section-nav-list">
+        {entries.map((entry) => (
+          <a class="page-section-nav-link" href={entry.href}>{entry.label}</a>
+        ))}
+      </div>
+    )}
   </nav>
 </aside>

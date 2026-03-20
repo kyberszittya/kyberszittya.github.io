@@ -13,6 +13,12 @@ import { contact, emailContacts, scholarMetrics, socialLinks } from '../data/pro
     kickerKey="page.contact.kicker"
     titleKey="page.contact.title"
     summaryKey="page.contact.summary"
+    inlineKicker={true}
+    stats={[
+      { value: `${emailContacts.length}`, label: 'direct emails' },
+      { value: `${socialLinks.length}`, label: 'profiles' },
+      { value: `${scholarMetrics.citations.all}`, label: 'citations tracked' },
+    ]}
   />
 
   <section class="card-grid">

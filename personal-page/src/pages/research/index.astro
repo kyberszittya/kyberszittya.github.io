@@ -12,6 +12,12 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
     kickerKey="page.research.kicker"
     titleKey="page.research.title"
     summaryKey="page.research.summary"
+    inlineKicker={true}
+    stats={[
+      { value: `${researchAreas.length}`, label: 'research areas' },
+      { value: `${focusResearch.length}`, label: 'focus threads' },
+      { value: `${backgroundResearch.length}`, label: 'background threads' },
+    ]}
   />
 
   <section class="dual-panel-grid">

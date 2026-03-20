@@ -9,6 +9,12 @@ import { dissertation } from '../data/profile';
     kicker="Dissertation"
     title={dissertation.title}
     summary={dissertation.summary}
+    inlineKicker={true}
+    stats={[
+      { value: dissertation.degree, label: 'document type' },
+      { value: dissertation.evaluation, label: 'evaluation' },
+      { value: `${dissertation.highlights.length}`, label: 'core highlights' },
+    ]}
   />
 
   <section class="card-grid-wide">

@@ -20,6 +20,13 @@ const experienceEntries = (await getCollection('experience')).sort(
     kickerKey="page.cv.kicker"
     titleKey="page.cv.title"
     summaryKey="page.cv.summary"
+    inlineKicker={true}
+    stats={[
+      { value: `${education.degrees.length}`, label: 'degrees' },
+      { value: `${experienceEntries.length}`, label: 'affiliations' },
+      { value: `${publications.length}`, label: 'selected publications' },
+      { value: `${skills.length}`, label: 'technical domains' },
+    ]}
   />
 
   <section class="page-multi-layout">

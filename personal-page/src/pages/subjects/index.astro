@@ -5,7 +5,7 @@ import InfoCard from '../../components/InfoCard.astro';
 import PageSectionNav from '../../components/PageSectionNav.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import SubjectSummaryCard from '../../components/SubjectSummaryCard.astro';
-import { education } from '../../data/profile';
+import { education } from '../../data/site';
 
 const subjectsCollection = (await getCollection('subjects')).sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),

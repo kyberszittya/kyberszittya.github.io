@@ -6,7 +6,7 @@ import StackList from '../../components/StackList.astro';
 import { formatBlogDate, getPostSlug, getPublishedPosts } from '../../lib/blog';
 
 const posts = await getPublishedPosts();
-const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const featuredPost = posts.find((post) => post.featured) ?? posts[0];
 const latestPosts = featuredPost ? posts.filter((post) => post.id !== featuredPost.id) : posts;
 ---
 
@@ -18,8 +18,8 @@ const latestPosts = featuredPost ? posts.filter((post) => post.id !== featuredPo
     inlineKicker={true}
     stats={[
       { value: `${posts.length}`, label: 'published posts' },
-      { value: `${new Set(posts.map((post) => post.data.category)).size}`, label: 'categories' },
-      { value: `${posts.filter((post) => post.data.featured).length}`, label: 'featured posts' },
+      { value: `${new Set(posts.map((post) => post.category)).size}`, label: 'categories' },
+      { value: `${posts.filter((post) => post.featured).length}`, label: 'featured posts' },
     ]}
   />
 
@@ -27,22 +27,22 @@ const latestPosts = featuredPost ? posts.filter((post) => post.id !== featuredPo
     <section class="card-grid-wide section-row section-row-blue">
       <InfoCard
         kicker="Featured post"
-        title={featuredPost.data.title}
+        title={featuredPost.title}
       >
-        <p>{featuredPost.data.summary}</p>
+        <p>{featuredPost.summary}</p>
         <StackList
           items={[
             {
               title: 'Published',
-              text: formatBlogDate(featuredPost.data.date),
+              text: formatBlogDate(featuredPost.date),
             },
             {
               title: 'Category',
-              text: featuredPost.data.category,
+              text: featuredPost.category,
             },
             {
               title: 'Tags',
-              text: featuredPost.data.tags.join(', ') || 'None yet',
+              text: featuredPost.tags.join(', ') || 'None yet',
             },
           ]}
         />
@@ -56,13 +56,13 @@ const latestPosts = featuredPost ? posts.filter((post) => post.id !== featuredPo
   <section class="card-grid section-row section-row-indigo">
     {latestPosts.map((post) => (
       <InfoCard>
-        <p class="section-label">{post.data.category}</p>
-        <h2>{post.data.title}</h2>
-        <p>{post.data.summary}</p>
-        <p><strong>Published:</strong> {formatBlogDate(post.data.date)}</p>
-        {post.data.tags.length > 0 && (
+        <p class="section-label">{post.category}</p>
+        <h2>{post.title}</h2>
+        <p>{post.summary}</p>
+        <p><strong>Published:</strong> {formatBlogDate(post.date)}</p>
+        {post.tags.length > 0 && (
           <div class="chip-row">
-            {post.data.tags.map((tag) => (
+            {post.tags.map((tag) => (
               <span class="chip chip-blue">{tag}</span>
             ))}
           </div>

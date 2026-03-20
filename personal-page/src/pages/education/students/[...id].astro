@@ -1,13 +1,14 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import InfoCard from '../../../components/InfoCard.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageIntro from '../../../components/PageIntro.astro';
 import PageSectionNav from '../../../components/PageSectionNav.astro';
 import StackList from '../../../components/StackList.astro';
+import { getStudentWorkRecords } from '../../../lib/contentQueries';
 
 export async function getStaticPaths() {
-  const students = await getCollection('students');
+  const students = await getStudentWorkRecords();
   return students.map((student) => ({
     params: { id: student.id },
     props: { student },
@@ -15,11 +16,9 @@ export async function getStaticPaths() {
 }
 
 const { student } = Astro.props;
-const { Content } = await render(student);
-const [degree = 'Student', yearFolder = ''] = student.id.split('/');
-const degreeLabel = degree.toUpperCase();
+const { Content } = await render(student.entry);
 const overviewItems = [
-  student.data.active
+  student.active
     ? {
         title: 'Ongoing',
         titleKey: 'student.status.ongoing',
@@ -31,46 +30,46 @@ const overviewItems = [
       },
   {
     title: 'Degree',
-    lines: [degreeLabel],
+    lines: [student.degreeLabel],
   },
-  student.data.program
+  student.program
     ? {
         title: 'Program',
-        lines: [student.data.program],
+        lines: [student.program],
       }
     : null,
-  student.data.startSemester
+  student.startSemester
     ? {
         title: 'Start semester',
-        lines: [student.data.startSemester],
+        lines: [student.startSemester],
       }
     : null,
-  student.data.endSemester
+  student.endSemester
     ? {
         title: 'End semester',
-        lines: [student.data.endSemester],
+        lines: [student.endSemester],
       }
     : null,
-  student.data.graduationYear
+  student.graduationYear
     ? {
         title: 'Graduation year',
-        lines: [String(student.data.graduationYear)],
+        lines: [String(student.graduationYear)],
       }
     : null,
-  yearFolder
+  student.folderYear
     ? {
         title: 'Folder year',
-        lines: [yearFolder],
+        lines: [student.folderYear],
       }
     : null,
 ].filter(Boolean);
 ---
 
-<BaseLayout title={`${student.data.name} | Student`}>
+<BaseLayout title={`${student.name} | Student`}>
   <PageIntro
     kicker="Education"
-    title={student.data.name}
-    summary={student.data.researchTopic}
+    title={student.name}
+    summary={student.researchTopic}
     kickerKey="page.students.kicker"
   />
 
@@ -87,15 +86,15 @@ const overviewItems = [
 
     <div class="page-multi-content">
       <section class="card-grid-wide">
-        <InfoCard as="section" className={!student.data.active ? 'graduated-card' : ''} id="student-overview">
+        <InfoCard as="section" className={!student.active ? 'graduated-card' : ''} id="student-overview">
           <h2>Student overview</h2>
           <StackList items={overviewItems} />
         </InfoCard>
 
         <InfoCard as="section" id="student-topic-summary">
           <h2>Topic summary</h2>
-          <p>{student.data.researchTopic}</p>
-          {student.data.note && <p><strong>Note:</strong> {student.data.note}</p>}
+          <p>{student.researchTopic}</p>
+          {student.note && <p><strong>Note:</strong> {student.note}</p>}
           <a class="text-link" href="/education/students">Back to student supervision</a>
         </InfoCard>
       </section>

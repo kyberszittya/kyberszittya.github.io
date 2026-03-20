@@ -1,5 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroMathOrnaments from '../components/HeroMathOrnaments.astro';
 import InfoCard from '../components/InfoCard.astro';
@@ -16,15 +15,11 @@ import {
   researchHighlightSection,
 } from '../data/home';
 import { hero, socialLinks } from '../data/profile';
+import { getStudentMetrics } from '../lib/contentQueries';
 
-const students = await getCollection('students');
-const graduatedStudentCount = students.filter((student) => !student.data.active).length;
-const completedStudentCount = students.filter((student) => !student.data.active).length;
-const graduatedStudentPercentage = completedStudentCount > 0
-  ? Math.round((graduatedStudentCount / completedStudentCount) * 100)
-  : 0;
+const { graduatedCount, graduatedPercentage } = await getStudentMetrics();
 const heroSocialLinks = socialLinks.filter((item) => heroSocialLabels.includes(item.label));
-const heroStats = buildHomeHeroStats({ graduatedStudentCount, graduatedStudentPercentage });
+const heroStats = buildHomeHeroStats({ graduatedStudentCount: graduatedCount, graduatedStudentPercentage: graduatedPercentage });
 ---
 
 <BaseLayout title="Kyberszittya | Researcher & Engineer">

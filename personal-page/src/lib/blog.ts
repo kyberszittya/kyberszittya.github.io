@@ -1,19 +1,13 @@
-import { getCollection } from 'astro:content';
+import { getPublishedBlogPosts as getPublishedBlogPostEntities, formatContentDate } from './contentQueries';
 
 export async function getPublishedPosts() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
-
-  return posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  return getPublishedBlogPostEntities();
 }
 
-export function getPostSlug(post: { id: string; data: { slug?: string } }) {
-  return post.data.slug ?? post.id.replace(/\.md$/i, '');
+export function getPostSlug(post: { slug: string }) {
+  return post.slug;
 }
 
 export function formatBlogDate(date: Date) {
-  return new Intl.DateTimeFormat('en', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date);
+  return formatContentDate(date);
 }

@@ -1,17 +1,16 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import InfoCard from '../components/InfoCard.astro';
 import PageSectionNav from '../components/PageSectionNav.astro';
 import PageIntro from '../components/PageIntro.astro';
 import StackList from '../components/StackList.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { dissertation, education, languages, scholarProfile, skills } from '../data/profile';
+import { getExperienceRecords } from '../lib/contentQueries';
 import { getPublications } from '../lib/publications';
 
 const publications = getPublications().slice(0, 6);
-const experienceEntries = (await getCollection('experience')).sort(
-  (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime(),
-);
+const experienceEntries = await getExperienceRecords();
 
 const degreeItems = education.degrees.map((degree) => ({
   title: degree.title,
@@ -81,12 +80,12 @@ const dissertationItems = [
           <div class="stack-list compact">
             {await Promise.all(
               experienceEntries.map(async (role) => {
-                const { Content } = await render(role);
+                const { Content } = await render(role.entry);
                 return (
                   <article class="stack-item">
-                    <strong>{role.data.title}</strong>
-                    <p>{role.data.organization}</p>
-                    <span>{role.data.period}</span>
+                    <strong>{role.title}</strong>
+                    <p>{role.organization}</p>
+                    <span>{role.period}</span>
                     <div class="cv-entry-copy">
                       <Content />
                     </div>

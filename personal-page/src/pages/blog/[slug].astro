@@ -14,25 +14,25 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content } = await render(post.entry);
 ---
 
-<BaseLayout title={`${post.data.title} | Blog`}>
+<BaseLayout title={`${post.title} | Blog`}>
   <section class="section-block">
     <InfoCard as="section" className="lecture-article">
-      <p class="section-label">{post.data.category}</p>
-      <h1 class="page-title">{post.data.title}</h1>
-      <p class="hero-summary">{post.data.summary}</p>
+      <p class="section-label">{post.category}</p>
+      <h1 class="page-title">{post.title}</h1>
+      <p class="hero-summary">{post.summary}</p>
       <div class="chip-row">
-        <span class="chip chip-blue">Published {formatBlogDate(post.data.date)}</span>
-        {post.data.updatedDate && (
-          <span class="chip chip-blue">Updated {formatBlogDate(post.data.updatedDate)}</span>
+        <span class="chip chip-blue">Published {formatBlogDate(post.date)}</span>
+        {post.updatedDate && (
+          <span class="chip chip-blue">Updated {formatBlogDate(post.updatedDate)}</span>
         )}
-        {post.data.series && <span class="chip chip-blue">{post.data.series}</span>}
+        {post.series && <span class="chip chip-blue">{post.series}</span>}
       </div>
-      {post.data.tags.length > 0 && (
+      {post.tags.length > 0 && (
         <div class="chip-row chip-row-large">
-          {post.data.tags.map((tag) => (
+          {post.tags.map((tag) => (
             <span class="chip">{tag}</span>
           ))}
         </div>

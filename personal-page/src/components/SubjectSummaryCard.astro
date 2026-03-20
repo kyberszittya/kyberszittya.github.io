@@ -1,0 +1,126 @@
+---
+type Mascot = {
+  name: string;
+  shortLabel?: string;
+  description?: string;
+  accent?: string;
+  emoji?: string;
+};
+
+type SubjectSummary = {
+  title: string;
+  heading?: string;
+  publishDate?: Date;
+  description: string;
+  hostUniversities: string[];
+  hostDepartments: string[];
+  degreePrograms: string[];
+  semesters: string[];
+  teachingLanguages?: string[];
+  languages?: string[];
+  tags?: string[];
+  neptunCode?: string;
+  mascot?: Mascot;
+  href: string;
+  id?: string;
+};
+
+type Props = {
+  subject: SubjectSummary;
+  compact?: boolean;
+  cardClassName?: string;
+};
+
+const { subject, compact = false, cardClassName = '' } = Astro.props;
+const teachingLanguages = subject.teachingLanguages ?? subject.languages ?? [];
+const visibleTags = compact ? subject.tags?.slice(0, 6) ?? [] : subject.tags ?? [];
+---
+
+<article
+  class:list={['info-card', cardClassName]}
+  id={subject.id}
+  data-subject-card={subject.id ? true : undefined}
+  data-subject-tags={subject.tags?.join('|')}
+>
+  <p class="section-label">
+    <a class="text-link lecture-card-link" href={subject.href}>{subject.title}</a>
+  </p>
+  <div class="subject-card-header">
+    <h2 style={compact ? 'font-size: 1.5rem;' : undefined}>
+      <a class="title-link lecture-card-title-link" href={subject.href}>{subject.heading ?? subject.title}</a>
+    </h2>
+    {subject.publishDate && <p>{subject.publishDate.toDateString()}</p>}
+    <p>{subject.description}</p>
+    <div class="subject-card-divider" aria-hidden="true"></div>
+  </div>
+
+  {(subject.neptunCode || subject.mascot) && (
+    <div class="chip-row">
+      {subject.neptunCode && <span class="chip chip-blue">Neptun: {subject.neptunCode}</span>}
+      {subject.mascot && (
+        <span class="chip">
+          {subject.mascot.emoji ? `${subject.mascot.emoji} ` : ''}{subject.mascot.shortLabel ?? subject.mascot.name}
+        </span>
+      )}
+    </div>
+  )}
+
+  <div class="subject-info-group">
+    <p class="subject-info-label">Subject information</p>
+    <div class="chip-row">
+      {subject.hostUniversities.map((hostUniversity) => (
+        <span class="chip">{hostUniversity}</span>
+      ))}
+      {subject.hostDepartments.map((hostDepartment) => (
+        <span class="chip">{hostDepartment}</span>
+      ))}
+    </div>
+  </div>
+
+  <div class="subject-info-group">
+    <p class="subject-info-label">Degree program</p>
+    <div class="chip-row">
+      {subject.degreePrograms.map((degreeProgram) => (
+        <span class="chip chip-blue">{degreeProgram}</span>
+      ))}
+    </div>
+  </div>
+
+  {subject.semesters.length > 0 && (
+    <div class="subject-info-group">
+      <p class="subject-info-label">Semesters</p>
+      <div class="chip-row">
+        {subject.semesters.map((semester) => (
+          <span class="chip">{semester}</span>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {teachingLanguages.length > 0 && (
+    <div class="subject-info-group">
+      <p class="subject-info-label">Teaching languages</p>
+      <div class="chip-row">
+        {teachingLanguages.map((language) => (
+          <span class="chip">{language}</span>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {visibleTags.length > 0 && (
+    <div class="subject-info-group">
+      <p class="subject-info-label">Tags</p>
+      <div class="chip-row">
+        {visibleTags.map((tag) => (
+          <span class="chip chip-blue">{tag}</span>
+        ))}
+        {compact && subject.tags && subject.tags.length > visibleTags.length && (
+          <span class="chip">+{subject.tags.length - visibleTags.length} more</span>
+        )}
+      </div>
+    </div>
+  )}
+
+  <a class="text-link" href={subject.href}>{compact ? 'Open subject' : 'Open subject materials'}</a>
+</article>

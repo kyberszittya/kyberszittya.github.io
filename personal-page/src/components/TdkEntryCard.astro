@@ -1,0 +1,40 @@
+---
+type Props = {
+  studentName: string;
+  studentHref?: string;
+  workTitle?: string;
+  summary: string;
+  placement: string;
+  year: number;
+  sourceNote?: string;
+  graduated?: boolean;
+};
+
+const {
+  studentName,
+  studentHref,
+  workTitle,
+  summary,
+  placement,
+  year,
+  sourceNote,
+  graduated = false,
+} = Astro.props;
+---
+
+<article class:list={['stack-item', graduated && 'graduated-card']}>
+  <strong>
+    {graduated && <span class="graduation-glyph" aria-hidden="true"></span>}
+    {studentHref ? (
+      <a class="title-link" href={studentHref}>{studentName}</a>
+    ) : (
+      studentName
+    )}
+  </strong>
+  {workTitle && <p><strong>Work:</strong> {workTitle}</p>}
+  <p>{summary}</p>
+  <span>TDK placement: {placement}</span>
+  <span>Year: {year}</span>
+  {sourceNote && <span>{sourceNote}</span>}
+  {graduated && <span class="graduation-label" data-i18n="student.status.graduated">Graduated</span>}
+</article>

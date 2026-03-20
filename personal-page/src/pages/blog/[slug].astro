@@ -1,0 +1,48 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InfoCard from '../../components/InfoCard.astro';
+import { formatBlogDate, getPostSlug, getPublishedPosts } from '../../lib/blog';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+
+  return posts.map((post) => ({
+    params: { slug: getPostSlug(post) },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} | Blog`}>
+  <section class="section-block">
+    <InfoCard as="section" className="lecture-article">
+      <p class="section-label">{post.data.category}</p>
+      <h1 class="page-title">{post.data.title}</h1>
+      <p class="hero-summary">{post.data.summary}</p>
+      <div class="chip-row">
+        <span class="chip chip-blue">Published {formatBlogDate(post.data.date)}</span>
+        {post.data.updatedDate && (
+          <span class="chip chip-blue">Updated {formatBlogDate(post.data.updatedDate)}</span>
+        )}
+        {post.data.series && <span class="chip chip-blue">{post.data.series}</span>}
+      </div>
+      {post.data.tags.length > 0 && (
+        <div class="chip-row chip-row-large">
+          {post.data.tags.map((tag) => (
+            <span class="chip">{tag}</span>
+          ))}
+        </div>
+      )}
+    </InfoCard>
+  </section>
+
+  <section class="section-block">
+    <article class="info-card lecture-article lecture-prose">
+      <Content />
+    </article>
+  </section>
+</BaseLayout>

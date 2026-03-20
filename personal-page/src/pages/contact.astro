@@ -1,7 +1,9 @@
 ---
 import PageIntro from '../components/PageIntro.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoCard from '../components/InfoCard.astro';
 import SocialIcon from '../components/SocialIcon.astro';
+import StackList from '../components/StackList.astro';
 import { contact, emailContacts, scholarMetrics, socialLinks } from '../data/profile';
 ---
 
@@ -23,53 +25,63 @@ import { contact, emailContacts, scholarMetrics, socialLinks } from '../data/pro
 
   <section class="card-grid">
     {contact.map((entry, index) => (
-      <article class="info-card">
+      <InfoCard>
         <h2 data-i18n={['contact.research', 'contact.general'][index]}>{entry.label}</h2>
         <p data-i18n={['contact.research.value', 'contact.general.value'][index]}>{entry.value}</p>
-      </article>
+      </InfoCard>
     ))}
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <InfoCard as="section">
       <h2 data-i18n="contact.emails">Email addresses</h2>
-      <div class="stack-list compact">
-        {emailContacts.map((entry, index) => (
-          <article class="stack-item">
-            <strong data-i18n={index === 0 ? 'profile.email.sze' : 'profile.email.obuda'}>{entry.label}</strong>
-            <a class="text-link" href={entry.href}>{entry.value}</a>
-          </article>
-        ))}
-      </div>
-    </section>
+      <StackList
+        items={emailContacts.map((entry, index) => ({
+          title: entry.label,
+          titleKey: index === 0 ? 'profile.email.sze' : 'profile.email.obuda',
+          href: entry.href,
+          hrefLabel: entry.value,
+        }))}
+      />
+    </InfoCard>
 
-    <section class="info-card">
+    <InfoCard as="section">
       <h2 data-i18n="contact.metrics">Scholar metrics</h2>
-      <div class="stack-list compact">
-        <article class="stack-item">
-          <strong data-i18n="metrics.citations">Citations</strong>
-          <p data-i18n="metrics.citations.value">{scholarMetrics.citations.all} total, {scholarMetrics.citations.since2021} since 2021</p>
-        </article>
-        <article class="stack-item">
-          <strong data-i18n="metrics.hindex">h-index</strong>
-          <p data-i18n="metrics.hindex.value">{scholarMetrics.hIndex.all} total, {scholarMetrics.hIndex.since2021} since 2021</p>
-        </article>
-        <article class="stack-item">
-          <strong data-i18n="metrics.i10index">i10-index</strong>
-          <p data-i18n="metrics.i10index.value">{scholarMetrics.i10Index.all} total, {scholarMetrics.i10Index.since2021} since 2021</p>
-        </article>
-        <article class="stack-item">
-          <strong data-i18n="contact.source">Source</strong>
-          <a class="text-link" href={scholarMetrics.sourceHref} target="_blank" rel="noreferrer">
-            {scholarMetrics.sourceLabel}
-          </a>
-        </article>
-      </div>
-    </section>
+      <StackList
+        items={[
+          {
+            title: 'Citations',
+            titleKey: 'metrics.citations',
+            text: `${scholarMetrics.citations.all} total, ${scholarMetrics.citations.since2021} since 2021`,
+            textKey: 'metrics.citations.value',
+          },
+          {
+            title: 'h-index',
+            titleKey: 'metrics.hindex',
+            text: `${scholarMetrics.hIndex.all} total, ${scholarMetrics.hIndex.since2021} since 2021`,
+            textKey: 'metrics.hindex.value',
+          },
+          {
+            title: 'i10-index',
+            titleKey: 'metrics.i10index',
+            text: `${scholarMetrics.i10Index.all} total, ${scholarMetrics.i10Index.since2021} since 2021`,
+            textKey: 'metrics.i10index.value',
+          },
+          {
+            title: 'Source',
+            titleKey: 'contact.source',
+            href: scholarMetrics.sourceHref,
+            hrefLabel: scholarMetrics.sourceLabel,
+            hrefTarget: '_blank',
+            hrefRel: 'noreferrer',
+          },
+        ]}
+      />
+    </InfoCard>
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <InfoCard as="section">
       <h2 data-i18n="contact.social">Social and academic profiles</h2>
       <div class="stack-list compact">
         {socialLinks.map((item) => (
@@ -85,16 +97,20 @@ import { contact, emailContacts, scholarMetrics, socialLinks } from '../data/pro
           </article>
         ))}
       </div>
-    </section>
+    </InfoCard>
 
-    <section class="info-card">
+    <InfoCard as="section">
       <h2 data-i18n="contact.metricNote">Metric note</h2>
-      <div class="stack-list compact">
-        <article class="stack-item">
-          <strong data-i18n="contact.verification">Verification</strong>
-          <span data-i18n="contact.metricNote.value">{scholarMetrics.note}</span>
-        </article>
-      </div>
-    </section>
+      <StackList
+        items={[
+          {
+            title: 'Verification',
+            titleKey: 'contact.verification',
+            lines: [scholarMetrics.note],
+            lineKeys: ['contact.metricNote.value'],
+          },
+        ]}
+      />
+    </InfoCard>
   </section>
 </BaseLayout>

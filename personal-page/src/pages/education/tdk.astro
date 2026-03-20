@@ -1,8 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
+import FeatureListCard from '../../components/FeatureListCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import PageSectionNav from '../../components/PageSectionNav.astro';
+import TdkEntryCard from '../../components/TdkEntryCard.astro';
+import { tdkGuideSections } from '../../data/educationContent';
 
 const tdkEntries = await getCollection('tdk');
 
@@ -28,80 +31,58 @@ tdkEntries.sort((a, b) => {
       title="TDK sections"
       ariaLabel="TDK section navigation"
       entries={[
-        { href: '#tdk-what-belongs-here', label: 'What belongs here' },
-        { href: '#tdk-good-directions', label: 'Good directions' },
+        ...tdkGuideSections.foundations.map((section) => ({
+          href: `#${section.id}`,
+          label: section.title,
+        })),
         { href: '#tdk-students', label: 'Recent students' },
-        { href: '#tdk-how-we-work', label: 'How we can work' },
-        { href: '#tdk-expected-outcomes', label: 'Expected outcomes' },
+        ...tdkGuideSections.practice.map((section) => ({
+          href: `#${section.id}`,
+          label: section.title,
+        })),
       ]}
     />
 
     <div class="page-multi-content">
-  <section class="card-grid-wide">
-    <section class="info-card" id="tdk-what-belongs-here">
-      <h2>What belongs here</h2>
-      <ul class="feature-list feature-list-light">
-        <li>Student research ideas that go beyond standard course assignments.</li>
-        <li>Topics with experimental, analytical, or prototype-oriented outcomes.</li>
-        <li>Work that can grow into a TDK submission, thesis topic, publication, or demonstrator.</li>
-      </ul>
-    </section>
-
-    <section class="info-card" id="tdk-good-directions">
-      <h2>Good TDK directions</h2>
-      <ul class="feature-list feature-list-light">
-        <li>Artificial intelligence and robotics applications with measurable evaluation.</li>
-        <li>Hypergraph-based modeling, structured knowledge, and semantic representations.</li>
-        <li>Industrial and cyber-physical systems with interpretable data-driven methods.</li>
-      </ul>
-    </section>
-  </section>
-
-  <section class="card-grid-wide">
-    <section class="info-card" id="tdk-students">
-      <h2>Recent TDK-related students</h2>
-      <div class="stack-list compact">
-        {tdkEntries.map((entry) => (
-          <article class:list={['stack-item', entry.data.graduated && 'graduated-card']}>
-            <strong>
-              {entry.data.graduated && <span class="graduation-glyph" aria-hidden="true"></span>}
-              {entry.data.studentHref ? (
-                <a class="title-link" href={entry.data.studentHref}>{entry.data.studentName}</a>
-              ) : (
-                entry.data.studentName
-              )}
-            </strong>
-            {entry.data.workTitle && <p><strong>Work:</strong> {entry.data.workTitle}</p>}
-            <p>{entry.data.summary}</p>
-            <span>TDK placement: {entry.data.placement}</span>
-            <span>Year: {entry.data.year}</span>
-            {entry.data.sourceNote && <span>{entry.data.sourceNote}</span>}
-            {entry.data.graduated && <span class="graduation-label" data-i18n="student.status.graduated">Graduated</span>}
-          </article>
+      <section class="card-grid-wide">
+        {tdkGuideSections.foundations.map((section) => (
+          <FeatureListCard id={section.id} title={section.title} items={[...section.items]} />
         ))}
-      </div>
-    </section>
+      </section>
 
-    <section class="info-card" id="tdk-how-we-work">
-      <h2>How we can work on it</h2>
-      <ul class="feature-list feature-list-light">
-        <li>Start from a focused research question instead of a broad software project alone.</li>
-        <li>Keep notes, references, experiment logs, and intermediate results from the beginning.</li>
-        <li>Build toward a clear outcome: report, presentation, prototype, experiment, or competition submission.</li>
-      </ul>
-    </section>
-  </section>
+      <section class="card-grid-wide">
+        <section class="info-card" id="tdk-students">
+          <h2>Recent TDK-related students</h2>
+          <div class="stack-list compact">
+            {tdkEntries.map((entry) => (
+              <TdkEntryCard
+                studentName={entry.data.studentName}
+                studentHref={entry.data.studentHref}
+                workTitle={entry.data.workTitle}
+                summary={entry.data.summary}
+                placement={entry.data.placement}
+                year={entry.data.year}
+                sourceNote={entry.data.sourceNote}
+                graduated={entry.data.graduated}
+              />
+            ))}
+          </div>
+        </section>
 
-  <section class="card-grid-wide">
-    <section class="info-card" id="tdk-expected-outcomes">
-      <h2>Expected outcomes</h2>
-      <ul class="feature-list feature-list-light">
-        <li>A well-scoped written summary with related work and evaluation.</li>
-        <li>A reproducible artifact such as code, dataset, experiment setup, or demo.</li>
-        <li>A presentation-ready storyline for internal review, TDK, or later thesis continuation.</li>
-      </ul>
-    </section>
-  </section>
+        <FeatureListCard
+          id={tdkGuideSections.practice[0].id}
+          title={tdkGuideSections.practice[0].title}
+          items={[...tdkGuideSections.practice[0].items]}
+        />
+      </section>
+
+      <section class="card-grid-wide">
+        <FeatureListCard
+          id={tdkGuideSections.practice[1].id}
+          title={tdkGuideSections.practice[1].title}
+          items={[...tdkGuideSections.practice[1].items]}
+        />
+      </section>
     </div>
   </section>
 </BaseLayout>

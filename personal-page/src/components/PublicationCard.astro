@@ -1,0 +1,30 @@
+---
+import InfoCard from './InfoCard.astro';
+
+type Publication = {
+  title: string;
+  authors: string[];
+  venue?: string;
+  year?: number | null;
+  externalUrl: string;
+  slug: string;
+};
+
+type Props = {
+  publication: Publication;
+};
+
+const { publication } = Astro.props;
+---
+
+<InfoCard className="publication-card">
+  <h3>
+    <a class="title-link" href={publication.externalUrl} target="_blank" rel="noreferrer">
+      {publication.title}
+    </a>
+  </h3>
+  <p>{publication.authors.join(', ')}</p>
+  {publication.venue && <p><strong>Venue:</strong> {publication.venue}</p>}
+  {publication.year && <p><strong>Year:</strong> {publication.year}</p>}
+  <a class="text-link" href={`/publications/${publication.slug}`} data-i18n="page.publications.openPublication">Open publication</a>
+</InfoCard>

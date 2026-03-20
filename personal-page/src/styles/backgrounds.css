@@ -104,13 +104,13 @@
 
 .fractal-overlay-sierpinski {
   left: 9vw;
-  bottom: 6rem;
+  bottom: 2rem;
   width: min(42vw, 520px);
   height: min(38vw, 470px);
-  opacity: 0.56;
+  opacity: 0.62;
   filter:
     drop-shadow(0 0 34px rgba(101, 72, 224, 0.32))
-    drop-shadow(0 0 52px rgba(72, 188, 224, 0.12));
+    drop-shadow(0 0 52px rgba(72, 188, 224, 0.16));
 }
 
 .fractal-overlay-morph {
@@ -134,9 +134,10 @@
 
 .fractal-motion-sierpinski {
   animation:
-    fractal-transit-sierpinski 30s ease-in-out infinite,
+    fractal-transit-sierpinski 34s ease-in-out infinite,
     fractal-pulse 14s ease-in-out infinite,
-    fractal-tilt 24s ease-in-out infinite;
+    fractal-tilt 24s ease-in-out infinite,
+    fractal-rise-cycle 22s ease-in-out infinite;
 }
 
 .fractal-motion-morph {
@@ -208,22 +209,37 @@
 
 .fractal-morph-shape-circle {
   stroke: rgba(72, 188, 224, 0.54);
-  animation: fractal-shape-shift 16s ease-in-out infinite;
+  animation: fractal-shape-shift 28s ease-in-out infinite;
 }
 
 .fractal-morph-shape-square {
   stroke: rgba(147, 157, 224, 0.48);
-  animation: fractal-shape-shift 16s ease-in-out infinite 4s;
+  animation: fractal-shape-shift 28s ease-in-out infinite 4s;
 }
 
 .fractal-morph-shape-triangle {
   stroke: rgba(152, 74, 225, 0.52);
-  animation: fractal-shape-shift 16s ease-in-out infinite 8s;
+  animation: fractal-shape-shift 28s ease-in-out infinite 8s;
 }
 
 .fractal-morph-shape-hexagon {
   stroke: rgba(223, 246, 255, 0.52);
-  animation: fractal-shape-shift 16s ease-in-out infinite 12s;
+  animation: fractal-shape-shift 28s ease-in-out infinite 12s;
+}
+
+.fractal-morph-shape-diamond {
+  stroke: rgba(120, 220, 255, 0.48);
+  animation: fractal-shape-shift 28s ease-in-out infinite 16s;
+}
+
+.fractal-morph-shape-octagon {
+  stroke: rgba(188, 160, 255, 0.48);
+  animation: fractal-shape-shift 28s ease-in-out infinite 20s;
+}
+
+.fractal-morph-shape-star {
+  stroke: rgba(255, 246, 196, 0.44);
+  animation: fractal-shape-shift 28s ease-in-out infinite 24s;
 }
 
 .background-slideshow {
@@ -372,11 +388,11 @@
 @keyframes fractal-transit-sierpinski {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotate(-4deg) scale(0.94);
+    transform: translate3d(-1rem, 1.5rem, 0) rotate(-7deg) scale(0.9);
   }
 
   50% {
-    transform: translate3d(2.5rem, -1.8rem, 0) rotate(7deg) scale(1.06);
+    transform: translate3d(3rem, -7.5rem, 0) rotate(8deg) scale(1.08);
   }
 }
 
@@ -423,6 +439,17 @@
   }
 }
 
+@keyframes fractal-rise-cycle {
+  0%,
+  100% {
+    opacity: 0.68;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
 @keyframes fractal-shape-shift {
   0%,
   100% {
@@ -466,10 +493,10 @@
 
   .fractal-overlay-sierpinski {
     left: -2vw;
-    bottom: 8rem;
+    bottom: 5rem;
     width: min(74vw, 320px);
     height: min(66vw, 280px);
-    opacity: 0.42;
+    opacity: 0.5;
   }
 
   .fractal-overlay-morph {

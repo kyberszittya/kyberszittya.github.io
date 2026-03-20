@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InfoCard from '../../components/InfoCard.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import StackList from '../../components/StackList.astro';
+import { formatBlogDate, getPostSlug, getPublishedPosts } from '../../lib/blog';
+
+const posts = await getPublishedPosts();
+const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const latestPosts = featuredPost ? posts.filter((post) => post.id !== featuredPost.id) : posts;
+---
+
+<BaseLayout title="Blog | Kyberszittya">
+  <PageIntro
+    kicker="Blog"
+    title="Notes, essays, and framework experiments"
+    summary="A typed content stream for research notes, architecture thoughts, and longer-form writing."
+    inlineKicker={true}
+    stats={[
+      { value: `${posts.length}`, label: 'published posts' },
+      { value: `${new Set(posts.map((post) => post.data.category)).size}`, label: 'categories' },
+      { value: `${posts.filter((post) => post.data.featured).length}`, label: 'featured posts' },
+    ]}
+  />
+
+  {featuredPost && (
+    <section class="card-grid-wide section-row section-row-blue">
+      <InfoCard
+        kicker="Featured post"
+        title={featuredPost.data.title}
+      >
+        <p>{featuredPost.data.summary}</p>
+        <StackList
+          items={[
+            {
+              title: 'Published',
+              text: formatBlogDate(featuredPost.data.date),
+            },
+            {
+              title: 'Category',
+              text: featuredPost.data.category,
+            },
+            {
+              title: 'Tags',
+              text: featuredPost.data.tags.join(', ') || 'None yet',
+            },
+          ]}
+        />
+        <p>
+          <a class="text-link" href={`/blog/${getPostSlug(featuredPost)}`}>Read featured post</a>
+        </p>
+      </InfoCard>
+    </section>
+  )}
+
+  <section class="card-grid section-row section-row-indigo">
+    {latestPosts.map((post) => (
+      <InfoCard>
+        <p class="section-label">{post.data.category}</p>
+        <h2>{post.data.title}</h2>
+        <p>{post.data.summary}</p>
+        <p><strong>Published:</strong> {formatBlogDate(post.data.date)}</p>
+        {post.data.tags.length > 0 && (
+          <div class="chip-row">
+            {post.data.tags.map((tag) => (
+              <span class="chip chip-blue">{tag}</span>
+            ))}
+          </div>
+        )}
+        <a class="text-link" href={`/blog/${getPostSlug(post)}`}>Open post</a>
+      </InfoCard>
+    ))}
+  </section>
+</BaseLayout>

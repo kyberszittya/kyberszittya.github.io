@@ -1,0 +1,29 @@
+---
+import InfoCard from './InfoCard.astro';
+
+type Props = {
+  id?: string;
+  title: string;
+  titleKey?: string;
+  items: string[];
+  itemKeys?: string[];
+  className?: string;
+};
+
+const {
+  id,
+  title,
+  titleKey,
+  items,
+  itemKeys,
+  className = '',
+} = Astro.props;
+---
+
+<InfoCard id={id} title={title} titleKey={titleKey} className={className}>
+  <ul class="feature-list feature-list-light">
+    {items.map((item, index) => (
+      <li data-i18n={itemKeys?.[index]}>{item}</li>
+    ))}
+  </ul>
+</InfoCard>

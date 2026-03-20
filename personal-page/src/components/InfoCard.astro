@@ -1,0 +1,30 @@
+---
+type Props = {
+  as?: 'article' | 'section' | 'aside' | 'div';
+  className?: string;
+  id?: string;
+  kicker?: string;
+  kickerKey?: string;
+  title?: string;
+  titleKey?: string;
+};
+
+const {
+  as = 'article',
+  className = '',
+  id,
+  kicker,
+  kickerKey,
+  title,
+  titleKey,
+  ...rest
+} = Astro.props;
+
+const Tag = as;
+---
+
+<Tag id={id} class:list={['info-card', className]} {...rest}>
+  {kicker && <p class="section-label" data-i18n={kickerKey}>{kicker}</p>}
+  {title && <h2 data-i18n={titleKey}>{title}</h2>}
+  <slot />
+</Tag>

@@ -1,8 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
+import InfoCard from '../../components/InfoCard.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageSectionNav from '../../components/PageSectionNav.astro';
+import StudentSummaryCard from '../../components/StudentSummaryCard.astro';
 
 const students = await getCollection('students');
 
@@ -34,6 +35,17 @@ for (const degree of ['bsc', 'msc'] as const) {
     return a.data.name.localeCompare(b.data.name);
   });
 }
+
+const yearGroupedStudents = {
+  bsc: availableYears.map((year) => ({
+    year,
+    students: studentGroups.bsc.filter((student) => getStudentYear(student) === year),
+  })).filter((group) => group.students.length > 0),
+  msc: availableYears.map((year) => ({
+    year,
+    students: studentGroups.msc.filter((student) => getStudentYear(student) === year),
+  })).filter((group) => group.students.length > 0),
+};
 ---
 
 <BaseLayout title="Student Supervision | Kyberszittya">
@@ -46,91 +58,158 @@ for (const degree of ['bsc', 'msc'] as const) {
     summaryKey="page.students.summary"
   />
 
-  <section class="page-multi-layout">
-    <PageSectionNav
-      title="Student sections"
-      ariaLabel="Student supervision section navigation"
-      entries={[
-        { href: '#student-supervision-filter', label: 'Filter by year' },
-        { href: '#bsc', label: 'BSc' },
-        { href: '#msc', label: 'MSc' },
-      ]}
-    />
+  <section class="page-multi-layout student-layout">
+    <aside class="info-card page-section-nav student-left-nav">
+      <p class="page-section-nav-kicker">Navigate</p>
+      <h2 class="page-section-nav-title">Students by year</h2>
+      <div class="student-filter-divider page-section-nav-divider" aria-hidden="true"></div>
+
+      <div class="student-nav-groups">
+        <div class="student-nav-group" data-student-nav-degree="bsc">
+          <p class="student-filter-group-title">BSc years</p>
+          <div class="student-nav-year-list">
+            {yearGroupedStudents.bsc.map((group) => (
+              <a
+                class="student-nav-year-link"
+                href={`#bsc-${group.year}`}
+                data-student-nav-group
+                data-student-nav-program="bsc"
+                data-student-nav-year={group.year}
+              >
+                <span>{group.year}</span>
+                <strong>{group.students.length}</strong>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="student-nav-group" data-student-nav-degree="msc">
+          <p class="student-filter-group-title">MSc years</p>
+          <div class="student-nav-year-list">
+            {yearGroupedStudents.msc.map((group) => (
+              <a
+                class="student-nav-year-link"
+                href={`#msc-${group.year}`}
+                data-student-nav-group
+                data-student-nav-program="msc"
+                data-student-nav-year={group.year}
+              >
+                <span>{group.year}</span>
+                <strong>{group.students.length}</strong>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </aside>
 
     <div class="page-multi-content">
-  <section class="info-card student-filter-panel" id="student-supervision-filter">
-    <div class="student-filter-header">
-      <div>
-        <p class="section-eyebrow" data-i18n="page.students.filter.kicker">Filter</p>
-        <h2 class="section-title" data-i18n="page.students.filter.title">Filter by year</h2>
-      </div>
-      <button type="button" class="chip-link student-filter-reset" data-student-filter-reset data-i18n="page.students.filter.reset">
-        Reset
-      </button>
-    </div>
-    <div class="student-filter-list" data-student-filter-controls>
-      {availableYears.map((year) => (
-        <label class="student-filter-chip">
-          <input type="checkbox" value={year} checked data-student-filter-checkbox />
-          <span>{year}</span>
-        </label>
-      ))}
-    </div>
-  </section>
+      <section class="card-grid">
+        <InfoCard as="section" id="bsc" className="student-section-panel" data-student-section-panel="bsc">
+          <h2>BSc</h2>
+          <div class="student-year-groups" data-student-list>
+            {yearGroupedStudents.bsc.map((group) => (
+              <section class="student-year-group" id={`bsc-${group.year}`} data-student-year-group={group.year}>
+                <div class="student-year-group-header">
+                  <h3>{group.year}</h3>
+                  <span>{group.students.length} student{group.students.length === 1 ? '' : 's'}</span>
+                </div>
+                <div class="stack-list compact">
+                  {group.students.map((student) => (
+                    <StudentSummaryCard
+                      name={student.data.name}
+                      researchTopic={student.data.researchTopic}
+                      href={`/education/students/${student.id}`}
+                      program={student.data.program}
+                      graduationYear={student.data.graduationYear}
+                      active={student.data.active}
+                      yearDataAttr={getStudentYear(student)}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </InfoCard>
 
-  <section class="card-grid">
-    <section class="info-card" id="bsc">
-      <h2>BSc</h2>
-      <div class="stack-list compact" data-student-list>
-        {studentGroups.bsc.map((student) => (
-          <article
-            class:list={['stack-item', !student.data.active && 'graduated-card']}
-            data-student-card
-            data-student-year={getStudentYear(student)}
-          >
-            <strong>
-              {!student.data.active && <span class="graduation-glyph" aria-hidden="true"></span>}
-              <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
-            </strong>
-            <p>{student.data.researchTopic}</p>
-            {student.data.program && <span>{student.data.program}</span>}
-            {student.data.graduationYear && <span>Graduation year: {student.data.graduationYear}</span>}
-            {student.data.active && <span class="ongoing-label" data-i18n="student.status.ongoing">Ongoing</span>}
-            {!student.data.active && <span class="graduation-label" data-i18n="student.status.graduated">Graduated</span>}
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="info-card" id="msc">
-      <h2>MSc</h2>
-      <div class="stack-list compact" data-student-list>
-        {studentGroups.msc.map((student) => (
-          <article
-            class:list={['stack-item', !student.data.active && 'graduated-card']}
-            data-student-card
-            data-student-year={getStudentYear(student)}
-          >
-            <strong>
-              {!student.data.active && <span class="graduation-glyph" aria-hidden="true"></span>}
-              <a class="title-link" href={`/education/students/${student.id}`}>{student.data.name}</a>
-            </strong>
-            <p>{student.data.researchTopic}</p>
-            {student.data.program && <span>{student.data.program}</span>}
-            {student.data.graduationYear && <span>Graduation year: {student.data.graduationYear}</span>}
-            {student.data.active && <span class="ongoing-label" data-i18n="student.status.ongoing">Ongoing</span>}
-            {!student.data.active && <span class="graduation-label" data-i18n="student.status.graduated">Graduated</span>}
-          </article>
-        ))}
-      </div>
-    </section>
-  </section>
+        <InfoCard as="section" id="msc" className="student-section-panel" data-student-section-panel="msc">
+          <h2>MSc</h2>
+          <div class="student-year-groups" data-student-list>
+            {yearGroupedStudents.msc.map((group) => (
+              <section class="student-year-group" id={`msc-${group.year}`} data-student-year-group={group.year}>
+                <div class="student-year-group-header">
+                  <h3>{group.year}</h3>
+                  <span>{group.students.length} student{group.students.length === 1 ? '' : 's'}</span>
+                </div>
+                <div class="stack-list compact">
+                  {group.students.map((student) => (
+                    <StudentSummaryCard
+                      name={student.data.name}
+                      researchTopic={student.data.researchTopic}
+                      href={`/education/students/${student.id}`}
+                      program={student.data.program}
+                      graduationYear={student.data.graduationYear}
+                      active={student.data.active}
+                      yearDataAttr={getStudentYear(student)}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </InfoCard>
+      </section>
     </div>
+
+    <aside class="student-filter-sidebar student-filter-float">
+      <InfoCard as="section" className="student-filter-panel" id="student-supervision-filter">
+        <div class="student-filter-header">
+          <div>
+            <p class="section-eyebrow" data-i18n="page.students.filter.kicker">Filter</p>
+            <h2 class="section-title" data-i18n="page.students.filter.title">Student filters</h2>
+          </div>
+          <button type="button" class="chip-link student-filter-reset" data-student-filter-reset data-i18n="page.students.filter.reset">
+            Reset
+          </button>
+        </div>
+
+        <div class="student-filter-group">
+          <p class="student-filter-group-title">Program</p>
+          <div class="student-filter-list student-filter-list-compact">
+            <label class="student-filter-chip student-filter-chip-toggle">
+              <input type="checkbox" value="bsc" checked data-student-program-checkbox />
+              <span>BSc</span>
+            </label>
+            <label class="student-filter-chip student-filter-chip-toggle">
+              <input type="checkbox" value="msc" checked data-student-program-checkbox />
+              <span>MSc</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="student-filter-group">
+          <p class="student-filter-group-title">Graduation year</p>
+          <div class="student-filter-list" data-student-filter-controls>
+            {availableYears.map((year) => (
+              <label class="student-filter-chip">
+                <input type="checkbox" value={year} checked data-student-filter-checkbox />
+                <span>{year}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </InfoCard>
+    </aside>
   </section>
 
   <script is:inline>
     const checkboxes = Array.from(document.querySelectorAll('[data-student-filter-checkbox]'));
+    const programCheckboxes = Array.from(document.querySelectorAll('[data-student-program-checkbox]'));
     const cards = Array.from(document.querySelectorAll('[data-student-card]'));
+    const sectionPanels = Array.from(document.querySelectorAll('[data-student-section-panel]'));
+    const yearGroups = Array.from(document.querySelectorAll('[data-student-year-group]'));
+    const navDegreeGroups = Array.from(document.querySelectorAll('[data-student-nav-degree]'));
+    const navGroups = Array.from(document.querySelectorAll('[data-student-nav-group]'));
     const resetButton = document.querySelector('[data-student-filter-reset]');
 
     const applyStudentYearFilter = () => {
@@ -139,11 +218,59 @@ for (const degree of ['bsc', 'msc'] as const) {
           .filter((checkbox) => checkbox instanceof HTMLInputElement && checkbox.checked)
           .map((checkbox) => checkbox instanceof HTMLInputElement ? checkbox.value : ''),
       );
+      const activePrograms = new Set(
+        programCheckboxes
+          .filter((checkbox) => checkbox instanceof HTMLInputElement && checkbox.checked)
+          .map((checkbox) => checkbox instanceof HTMLInputElement ? checkbox.value : ''),
+      );
 
       cards.forEach((card) => {
         if (!(card instanceof HTMLElement)) return;
         const year = card.dataset.studentYear ?? '';
-        card.hidden = activeYears.size > 0 && !activeYears.has(year);
+        const sectionPanel = card.closest('[data-student-section-panel]');
+        const program = sectionPanel instanceof HTMLElement ? sectionPanel.dataset.studentSectionPanel ?? '' : '';
+        const yearHidden = activeYears.size > 0 && !activeYears.has(year);
+        const programHidden = activePrograms.size > 0 && !activePrograms.has(program);
+        card.hidden = yearHidden || programHidden;
+      });
+
+      yearGroups.forEach((group) => {
+        if (!(group instanceof HTMLElement)) return;
+        const groupYear = group.dataset.studentYearGroup ?? '';
+        const sectionPanel = group.closest('[data-student-section-panel]');
+        const program = sectionPanel instanceof HTMLElement ? sectionPanel.dataset.studentSectionPanel ?? '' : '';
+        const visibleCards = Array.from(group.querySelectorAll('[data-student-card]')).some(
+          (card) => card instanceof HTMLElement && !card.hidden,
+        );
+        const yearVisible = activeYears.size > 0 ? activeYears.has(groupYear) : false;
+        const programVisible = activePrograms.size > 0 ? activePrograms.has(program) : false;
+        group.hidden = !visibleCards || !yearVisible || !programVisible;
+      });
+
+      navGroups.forEach((group) => {
+        if (!(group instanceof HTMLElement)) return;
+        const year = group.dataset.studentNavYear ?? '';
+        const program = group.dataset.studentNavProgram ?? '';
+        const yearHidden = activeYears.size > 0 && !activeYears.has(year);
+        const programHidden = activePrograms.size > 0 && !activePrograms.has(program);
+        group.hidden = yearHidden || programHidden;
+      });
+
+      navDegreeGroups.forEach((group) => {
+        if (!(group instanceof HTMLElement)) return;
+        const hasVisibleYearGroups = Array.from(group.querySelectorAll('[data-student-nav-group]')).some(
+          (navGroup) => navGroup instanceof HTMLElement && !navGroup.hidden,
+        );
+        group.hidden = !hasVisibleYearGroups;
+      });
+
+      sectionPanels.forEach((panel) => {
+        if (!(panel instanceof HTMLElement)) return;
+        const program = panel.dataset.studentSectionPanel ?? '';
+        const cardElements = Array.from(panel.querySelectorAll('[data-student-card]'));
+        const hasVisibleCards = cardElements.some((card) => card instanceof HTMLElement && !card.hidden);
+        const programVisible = activePrograms.size > 0 ? activePrograms.has(program) : false;
+        panel.hidden = !programVisible || !hasVisibleCards;
       });
     };
 
@@ -151,8 +278,17 @@ for (const degree of ['bsc', 'msc'] as const) {
       checkbox.addEventListener('change', applyStudentYearFilter);
     });
 
+    programCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', applyStudentYearFilter);
+    });
+
     resetButton?.addEventListener('click', () => {
       checkboxes.forEach((checkbox) => {
+        if (checkbox instanceof HTMLInputElement) {
+          checkbox.checked = true;
+        }
+      });
+      programCheckboxes.forEach((checkbox) => {
         if (checkbox instanceof HTMLInputElement) {
           checkbox.checked = true;
         }

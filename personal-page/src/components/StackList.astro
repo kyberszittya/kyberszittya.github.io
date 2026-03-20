@@ -1,0 +1,47 @@
+---
+export type StackListItem = {
+  title: string;
+  titleKey?: string;
+  text?: string;
+  textKey?: string;
+  lines?: string[];
+  lineKeys?: string[];
+  href?: string;
+  hrefLabel?: string;
+  hrefLabelKey?: string;
+  hrefTarget?: string;
+  hrefRel?: string;
+  className?: string;
+  headingClassName?: string;
+};
+
+type Props = {
+  items: StackListItem[];
+  className?: string;
+};
+
+const { items, className = 'compact' } = Astro.props;
+---
+
+<div class:list={['stack-list', className]}>
+  {items.map((item) => (
+    <article class:list={['stack-item', item.className]}>
+      <strong class={item.headingClassName} data-i18n={item.titleKey}>{item.title}</strong>
+      {item.text && <p data-i18n={item.textKey}>{item.text}</p>}
+      {item.lines?.map((line, index) => (
+        <span data-i18n={item.lineKeys?.[index]}>{line}</span>
+      ))}
+      {item.href && (
+        <a
+          class="text-link"
+          href={item.href}
+          target={item.hrefTarget}
+          rel={item.hrefRel}
+          data-i18n={item.hrefLabelKey}
+        >
+          {item.hrefLabel}
+        </a>
+      )}
+    </article>
+  ))}
+</div>

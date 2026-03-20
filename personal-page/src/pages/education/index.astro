@@ -1,8 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
+import InfoCard from '../../components/InfoCard.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageSectionNav from '../../components/PageSectionNav.astro';
+import StackList from '../../components/StackList.astro';
+import SubjectSummaryCard from '../../components/SubjectSummaryCard.astro';
 import { education } from '../../data/profile';
 
 const subjectsCollection = await getCollection('subjects');
@@ -20,23 +23,24 @@ const subjects = Array.from(
       if (!current) {
         map.set(subjectEntry.data.subject, {
           title: subjectEntry.data.subject,
+          heading: subjectEntry.data.title,
           description:
             subjectEntry.data.subjectSummary ??
             `Subject materials and teaching notes for ${subjectEntry.data.subject}.`,
           semesters: semesterLabels,
-          languages: languageLabels,
+          teachingLanguages: languageLabels,
           hostUniversities,
           hostDepartments,
           degreePrograms,
           neptunCode: subjectEntry.data.neptunCode,
           mascot: subjectEntry.data.mascot,
-          href: '/subjects',
+          href: `/subjects/${subjectEntry.id}`,
         });
         return map;
       }
 
       const mergedSemesters = Array.from(new Set([...current.semesters, ...semesterLabels]));
-      const mergedLanguages = Array.from(new Set([...current.languages, ...languageLabels]));
+      const mergedLanguages = Array.from(new Set([...current.teachingLanguages, ...languageLabels]));
       const mergedHostUniversities = Array.from(new Set([...current.hostUniversities, ...hostUniversities]));
       const mergedHostDepartments = Array.from(new Set([...current.hostDepartments, ...hostDepartments]));
       const mergedDegreePrograms = Array.from(new Set([...current.degreePrograms, ...degreePrograms]));
@@ -45,7 +49,7 @@ const subjects = Array.from(
         ...current,
         description: subjectEntry.data.subjectSummary ?? current.description,
         semesters: mergedSemesters,
-        languages: mergedLanguages,
+        teachingLanguages: mergedLanguages,
         hostUniversities: mergedHostUniversities,
         hostDepartments: mergedHostDepartments,
         degreePrograms: mergedDegreePrograms,
@@ -54,9 +58,35 @@ const subjects = Array.from(
       });
 
       return map;
-    }, new Map<string, { title: string; description: string; semesters: string[]; languages: string[]; hostUniversities: string[]; hostDepartments: string[]; degreePrograms: string[]; neptunCode?: string; mascot?: { name: string; shortLabel?: string; description?: string; accent?: string; emoji?: string }; href: string }>())
+    }, new Map<string, {
+      title: string;
+      heading: string;
+      description: string;
+      semesters: string[];
+      teachingLanguages: string[];
+      hostUniversities: string[];
+      hostDepartments: string[];
+      degreePrograms: string[];
+      neptunCode?: string;
+      mascot?: { name: string; shortLabel?: string; description?: string; accent?: string; emoji?: string };
+      href: string;
+    }>())
     .values(),
 ).sort((a, b) => a.title.localeCompare(b.title));
+
+const degreeItems = education.degrees.map((degree) => ({
+  title: degree.title,
+  text: degree.track,
+  lines: degree.details,
+}));
+
+const teachingItems = [
+  {
+    title: education.teachingProfile.title,
+    text: education.teachingProfile.period,
+    lines: [education.teachingProfile.description],
+  },
+];
 ---
 
 <BaseLayout title="Education | Kyberszittya">
@@ -88,113 +118,46 @@ const subjects = Array.from(
     />
 
     <div class="page-multi-content">
-  <section class="card-grid-wide">
-    <section class="info-card" id="education-academic-background">
-      <h2 data-i18n="page.cv.academicBackground">Academic background</h2>
-      <div class="stack-list">
-        {education.degrees.map((degree) => (
-          <article class="stack-item">
-            <strong>{degree.title}</strong>
-            {degree.track && <p>{degree.track}</p>}
-            {degree.details.map((detail) => (
-              <span>{detail}</span>
+      <section class="card-grid-wide">
+        <InfoCard as="section" id="education-academic-background">
+          <h2 data-i18n="page.cv.academicBackground">Academic background</h2>
+          <StackList items={degreeItems} className="" />
+        </InfoCard>
+
+        <InfoCard as="section" id="education-teaching-experience">
+          <h2>Teaching experience</h2>
+          <StackList items={teachingItems} className="" />
+          <h3 class="section-subtitle">Teaching languages</h3>
+          <div class="chip-row">
+            {education.teachingProfile.languages.map((language) => (
+              <span class="chip chip-blue">{language}</span>
             ))}
-          </article>
-        ))}
-      </div>
-    </section>
+          </div>
+        </InfoCard>
+      </section>
 
-    <section class="info-card" id="education-teaching-experience">
-      <h2>Teaching experience</h2>
-      <div class="stack-list">
-        <article class="stack-item">
-          <strong>{education.teachingProfile.title}</strong>
-          <p>{education.teachingProfile.period}</p>
-          <span>{education.teachingProfile.description}</span>
-        </article>
-      </div>
-      <h3 class="section-subtitle">Teaching languages</h3>
-      <div class="chip-row">
-        {education.teachingProfile.languages.map((language) => (
-          <span class="chip chip-blue">{language}</span>
-        ))}
-      </div>
-    </section>
-  </section>
+      <section class="card-grid-wide">
+        <InfoCard as="section" id="education-subjects">
+          <h2>Subjects</h2>
+          <div class="stack-list">
+            {subjects.map((subject) => (
+              <SubjectSummaryCard subject={subject} />
+            ))}
+          </div>
+        </InfoCard>
 
-  <section class="card-grid-wide">
-    <section class="info-card" id="education-subjects">
-      <h2>Subjects</h2>
-      <div class="stack-list">
-        {subjects.map((subject) => (
-          <article class="stack-item">
-            <strong>{subject.title}</strong>
-            <span>{subject.description}</span>
-            {(subject.neptunCode || subject.mascot) && (
-              <div class="chip-row">
-                {subject.neptunCode && <span class="chip chip-blue">Neptun: {subject.neptunCode}</span>}
-                {subject.mascot && (
-                  <span class="chip">
-                    {subject.mascot.emoji ? `${subject.mascot.emoji} ` : ''}{subject.mascot.shortLabel ?? subject.mascot.name}
-                  </span>
-                )}
-              </div>
-            )}
-            <div class="subject-info-group">
-              <p class="subject-info-label">Subject information</p>
-              <div class="chip-row">
-                {subject.hostUniversities.map((hostUniversity) => (
-                  <span class="chip">{hostUniversity}</span>
-                ))}
-                {subject.hostDepartments.map((hostDepartment) => (
-                  <span class="chip">{hostDepartment}</span>
-                ))}
-              </div>
-            </div>
-            <div class="subject-info-group">
-              <p class="subject-info-label">Degree program</p>
-              <div class="chip-row">
-                {subject.degreePrograms.map((degreeProgram) => (
-                  <span class="chip chip-blue">{degreeProgram}</span>
-                ))}
-              </div>
-            </div>
-            {subject.semesters.length > 0 && (
-              <div class="subject-info-group">
-                <p class="subject-info-label">Semesters</p>
-                <div class="chip-row">
-                  {subject.semesters.map((semester) => (
-                    <span class="chip chip-blue">{semester}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div class="subject-info-group">
-              <p class="subject-info-label">Teaching languages</p>
-              <div class="chip-row">
-                {subject.languages.map((language) => (
-                  <span class="chip">{language}</span>
-                ))}
-              </div>
-            </div>
-            <a class="text-link" href={subject.href}>Open subject materials</a>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="info-card" id="education-student-supervision">
-      <h2 data-i18n="page.education.finishedStudents">Student supervision</h2>
-      <p data-i18n="page.education.finishedStudents.summary">This area brings together active and graduated student supervision, and can grow into a fuller archive as more project details are added.</p>
-      <p style="margin-top: 1rem;">
-        <a class="text-link" href="/education/tdk" data-i18n="page.education.openTdk">Open TDK page</a>
-      </p>
-      <p style="margin-top: 1rem;">
-        <a class="text-link" href="/education/thesis-faq" data-i18n="page.education.openThesisFaq">Open thesis FAQ</a>
-      </p>
-      <a class="text-link" href="/education/students" data-i18n="page.education.openFinishedStudents">Open student supervision</a>
-    </section>
-  </section>
+        <InfoCard as="section" id="education-student-supervision">
+          <h2 data-i18n="page.education.finishedStudents">Student supervision</h2>
+          <p data-i18n="page.education.finishedStudents.summary">This area brings together active and graduated student supervision, and can grow into a fuller archive as more project details are added.</p>
+          <p style="margin-top: 1rem;">
+            <a class="text-link" href="/education/tdk" data-i18n="page.education.openTdk">Open TDK page</a>
+          </p>
+          <p style="margin-top: 1rem;">
+            <a class="text-link" href="/education/thesis-faq" data-i18n="page.education.openThesisFaq">Open thesis FAQ</a>
+          </p>
+          <a class="text-link" href="/education/students" data-i18n="page.education.openFinishedStudents">Open student supervision</a>
+        </InfoCard>
+      </section>
     </div>
   </section>
 </BaseLayout>

@@ -1,0 +1,39 @@
+---
+type Props = {
+  name: string;
+  researchTopic: string;
+  href?: string;
+  program?: string;
+  graduationYear?: number;
+  active: boolean;
+  className?: string;
+  yearDataAttr?: string;
+};
+
+const {
+  name,
+  researchTopic,
+  href,
+  program,
+  graduationYear,
+  active,
+  className = '',
+  yearDataAttr,
+} = Astro.props;
+---
+
+<article
+  class:list={['stack-item', !active && 'graduated-card', className]}
+  data-student-card={yearDataAttr ? true : undefined}
+  data-student-year={yearDataAttr}
+>
+  <strong>
+    {!active && <span class="graduation-glyph" aria-hidden="true"></span>}
+    {href ? <a class="title-link" href={href}>{name}</a> : name}
+  </strong>
+  <p>{researchTopic}</p>
+  {program && <span>{program}</span>}
+  {graduationYear && <span>Graduation year: {graduationYear}</span>}
+  {active && <span class="ongoing-label" data-i18n="student.status.ongoing">Ongoing</span>}
+  {!active && <span class="graduation-label" data-i18n="student.status.graduated">Graduated</span>}
+</article>

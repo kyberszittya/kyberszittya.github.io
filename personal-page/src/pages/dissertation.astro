@@ -1,7 +1,21 @@
 ---
+import InfoCard from '../components/InfoCard.astro';
 import PageIntro from '../components/PageIntro.astro';
+import StackList from '../components/StackList.astro';
+import FeatureListCard from '../components/FeatureListCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { dissertation } from '../data/profile';
+
+const dissertationOverviewItems = [
+  {
+    title: dissertation.degree,
+    lines: [dissertation.institution, dissertation.evaluation],
+    href: dissertation.pdfHref,
+    hrefLabel: 'Open dissertation PDF',
+    hrefTarget: '_blank',
+    hrefRel: 'noreferrer',
+  },
+];
 ---
 
 <BaseLayout title="Dissertation | Kyberszittya">
@@ -18,28 +32,11 @@ import { dissertation } from '../data/profile';
   />
 
   <section class="card-grid-wide">
-    <section class="info-card">
-      <h2>Overview</h2>
-      <div class="stack-list compact">
-        <article class="stack-item">
-          <strong>{dissertation.degree}</strong>
-          <span>{dissertation.institution}</span>
-          <span>{dissertation.evaluation}</span>
-        </article>
-      </div>
+    <InfoCard as="section" title="Overview">
+      <StackList items={dissertationOverviewItems} />
       <p>{dissertation.summary}</p>
-      <p>
-        <a class="text-link" href={dissertation.pdfHref} target="_blank" rel="noreferrer">Open dissertation PDF</a>
-      </p>
-    </section>
+    </InfoCard>
 
-    <section class="info-card">
-      <h2>Core highlights</h2>
-      <ul class="feature-list feature-list-light">
-        {dissertation.highlights.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-    </section>
+    <FeatureListCard title="Core highlights" items={dissertation.highlights} />
   </section>
 </BaseLayout>

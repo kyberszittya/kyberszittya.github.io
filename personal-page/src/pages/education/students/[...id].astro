@@ -1,8 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
+import InfoCard from '../../../components/InfoCard.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageIntro from '../../../components/PageIntro.astro';
 import PageSectionNav from '../../../components/PageSectionNav.astro';
+import StackList from '../../../components/StackList.astro';
 
 export async function getStaticPaths() {
   const students = await getCollection('students');
@@ -16,6 +18,52 @@ const { student } = Astro.props;
 const { Content } = await render(student);
 const [degree = 'Student', yearFolder = ''] = student.id.split('/');
 const degreeLabel = degree.toUpperCase();
+const overviewItems = [
+  student.data.active
+    ? {
+        title: 'Ongoing',
+        titleKey: 'student.status.ongoing',
+      }
+    : {
+        title: 'Graduated',
+        titleKey: 'student.status.graduated',
+        className: 'graduated-card',
+      },
+  {
+    title: 'Degree',
+    lines: [degreeLabel],
+  },
+  student.data.program
+    ? {
+        title: 'Program',
+        lines: [student.data.program],
+      }
+    : null,
+  student.data.startSemester
+    ? {
+        title: 'Start semester',
+        lines: [student.data.startSemester],
+      }
+    : null,
+  student.data.endSemester
+    ? {
+        title: 'End semester',
+        lines: [student.data.endSemester],
+      }
+    : null,
+  student.data.graduationYear
+    ? {
+        title: 'Graduation year',
+        lines: [String(student.data.graduationYear)],
+      }
+    : null,
+  yearFolder
+    ? {
+        title: 'Folder year',
+        lines: [yearFolder],
+      }
+    : null,
+].filter(Boolean);
 ---
 
 <BaseLayout title={`${student.data.name} | Student`}>
@@ -38,71 +86,26 @@ const degreeLabel = degree.toUpperCase();
     />
 
     <div class="page-multi-content">
-  <section class="card-grid-wide">
-    <section class:list={['info-card', !student.data.active && 'graduated-card']} id="student-overview">
-      <h2>Student overview</h2>
-      <div class="stack-list compact">
-        {!student.data.active && (
-          <article class="stack-item graduated-card">
-            <strong><span class="graduation-glyph" aria-hidden="true"></span><span data-i18n="student.status.graduated">Graduated</span></strong>
-          </article>
-        )}
-        {student.data.active && (
-          <article class="stack-item">
-            <strong><span class="ongoing-glyph" aria-hidden="true"></span><span data-i18n="student.status.ongoing">Ongoing</span></strong>
-          </article>
-        )}
-        <article class="stack-item">
-          <strong>Degree</strong>
-          <span>{degreeLabel}</span>
-        </article>
-        {student.data.program && (
-          <article class="stack-item">
-            <strong>Program</strong>
-            <span>{student.data.program}</span>
-          </article>
-        )}
-        {student.data.startSemester && (
-          <article class="stack-item">
-            <strong>Start semester</strong>
-            <span>{student.data.startSemester}</span>
-          </article>
-        )}
-        {student.data.endSemester && (
-          <article class="stack-item">
-            <strong>End semester</strong>
-            <span>{student.data.endSemester}</span>
-          </article>
-        )}
-        {student.data.graduationYear && (
-          <article class="stack-item">
-            <strong>Graduation year</strong>
-            <span>{student.data.graduationYear}</span>
-          </article>
-        )}
-        {yearFolder && (
-          <article class="stack-item">
-            <strong>Folder year</strong>
-            <span>{yearFolder}</span>
-          </article>
-        )}
-      </div>
-    </section>
+      <section class="card-grid-wide">
+        <InfoCard as="section" className={!student.data.active ? 'graduated-card' : ''} id="student-overview">
+          <h2>Student overview</h2>
+          <StackList items={overviewItems} />
+        </InfoCard>
 
-    <section class="info-card" id="student-topic-summary">
-      <h2>Topic summary</h2>
-      <p>{student.data.researchTopic}</p>
-      {student.data.note && <p><strong>Note:</strong> {student.data.note}</p>}
-      <a class="text-link" href="/education/students">Back to student supervision</a>
-    </section>
-  </section>
+        <InfoCard as="section" id="student-topic-summary">
+          <h2>Topic summary</h2>
+          <p>{student.data.researchTopic}</p>
+          {student.data.note && <p><strong>Note:</strong> {student.data.note}</p>}
+          <a class="text-link" href="/education/students">Back to student supervision</a>
+        </InfoCard>
+      </section>
 
-  <section class="info-card" id="student-notes">
-    <h2>Notes</h2>
-    <div class="prose prose-invert max-w-none lecture-prose">
-      <Content />
-    </div>
-  </section>
+      <InfoCard as="section" id="student-notes">
+        <h2>Notes</h2>
+        <div class="prose prose-invert max-w-none lecture-prose">
+          <Content />
+        </div>
+      </InfoCard>
     </div>
   </section>
 </BaseLayout>

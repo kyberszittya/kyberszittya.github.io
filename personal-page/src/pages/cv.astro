@@ -1,7 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
+import InfoCard from '../components/InfoCard.astro';
 import PageSectionNav from '../components/PageSectionNav.astro';
 import PageIntro from '../components/PageIntro.astro';
+import StackList from '../components/StackList.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { dissertation, education, languages, scholarProfile, skills } from '../data/profile';
 import { getPublications } from '../lib/publications';
@@ -10,6 +12,20 @@ const publications = getPublications().slice(0, 6);
 const experienceEntries = (await getCollection('experience')).sort(
   (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime(),
 );
+
+const degreeItems = education.degrees.map((degree) => ({
+  title: degree.title,
+  text: degree.track,
+  lines: degree.details,
+}));
+
+const dissertationItems = [
+  {
+    title: dissertation.title,
+    text: dissertation.degree,
+    lines: [dissertation.institution, dissertation.evaluation],
+  },
+];
 ---
 
 <BaseLayout title="CV | Kyberszittya">
@@ -43,93 +59,76 @@ const experienceEntries = (await getCollection('experience')).sort(
     />
 
     <div class="page-multi-content">
-  <section class="card-grid-wide">
-    <section class="info-card" id="cv-academic-background">
-      <h2 data-i18n="page.cv.academicBackground">Academic background</h2>
-      <div class="stack-list">
-        {education.degrees.map((degree) => (
-          <article class="stack-item">
-            <strong>{degree.title}</strong>
-            {degree.track && <p>{degree.track}</p>}
-            {degree.details.map((detail) => (
-              <span>{detail}</span>
+      <section class="card-grid-wide">
+        <InfoCard as="section" id="cv-academic-background">
+          <h2 data-i18n="page.cv.academicBackground">Academic background</h2>
+          <StackList items={degreeItems} className="" />
+        </InfoCard>
+
+        <InfoCard as="section" id="cv-dissertation">
+          <h2>Dissertation</h2>
+          <StackList items={dissertationItems} />
+          <p>{dissertation.summary}</p>
+          <p>
+            <a class="text-link" href="/dissertation">Open dissertation page</a>
+          </p>
+        </InfoCard>
+      </section>
+
+      <section class="card-grid-wide">
+        <InfoCard as="section" id="cv-professional-affiliations">
+          <h2 data-i18n="page.cv.professionalAffiliations">Professional affiliations</h2>
+          <div class="stack-list compact">
+            {await Promise.all(
+              experienceEntries.map(async (role) => {
+                const { Content } = await render(role);
+                return (
+                  <article class="stack-item">
+                    <strong>{role.data.title}</strong>
+                    <p>{role.data.organization}</p>
+                    <span>{role.data.period}</span>
+                    <div class="cv-entry-copy">
+                      <Content />
+                    </div>
+                  </article>
+                );
+              }),
+            )}
+          </div>
+        </InfoCard>
+      </section>
+
+      <section class="card-grid-wide">
+        <InfoCard as="section" id="cv-selected-publications">
+          <h2 data-i18n="page.cv.selectedPublications">Selected publications</h2>
+          <ul class="feature-list feature-list-light">
+            {publications.map((item) => (
+              <li>{item.title} {item.year ? `(${item.year})` : ''}</li>
             ))}
-          </article>
-        ))}
-      </div>
-    </section>
+          </ul>
+          <p>
+            <a class="text-link" href="/publications" data-i18n="page.cv.fullArchive">Open full publication archive</a>
+          </p>
+          <p>
+            <a class="text-link" href={scholarProfile.href} target="_blank" rel="noreferrer" data-i18n="page.cv.scholarProfile">Open Google Scholar profile</a>
+          </p>
+        </InfoCard>
 
-    <section class="info-card" id="cv-dissertation">
-      <h2>Dissertation</h2>
-      <div class="stack-list compact">
-        <article class="stack-item">
-          <strong>{dissertation.title}</strong>
-          <p>{dissertation.degree}</p>
-          <span>{dissertation.institution}</span>
-          <span>{dissertation.evaluation}</span>
-        </article>
-      </div>
-      <p>{dissertation.summary}</p>
-      <p>
-        <a class="text-link" href="/dissertation">Open dissertation page</a>
-      </p>
-    </section>
-  </section>
-
-  <section class="card-grid-wide">
-    <section class="info-card" id="cv-professional-affiliations">
-      <h2 data-i18n="page.cv.professionalAffiliations">Professional affiliations</h2>
-      <div class="stack-list compact">
-        {await Promise.all(
-          experienceEntries.map(async (role) => {
-            const { Content } = await render(role);
-            return (
-              <article class="stack-item">
-                <strong>{role.data.title}</strong>
-                <p>{role.data.organization}</p>
-                <span>{role.data.period}</span>
-                <div class="cv-entry-copy">
-                  <Content />
-                </div>
-              </article>
-            );
-          }),
-        )}
-      </div>
-    </section>
-  </section>
-
-  <section class="card-grid-wide">
-    <section class="info-card" id="cv-selected-publications">
-      <h2 data-i18n="page.cv.selectedPublications">Selected publications</h2>
-      <ul class="feature-list feature-list-light">
-        {publications.map((item) => (
-          <li>{item.title} {item.year ? `(${item.year})` : ''}</li>
-        ))}
-      </ul>
-      <p>
-        <a class="text-link" href="/publications" data-i18n="page.cv.fullArchive">Open full publication archive</a>
-      </p>
-      <p>
-        <a class="text-link" href={scholarProfile.href} target="_blank" rel="noreferrer" data-i18n="page.cv.scholarProfile">Open Google Scholar profile</a>
-      </p>
-    </section>
-
-    <section class="info-card" id="cv-technical-expertise">
-      <h2 data-i18n="page.cv.technicalExpertise">Technical expertise</h2>
-      <div class="chip-row">
-        {skills.map((skill) => (
-          <span class="chip chip-blue">{skill}</span>
-        ))}
-      </div>
-      <h3 class="section-subtitle" data-i18n="page.cv.languages">Languages</h3>
-      <div class="chip-row">
-        {languages.map((language) => (
-          <span class="chip">{language}</span>
-        ))}
-      </div>
-    </section>
-  </section>
+        <InfoCard as="section" id="cv-technical-expertise">
+          <h2 data-i18n="page.cv.technicalExpertise">Technical expertise</h2>
+          <div class="chip-row">
+            {skills.map((skill) => (
+              <span class="chip chip-blue">{skill}</span>
+            ))}
+          </div>
+          <h3 class="section-subtitle" data-i18n="page.cv.languages">Languages</h3>
+          <div class="chip-row">
+            {languages.map((language) => (
+              <span class="chip">{language}</span>
+            ))}
+          </div>
+        </InfoCard>
+      </section>
     </div>
   </section>
 </BaseLayout>

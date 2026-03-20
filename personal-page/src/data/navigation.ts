@@ -29,6 +29,12 @@ export const navigation: NavItem[] = [
     description: 'Google Scholar and BibTeX-based publication list',
   },
   {
+    key: 'nav.blog',
+    label: 'Blog',
+    href: '/blog',
+    description: 'Notes, essays, and framework experiments',
+  },
+  {
     key: 'nav.education',
     label: 'Education',
     href: '/education',

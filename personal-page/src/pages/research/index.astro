@@ -1,6 +1,7 @@
 ---
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import InfoCard from '../../components/InfoCard.astro';
 import PageSectionNav from '../../components/PageSectionNav.astro';
 import { backgroundResearch, focusResearch, researchAreas } from '../../data/profile';
 ---
@@ -57,7 +58,7 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
 
   <section class="card-grid" id="research-areas">
     {researchAreas.map((area) => (
-      <article class="info-card">
+      <InfoCard>
         <h2>{area.title}</h2>
         <p>{area.description}</p>
         <ul class="feature-list feature-list-light">
@@ -66,7 +67,7 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
           ))}
         </ul>
         <a class="text-link" href={`/research/${area.slug}`} data-i18n="common.openTopicPage">Open topic page</a>
-      </article>
+      </InfoCard>
     ))}
   </section>
     </div>

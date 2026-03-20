@@ -208,11 +208,13 @@
 
 .hero-card-stack {
   position: absolute;
-  inset: var(--fib-5) 0 var(--fib-5) auto;
+  top: 50%;
+  right: 0;
   display: grid;
   gap: var(--fib-5);
   width: min(100%, 21rem);
   z-index: 2;
+  transform: translateY(-50%);
 }
 
 .hero-orbit {
@@ -368,8 +370,10 @@
 
   .hero-card-stack {
     position: relative;
-    inset: auto;
+    top: auto;
+    right: auto;
     width: 100%;
+    transform: none;
   }
 
   .hero-orbit-one {

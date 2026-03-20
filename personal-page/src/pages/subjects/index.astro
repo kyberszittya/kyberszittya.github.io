@@ -1,7 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import InfoCard from '../../components/InfoCard.astro';
 import PageSectionNav from '../../components/PageSectionNav.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import SubjectSummaryCard from '../../components/SubjectSummaryCard.astro';
 import { education } from '../../data/profile';
 
 const subjectsCollection = (await getCollection('subjects')).sort(
@@ -173,22 +176,20 @@ const subjectNavItems = subjects.map((subject) => ({
 ---
 
 <BaseLayout title="Subjects | Kyberszittya">
-  <section class="section-block">
-    <div class="section-heading">
-      <p class="section-label" data-i18n="page.lectures.kicker">Education</p>
-      <h1 class="hero-title" style="font-size: clamp(2.4rem, 5vw, 3.8rem); color: #f8fbff;" data-i18n="page.lectures.title">Subjects</h1>
-      <p class="hero-summary" data-i18n="page.lectures.summary">Teaching materials connected to full university subjects taught since 2022, currently offered in English and Hungarian.</p>
-      <div class="chip-row" style="margin-top: 1rem;">
-        <span class="chip chip-blue">{education.teachingProfile.period}</span>
-        {education.teachingProfile.languages.map((language) => (
-          <span class="chip">{language}</span>
-        ))}
-        {subjects.map((subject) => (
-          <span class="chip">{subject.title}</span>
-        ))}
-      </div>
-    </div>
-  </section>
+  <PageIntro
+    kicker="Education"
+    title="Subjects"
+    summary="Teaching materials connected to full university subjects taught since 2022, currently offered in English and Hungarian."
+    kickerKey="page.lectures.kicker"
+    titleKey="page.lectures.title"
+    summaryKey="page.lectures.summary"
+    inlineKicker={true}
+    stats={[
+      { value: education.teachingProfile.period, label: 'teaching period' },
+      { value: `${education.teachingProfile.languages.length}`, label: 'teaching languages' },
+      { value: `${subjects.length}`, label: 'subjects listed' },
+    ]}
+  />
 
   <section class="subject-layout">
     <PageSectionNav
@@ -198,7 +199,7 @@ const subjectNavItems = subjects.map((subject) => ({
       className="page-section-nav-subjects"
     />
 
-    <aside class="info-card student-filter-panel subject-filter-sidebar">
+    <InfoCard as="aside" className="student-filter-panel subject-filter-sidebar">
       <div class="student-filter-header">
         <div>
           <p class="section-eyebrow">Filter</p>
@@ -234,89 +235,18 @@ const subjectNavItems = subjects.map((subject) => ({
           </section>
         ))}
       </div>
-    </aside>
+    </InfoCard>
 
     <div class="card-grid subject-card-grid">
       {subjects.map((subject) => (
-        <article
-          class="info-card"
-          id={`subject-${subject.id}`}
-          data-subject-card
-          data-subject-tags={subject.tags.join('|')}
-        >
-        <p class="section-label">
-          <a class="text-link lecture-card-link" href={`/subjects/${subject.id}`}>{subject.title}</a>
-        </p>
-        <div class="subject-card-header">
-          <h2 style="font-size: 1.5rem;">
-            <a class="title-link lecture-card-title-link" href={`/subjects/${subject.id}`}>{subject.heading}</a>
-          </h2>
-          <p>{subject.publishDate.toDateString()}</p>
-          <p>{subject.description}</p>
-          <div class="subject-card-divider" aria-hidden="true"></div>
-        </div>
-        {(subject.neptunCode || subject.mascot) && (
-          <div class="chip-row">
-            {subject.neptunCode && <span class="chip chip-blue">Neptun: {subject.neptunCode}</span>}
-            {subject.mascot && (
-                <span class="chip">
-                  {subject.mascot.emoji ? `${subject.mascot.emoji} ` : ''}{subject.mascot.shortLabel ?? subject.mascot.name}
-                </span>
-              )}
-            </div>
-          )}
-          <div class="subject-info-group">
-            <p class="subject-info-label">Subject information</p>
-            <div class="chip-row">
-              {subject.hostUniversities.map((hostUniversity) => (
-                <span class="chip">{hostUniversity}</span>
-              ))}
-              {subject.hostDepartments.map((hostDepartment) => (
-                <span class="chip">{hostDepartment}</span>
-              ))}
-            </div>
-          </div>
-          <div class="subject-info-group">
-            <p class="subject-info-label">Degree program</p>
-            <div class="chip-row">
-              {subject.degreePrograms.map((degreeProgram) => (
-                <span class="chip chip-blue">{degreeProgram}</span>
-              ))}
-            </div>
-          </div>
-          {subject.semesters.length > 0 && (
-            <div class="subject-info-group">
-              <p class="subject-info-label">Semesters</p>
-              <div class="chip-row">
-                {subject.semesters.map((semester) => (
-                  <span class="chip">{semester}</span>
-                ))}
-              </div>
-            </div>
-          )}
-          {subject.teachingLanguages.length > 0 && (
-            <div class="subject-info-group">
-              <p class="subject-info-label">Teaching languages</p>
-              <div class="chip-row">
-                {subject.teachingLanguages.map((language) => (
-                  <span class="chip">{language}</span>
-                ))}
-              </div>
-            </div>
-          )}
-          {subject.tags.length > 0 && (
-            <div class="subject-info-group">
-              <p class="subject-info-label">Tags</p>
-              <div class="chip-row">
-                {subject.tags.slice(0, 6).map((tag) => (
-                  <span class="chip chip-blue">{tag}</span>
-                ))}
-                {subject.tags.length > 6 && <span class="chip">+{subject.tags.length - 6} more</span>}
-              </div>
-            </div>
-          )}
-          <a class="text-link" href={`/subjects/${subject.id}`} data-i18n="page.lectures.read">Open subject</a>
-        </article>
+        <SubjectSummaryCard
+          subject={{
+            ...subject,
+            id: `subject-${subject.id}`,
+            href: `/subjects/${subject.id}`,
+          }}
+          compact={true}
+        />
       ))}
     </div>
   </section>

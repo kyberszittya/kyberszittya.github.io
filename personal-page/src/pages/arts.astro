@@ -1,12 +1,13 @@
 ---
 import PageIntro from '../components/PageIntro.astro';
-import ImageGallery from '../components/ImageGallery.astro';
 import PageSectionNav from '../components/PageSectionNav.astro';
+import ImageGallery from '../components/ImageGallery.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { arts } from '../data/profile';
 import { getArtGalleryGroups } from '../lib/artGallery';
 
 const artGroups = getArtGalleryGroups();
+const totalArtImages = artGroups.reduce((sum, group) => sum + group.imageCount, 0);
 ---
 
 <BaseLayout title="Arts | Kyberszittya">
@@ -19,66 +20,203 @@ const artGroups = getArtGalleryGroups();
     summaryKey="page.arts.summary"
   />
 
-  <section class="page-multi-layout">
-    <PageSectionNav
-      title="Art collections"
-      ariaLabel="Art collection navigation"
-      entries={artGroups.map((group) => ({ href: `#${group.id}`, label: `${group.title} (${group.imageCount})` }))}
-    />
+  <section class="page-multi-layout art-page-layout">
+    {artGroups.length > 0 && (
+      <div class="art-left-rail">
+        <PageSectionNav
+          title="Gallery archive"
+          kicker="Collection browser"
+          ariaLabel="Art collection navigation"
+          className="art-gallery-nav"
+          entries={artGroups.map((group) => ({ href: `#${group.id}`, label: `${group.title} (${group.imageCount})` }))}
+        />
 
-    <div class="page-multi-content">
-      <section class="card-grid-wide">
-        <section class="info-card">
-          <h2 data-i18n="page.arts.overview">Overview</h2>
-          <p>{arts.summary}</p>
-        </section>
-
-        <section class="info-card">
-          <h2 data-i18n="page.arts.highlights">Highlights</h2>
-          <ul class="feature-list feature-list-light">
-            {arts.highlights.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
-        </section>
-      </section>
-
-      <section class="card-grid-wide">
-        <section class="info-card">
-          <h2>Gallery archive</h2>
+        <aside class="info-card art-gallery-metrics">
+          <p class="section-label">Visual collections</p>
           <div class="stack-list compact">
             <article class="stack-item">
               <strong>{artGroups.length} collections</strong>
-              <p>Grouped directly from the `public/art` folder structure.</p>
+              <p>Grouped from the archive and available through the left navigation pane.</p>
             </article>
             <article class="stack-item">
-              <strong>{artGroups.reduce((sum, group) => sum + group.imageCount, 0)} images</strong>
-              <p>Available in the gallery lightbox and grouped by visual theme.</p>
+              <strong>{totalArtImages} images</strong>
+              <p>Distributed across the collection archive and shown one gallery at a time.</p>
             </article>
           </div>
-        </section>
-      </section>
-
-      <div class="art-gallery-stack">
-        {artGroups.map((group) => (
-          <section class="info-card art-gallery-section" id={group.id}>
-            <div class="art-gallery-header">
-              <div>
-                <p class="section-label">Collection</p>
-                <h2>{group.title}</h2>
-              </div>
-              <span class="chip chip-blue">{group.imageCount} pieces</span>
-            </div>
-            <div class="subject-card-divider" aria-hidden="true"></div>
-            <ImageGallery
-              title={`${group.title} gallery`}
-              images={group.images}
-              className="image-gallery-showcase image-gallery-page"
-              maxRows={2}
-            />
-          </section>
-        ))}
+        </aside>
       </div>
+    )}
+
+    <div class="page-multi-content" data-art-tabs-root>
+      {artGroups.length > 0 ? (
+        <section class="art-browser-layout">
+          <div class="art-browser-main">
+            <div class="art-gallery-stack">
+              {artGroups.map((group, index) => (
+                <section
+                  class="info-card art-gallery-section"
+                  id={group.id}
+                  data-art-panel
+                  data-art-collection={group.id}
+                  tabindex="0"
+                  hidden={index !== 0}
+                >
+                  <div class="art-gallery-header">
+                    <div>
+                      <p class="section-label">Collection</p>
+                      <h2>{group.title}</h2>
+                    </div>
+                    <span class="chip chip-blue">{group.imageCount} pieces</span>
+                  </div>
+                  <div class="subject-card-divider" aria-hidden="true"></div>
+                  <ImageGallery
+                    title={`${group.title} gallery`}
+                    images={group.images}
+                    className="image-gallery-showcase image-gallery-page"
+                  />
+                </section>
+              ))}
+            </div>
+          </div>
+
+          {artGroups.map((group, index) => (
+            <aside
+              class="info-card art-collection-float"
+              data-art-float-panel
+              data-art-collection={group.id}
+              hidden={index !== 0}
+            >
+              <div class="art-collection-float-shell" aria-hidden="true">
+                <span class="art-collection-float-arc art-collection-float-arc-1"></span>
+                <span class="art-collection-float-arc art-collection-float-arc-2"></span>
+                <span class="art-collection-float-arc art-collection-float-arc-3"></span>
+              </div>
+
+              <section class="art-collection-float-panel">
+                <p class="section-label">Active collection</p>
+                <h2>{group.title}</h2>
+                <p class="art-collection-float-summary">
+                  A focused view into the <strong>{group.title}</strong> series, grouped from the local
+                  archive and shown one collection at a time for a calmer gallery flow.
+                </p>
+
+                <div class="subject-card-divider" aria-hidden="true"></div>
+
+                <div class="stack-list compact art-collection-float-stats">
+                  <article class="stack-item">
+                    <strong>{group.imageCount} pieces</strong>
+                    <p>Available in the current tab and lightbox sequence.</p>
+                  </article>
+                  <article class="stack-item">
+                    <strong>{index + 1} / {artGroups.length}</strong>
+                    <p>Position inside the archive rhythm.</p>
+                  </article>
+                  <article class="stack-item">
+                    <strong>#{group.id}</strong>
+                    <p>Direct-link anchor for this collection view.</p>
+                  </article>
+                </div>
+              </section>
+            </aside>
+          ))}
+        </section>
+      ) : (
+        <section class="info-card art-collections-browser">
+          <p class="section-label">Collection browser</p>
+          <h2>Gallery archive</h2>
+          <p class="art-collections-empty">No art collections are available yet.</p>
+        </section>
+      )}
+
+      <section class="info-card art-summary-panel">
+        <p class="section-label">Overview</p>
+        <h2 data-i18n="page.arts.overview">Visual direction</h2>
+        <p>{arts.summary}</p>
+        <div class="subject-card-divider" aria-hidden="true"></div>
+        <ul class="feature-list feature-list-light">
+          {arts.highlights.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </section>
     </div>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector('[data-art-tabs-root]');
+    if (!(root instanceof HTMLElement)) return;
+
+    const panels = Array.from(root.querySelectorAll('[data-art-panel]')).filter(
+      (panel) => panel instanceof HTMLElement,
+    );
+    const navLinks = Array.from(document.querySelectorAll('.art-gallery-nav a[href^="#"]')).filter(
+      (link) => link instanceof HTMLAnchorElement,
+    );
+    const floatPanels = Array.from(document.querySelectorAll('[data-art-float-panel]')).filter(
+      (panel) => panel instanceof HTMLElement,
+    );
+
+    if (!panels.length) return;
+
+    const getCollectionId = (element) => element.dataset.artCollection ?? '';
+    const panelIds = new Set(panels.map((panel) => getCollectionId(panel)).filter(Boolean));
+
+    const setActiveCollection = (collectionId, { focus = false, syncHash = false } = {}) => {
+      if (!panelIds.has(collectionId)) return;
+
+      navLinks.forEach((link) => {
+        const isActive = link.getAttribute('href') === `#${collectionId}`;
+        link.classList.toggle('is-active', isActive);
+        link.setAttribute('aria-current', isActive ? 'location' : 'false');
+      });
+
+      panels.forEach((panel) => {
+        const isActive = getCollectionId(panel) === collectionId;
+        panel.hidden = !isActive;
+
+        if (focus && isActive) {
+          panel.focus();
+        }
+      });
+
+      floatPanels.forEach((panel) => {
+        panel.hidden = getCollectionId(panel) !== collectionId;
+      });
+
+      if (syncHash) {
+        const url = new URL(window.location.href);
+        url.hash = collectionId;
+        window.history.replaceState(null, '', url);
+      }
+    };
+
+    const readHashCollection = () => decodeURIComponent(window.location.hash.replace(/^#/, ''));
+
+    navLinks.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const collectionId = decodeURIComponent(link.getAttribute('href')?.replace(/^#/, '') ?? '');
+        if (!panelIds.has(collectionId)) return;
+        event.preventDefault();
+        setActiveCollection(collectionId, { syncHash: true, focus: true });
+      });
+    });
+
+    window.addEventListener('hashchange', () => {
+      const collectionId = readHashCollection();
+      if (panelIds.has(collectionId)) {
+        setActiveCollection(collectionId);
+      }
+    });
+
+    const initialCollectionId = readHashCollection();
+
+    if (panelIds.has(initialCollectionId)) {
+      setActiveCollection(initialCollectionId);
+    } else {
+      const firstPanel = panels[0];
+      setActiveCollection(getCollectionId(firstPanel));
+    }
+  })();
+</script>

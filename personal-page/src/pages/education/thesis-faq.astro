@@ -1,5 +1,6 @@
 ---
 import PageIntro from '../../components/PageIntro.astro';
+import PageSectionNav from '../../components/PageSectionNav.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
@@ -13,8 +14,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     summaryKey="page.thesisFaq.summary"
   />
 
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="Thesis FAQ"
+      ariaLabel="Thesis FAQ section navigation"
+      entries={[
+        { href: '#thesis-faq-before-starting', label: 'Before starting' },
+        { href: '#thesis-faq-working-together', label: 'Working together' },
+        { href: '#thesis-faq-deliverables', label: 'Deliverables' },
+        { href: '#thesis-faq-key-points', label: 'Most important things' },
+      ]}
+    />
+
+    <div class="page-multi-content">
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="thesis-faq-before-starting">
       <h2 data-i18n="page.thesisFaq.start">Before starting</h2>
       <ul class="feature-list feature-list-light">
         <li data-i18n="page.thesisFaq.start.0">Choose a topic that is narrow enough to finish well, but meaningful enough to demonstrate real engineering or research value.</li>
@@ -24,7 +38,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </ul>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="thesis-faq-working-together">
       <h2 data-i18n="page.thesisFaq.workflow">Working together</h2>
       <ul class="feature-list feature-list-light">
         <li data-i18n="page.thesisFaq.workflow.0">Keep progress visible through short updates, versioned files, and clearly named milestones.</li>
@@ -36,7 +50,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="thesis-faq-deliverables">
       <h2 data-i18n="page.thesisFaq.delivery">Deliverables and expectations</h2>
       <ul class="feature-list feature-list-light">
         <li data-i18n="page.thesisFaq.delivery.0">The written thesis should explain the problem, context, method, implementation, evaluation, and conclusions in a coherent structure.</li>
@@ -46,7 +60,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </ul>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="thesis-faq-key-points">
       <h2 data-i18n="page.thesisFaq.tips">Most important things to know</h2>
       <ul class="feature-list feature-list-light">
         <li data-i18n="page.thesisFaq.tips.0">Do not leave writing to the final weeks. Write continuously alongside the implementation.</li>
@@ -55,5 +69,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <li data-i18n="page.thesisFaq.tips.3">Ask questions early when something is unclear. Small uncertainties tend to become large delays if they remain implicit.</li>
       </ul>
     </section>
+  </section>
+    </div>
   </section>
 </BaseLayout>

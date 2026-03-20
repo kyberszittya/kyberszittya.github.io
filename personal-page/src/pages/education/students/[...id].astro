@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageIntro from '../../../components/PageIntro.astro';
+import PageSectionNav from '../../../components/PageSectionNav.astro';
 
 export async function getStaticPaths() {
   const students = await getCollection('students');
@@ -25,8 +26,20 @@ const degreeLabel = degree.toUpperCase();
     kickerKey="page.students.kicker"
   />
 
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="Student page"
+      ariaLabel="Student page section navigation"
+      entries={[
+        { href: '#student-overview', label: 'Student overview' },
+        { href: '#student-topic-summary', label: 'Topic summary' },
+        { href: '#student-notes', label: 'Notes' },
+      ]}
+    />
+
+    <div class="page-multi-content">
   <section class="card-grid-wide">
-    <section class:list={['info-card', !student.data.active && 'graduated-card']}>
+    <section class:list={['info-card', !student.data.active && 'graduated-card']} id="student-overview">
       <h2>Student overview</h2>
       <div class="stack-list compact">
         {!student.data.active && (
@@ -76,7 +89,7 @@ const degreeLabel = degree.toUpperCase();
       </div>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="student-topic-summary">
       <h2>Topic summary</h2>
       <p>{student.data.researchTopic}</p>
       {student.data.note && <p><strong>Note:</strong> {student.data.note}</p>}
@@ -84,10 +97,12 @@ const degreeLabel = degree.toUpperCase();
     </section>
   </section>
 
-  <section class="info-card">
+  <section class="info-card" id="student-notes">
     <h2>Notes</h2>
     <div class="prose prose-invert max-w-none lecture-prose">
       <Content />
+    </div>
+  </section>
     </div>
   </section>
 </BaseLayout>

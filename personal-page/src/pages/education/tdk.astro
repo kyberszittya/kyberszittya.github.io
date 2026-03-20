@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
+import PageSectionNav from '../../components/PageSectionNav.astro';
 
 const tdkEntries = await getCollection('tdk');
 
@@ -22,8 +23,22 @@ tdkEntries.sort((a, b) => {
     summaryKey="page.tdk.summary"
   />
 
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="TDK sections"
+      ariaLabel="TDK section navigation"
+      entries={[
+        { href: '#tdk-what-belongs-here', label: 'What belongs here' },
+        { href: '#tdk-good-directions', label: 'Good directions' },
+        { href: '#tdk-students', label: 'Recent students' },
+        { href: '#tdk-how-we-work', label: 'How we can work' },
+        { href: '#tdk-expected-outcomes', label: 'Expected outcomes' },
+      ]}
+    />
+
+    <div class="page-multi-content">
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="tdk-what-belongs-here">
       <h2>What belongs here</h2>
       <ul class="feature-list feature-list-light">
         <li>Student research ideas that go beyond standard course assignments.</li>
@@ -32,7 +47,7 @@ tdkEntries.sort((a, b) => {
       </ul>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="tdk-good-directions">
       <h2>Good TDK directions</h2>
       <ul class="feature-list feature-list-light">
         <li>Artificial intelligence and robotics applications with measurable evaluation.</li>
@@ -43,7 +58,7 @@ tdkEntries.sort((a, b) => {
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="tdk-students">
       <h2>Recent TDK-related students</h2>
       <div class="stack-list compact">
         {tdkEntries.map((entry) => (
@@ -67,7 +82,7 @@ tdkEntries.sort((a, b) => {
       </div>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="tdk-how-we-work">
       <h2>How we can work on it</h2>
       <ul class="feature-list feature-list-light">
         <li>Start from a focused research question instead of a broad software project alone.</li>
@@ -78,7 +93,7 @@ tdkEntries.sort((a, b) => {
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="tdk-expected-outcomes">
       <h2>Expected outcomes</h2>
       <ul class="feature-list feature-list-light">
         <li>A well-scoped written summary with related work and evaluation.</li>
@@ -86,5 +101,7 @@ tdkEntries.sort((a, b) => {
         <li>A presentation-ready storyline for internal review, TDK, or later thesis continuation.</li>
       </ul>
     </section>
+  </section>
+    </div>
   </section>
 </BaseLayout>

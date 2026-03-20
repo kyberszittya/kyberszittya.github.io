@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageSectionNav from '../../components/PageSectionNav.astro';
 
 const students = await getCollection('students');
 
@@ -45,7 +46,19 @@ for (const degree of ['bsc', 'msc'] as const) {
     summaryKey="page.students.summary"
   />
 
-  <section class="info-card student-filter-panel">
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="Student sections"
+      ariaLabel="Student supervision section navigation"
+      entries={[
+        { href: '#student-supervision-filter', label: 'Filter by year' },
+        { href: '#bsc', label: 'BSc' },
+        { href: '#msc', label: 'MSc' },
+      ]}
+    />
+
+    <div class="page-multi-content">
+  <section class="info-card student-filter-panel" id="student-supervision-filter">
     <div class="student-filter-header">
       <div>
         <p class="section-eyebrow" data-i18n="page.students.filter.kicker">Filter</p>
@@ -111,6 +124,8 @@ for (const degree of ['bsc', 'msc'] as const) {
         ))}
       </div>
     </section>
+  </section>
+    </div>
   </section>
 
   <script is:inline>

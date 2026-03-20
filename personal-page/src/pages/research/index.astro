@@ -1,6 +1,7 @@
 ---
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageSectionNav from '../../components/PageSectionNav.astro';
 import { backgroundResearch, focusResearch, researchAreas } from '../../data/profile';
 ---
 
@@ -20,8 +21,20 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
     ]}
   />
 
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="Research sections"
+      ariaLabel="Research section navigation"
+      entries={[
+        { href: '#research-focus', label: 'Research focus' },
+        { href: '#research-background', label: 'Research background' },
+        { href: '#research-areas', label: 'Research areas' },
+      ]}
+    />
+
+    <div class="page-multi-content">
   <section class="dual-panel-grid">
-    <section class="glass-panel glass-panel-dark">
+    <section class="glass-panel glass-panel-dark" id="research-focus">
       <p class="section-label" data-i18n="research.focus.kicker">Research focus</p>
       <h2 data-i18n="research.focus.title">Focused research challenges</h2>
       <ul class="feature-list">
@@ -31,7 +44,7 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
       </ul>
     </section>
 
-    <section class="glass-panel glass-panel-dark">
+    <section class="glass-panel glass-panel-dark" id="research-background">
       <p class="section-label" data-i18n="research.background.kicker">Research background</p>
       <h2 data-i18n="research.background.title">Background research challenges</h2>
       <ul class="feature-list">
@@ -42,7 +55,7 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
     </section>
   </section>
 
-  <section class="card-grid">
+  <section class="card-grid" id="research-areas">
     {researchAreas.map((area) => (
       <article class="info-card">
         <h2>{area.title}</h2>
@@ -55,5 +68,7 @@ import { backgroundResearch, focusResearch, researchAreas } from '../../data/pro
         <a class="text-link" href={`/research/${area.slug}`} data-i18n="common.openTopicPage">Open topic page</a>
       </article>
     ))}
+  </section>
+    </div>
   </section>
 </BaseLayout>

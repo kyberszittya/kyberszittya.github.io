@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import PageIntro from '../../components/PageIntro.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageSectionNav from '../../components/PageSectionNav.astro';
 import { education } from '../../data/profile';
 
 const subjectsCollection = await getCollection('subjects');
@@ -74,8 +75,21 @@ const subjects = Array.from(
     ]}
   />
 
+  <section class="page-multi-layout">
+    <PageSectionNav
+      title="Education sections"
+      ariaLabel="Education section navigation"
+      entries={[
+        { href: '#education-academic-background', label: 'Academic background' },
+        { href: '#education-teaching-experience', label: 'Teaching experience' },
+        { href: '#education-subjects', label: 'Subjects' },
+        { href: '#education-student-supervision', label: 'Student supervision' },
+      ]}
+    />
+
+    <div class="page-multi-content">
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="education-academic-background">
       <h2 data-i18n="page.cv.academicBackground">Academic background</h2>
       <div class="stack-list">
         {education.degrees.map((degree) => (
@@ -90,7 +104,7 @@ const subjects = Array.from(
       </div>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="education-teaching-experience">
       <h2>Teaching experience</h2>
       <div class="stack-list">
         <article class="stack-item">
@@ -109,7 +123,7 @@ const subjects = Array.from(
   </section>
 
   <section class="card-grid-wide">
-    <section class="info-card">
+    <section class="info-card" id="education-subjects">
       <h2>Subjects</h2>
       <div class="stack-list">
         {subjects.map((subject) => (
@@ -169,7 +183,7 @@ const subjects = Array.from(
       </div>
     </section>
 
-    <section class="info-card">
+    <section class="info-card" id="education-student-supervision">
       <h2 data-i18n="page.education.finishedStudents">Student supervision</h2>
       <p data-i18n="page.education.finishedStudents.summary">This area brings together active and graduated student supervision, and can grow into a fuller archive as more project details are added.</p>
       <p style="margin-top: 1rem;">
@@ -180,5 +194,7 @@ const subjects = Array.from(
       </p>
       <a class="text-link" href="/education/students" data-i18n="page.education.openFinishedStudents">Open student supervision</a>
     </section>
+  </section>
+    </div>
   </section>
 </BaseLayout>

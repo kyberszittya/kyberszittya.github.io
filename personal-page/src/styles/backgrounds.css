@@ -1,0 +1,493 @@
+.page-hue-shift {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  will-change: opacity, transform, filter;
+}
+
+.page-hue-shift-blue {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(72, 188, 224, 0.2), transparent 30%),
+    radial-gradient(circle at 84% 14%, rgba(101, 72, 224, 0.18), transparent 32%),
+    linear-gradient(180deg, rgba(13, 53, 102, 0.12), rgba(72, 92, 224, 0.04));
+  animation: background-hue-shift 18s ease-in-out infinite;
+}
+
+.page-hue-shift-violet {
+  background:
+    radial-gradient(circle at 74% 22%, rgba(152, 74, 225, 0.24), transparent 28%),
+    radial-gradient(circle at 24% 76%, rgba(72, 92, 224, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(33, 17, 102, 0.08), rgba(13, 53, 102, 0.02));
+  opacity: 0.2;
+  animation: background-violet-breath 18s ease-in-out infinite;
+}
+
+.page-banner-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.34;
+}
+
+.page-banner-image {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  opacity: 0;
+  animation: slideshow-fade 22s infinite;
+  animation-delay: calc((22s / var(--page-banner-count, 1)) * var(--slide-index, 0));
+  filter: saturate(0.88) contrast(1.02) blur(1px);
+  transform: scale(1.03);
+}
+
+.page-banner-image.is-static {
+  opacity: 1;
+  animation: none;
+}
+
+.fractal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.fractal-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 62% 18%, rgba(72, 188, 224, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(13, 53, 102, 0.03), rgba(33, 17, 102, 0.01));
+}
+
+.fractal-canvas,
+.fractal-overlay {
+  position: absolute;
+  border-radius: 2.5rem;
+  mix-blend-mode: screen;
+}
+
+.fractal-canvas {
+  top: 2.5rem;
+  right: 4vw;
+  width: min(72vw, 920px);
+  height: min(72vw, 920px);
+  opacity: 0.6;
+  transform: rotate(-10deg);
+  filter: blur(0.1px) saturate(1.28) contrast(1.18);
+  box-shadow:
+    0 0 140px rgba(72, 188, 224, 0.22),
+    0 0 200px rgba(101, 72, 224, 0.24);
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.98), transparent 84%);
+}
+
+.fractal-overlay {
+  overflow: visible;
+  will-change: transform, opacity;
+}
+
+.fractal-overlay-fibonacci {
+  top: 4rem;
+  right: 1vw;
+  width: min(52vw, 620px);
+  height: min(56vw, 660px);
+  opacity: 0.44;
+  filter: drop-shadow(0 0 26px rgba(72, 188, 224, 0.28));
+}
+
+.fractal-overlay-sierpinski {
+  left: 9vw;
+  bottom: 6rem;
+  width: min(42vw, 520px);
+  height: min(38vw, 470px);
+  opacity: 0.56;
+  filter:
+    drop-shadow(0 0 34px rgba(101, 72, 224, 0.32))
+    drop-shadow(0 0 52px rgba(72, 188, 224, 0.12));
+}
+
+.fractal-overlay-morph {
+  right: 16vw;
+  bottom: 8rem;
+  width: min(28vw, 360px);
+  height: min(28vw, 360px);
+  opacity: 0.4;
+  filter: drop-shadow(0 0 30px rgba(152, 74, 225, 0.22));
+}
+
+.fractal-motion {
+  transform-origin: center;
+}
+
+.fractal-motion-fibonacci {
+  animation:
+    fractal-transit-fibonacci 26s ease-in-out infinite,
+    fractal-spin-slow 40s linear infinite;
+}
+
+.fractal-motion-sierpinski {
+  animation:
+    fractal-transit-sierpinski 30s ease-in-out infinite,
+    fractal-pulse 14s ease-in-out infinite,
+    fractal-tilt 24s ease-in-out infinite;
+}
+
+.fractal-motion-morph {
+  animation:
+    fractal-transit-morph 28s ease-in-out infinite,
+    fractal-spin-slow 54s linear infinite reverse;
+}
+
+.fractal-guide {
+  fill: none;
+  stroke: rgba(147, 157, 224, 0.12);
+  stroke-width: 1.1;
+}
+
+.fractal-spiral {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fractal-spiral-halo {
+  stroke: rgba(72, 188, 224, 0.16);
+  stroke-width: 8;
+}
+
+.fractal-spiral-core {
+  stroke: rgba(223, 246, 255, 0.78);
+  stroke-width: 2.2;
+  stroke-dasharray: 5 12;
+}
+
+.fractal-triangle {
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+
+.fractal-triangle-shell {
+  fill: rgba(20, 36, 92, 0.12);
+  stroke: rgba(223, 246, 255, 0.32);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+}
+
+.fractal-triangle-1,
+.fractal-triangle-4 {
+  fill: rgba(72, 188, 224, 0.16);
+  stroke: rgba(72, 188, 224, 0.5);
+}
+
+.fractal-triangle-2,
+.fractal-triangle-5 {
+  fill: rgba(101, 72, 224, 0.14);
+  stroke: rgba(147, 157, 224, 0.42);
+}
+
+.fractal-triangle-3,
+.fractal-triangle-6 {
+  fill: rgba(152, 74, 225, 0.13);
+  stroke: rgba(152, 74, 225, 0.38);
+}
+
+.fractal-morph-shape {
+  fill: rgba(14, 28, 84, 0.06);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.fractal-morph-shape-circle {
+  stroke: rgba(72, 188, 224, 0.54);
+  animation: fractal-shape-shift 16s ease-in-out infinite;
+}
+
+.fractal-morph-shape-square {
+  stroke: rgba(147, 157, 224, 0.48);
+  animation: fractal-shape-shift 16s ease-in-out infinite 4s;
+}
+
+.fractal-morph-shape-triangle {
+  stroke: rgba(152, 74, 225, 0.52);
+  animation: fractal-shape-shift 16s ease-in-out infinite 8s;
+}
+
+.fractal-morph-shape-hexagon {
+  stroke: rgba(223, 246, 255, 0.52);
+  animation: fractal-shape-shift 16s ease-in-out infinite 12s;
+}
+
+.background-slideshow {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(147, 157, 224, 0.16);
+  border-radius: 1.5rem;
+  margin-bottom: 1.75rem;
+  background: linear-gradient(160deg, rgba(13, 53, 102, 0.92), rgba(33, 17, 102, 0.88));
+}
+
+.background-slideshow-media {
+  position: absolute;
+  inset: 0;
+}
+
+.background-slideshow-layer {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  opacity: 0;
+  animation: slideshow-fade var(--slideshow-duration, 18s) infinite;
+  animation-delay: calc((var(--slideshow-duration, 18s) / var(--slideshow-count, 1)) * var(--slide-index));
+}
+
+.background-slideshow-layer.is-static {
+  opacity: 1;
+  animation: none;
+}
+
+.background-slideshow-overlay {
+  position: relative;
+  z-index: 1;
+  padding: 1.6rem;
+  backdrop-filter: blur(2px);
+}
+
+.lecture-showcase .background-slideshow-overlay {
+  padding: 2rem;
+}
+
+.page-glow,
+.page-grid,
+.page-noise {
+  position: fixed;
+  pointer-events: none;
+}
+
+.page-glow {
+  z-index: 0;
+  width: 32rem;
+  height: 32rem;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+}
+
+.page-glow-left {
+  top: -8rem;
+  left: -8rem;
+  background: rgba(72, 188, 224, 0.48);
+}
+
+.page-glow-right {
+  top: 14rem;
+  right: -10rem;
+  background: rgba(152, 74, 225, 0.38);
+}
+
+.page-grid {
+  inset: 0;
+  z-index: 0;
+  opacity: 0.1;
+  background-image:
+    linear-gradient(rgba(147, 157, 224, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 157, 224, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 60%);
+}
+
+.page-noise {
+  inset: 0;
+  z-index: 1;
+  opacity: 0.025;
+  background-image:
+    radial-gradient(circle at 20% 20%, #ffffff 0, transparent 18%),
+    radial-gradient(circle at 80% 30%, #ffffff 0, transparent 16%),
+    radial-gradient(circle at 50% 80%, #ffffff 0, transparent 14%);
+  background-size: 22rem 22rem;
+}
+
+@keyframes background-hue-shift {
+  0%,
+  100% {
+    opacity: 0.7;
+    filter: hue-rotate(0deg) saturate(1);
+  }
+
+  50% {
+    opacity: 1;
+    filter: hue-rotate(26deg) saturate(1.16);
+  }
+}
+
+@keyframes background-violet-breath {
+  0%,
+  100% {
+    opacity: 0.16;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.38;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes slideshow-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  8%,
+  28% {
+    opacity: 1;
+  }
+
+  36% {
+    opacity: 0;
+  }
+}
+
+@keyframes fractal-transit-fibonacci {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-6deg) scale(0.97);
+  }
+
+  50% {
+    transform: translate3d(-1.4rem, 1.1rem, 0) rotate(6deg) scale(1.03);
+  }
+}
+
+@keyframes fractal-transit-sierpinski {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-4deg) scale(0.94);
+  }
+
+  50% {
+    transform: translate3d(2.5rem, -1.8rem, 0) rotate(7deg) scale(1.06);
+  }
+}
+
+@keyframes fractal-transit-morph {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.94);
+  }
+
+  50% {
+    transform: translate3d(-1.6rem, 1rem, 0) scale(1.04);
+  }
+}
+
+@keyframes fractal-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fractal-pulse {
+  0%,
+  100% {
+    opacity: 0.82;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fractal-tilt {
+  0%,
+  100% {
+    filter: saturate(1) brightness(0.96);
+  }
+
+  50% {
+    filter: saturate(1.14) brightness(1.08);
+  }
+}
+
+@keyframes fractal-shape-shift {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.84) rotate(-12deg);
+  }
+
+  8%,
+  28% {
+    opacity: 0.95;
+    transform: scale(1) rotate(0deg);
+  }
+
+  38% {
+    opacity: 0;
+    transform: scale(1.08) rotate(12deg);
+  }
+}
+
+@media (max-width: 720px) {
+  .background-slideshow-overlay,
+  .lecture-showcase .background-slideshow-overlay {
+    padding: 1.2rem;
+  }
+
+  .fractal-canvas {
+    top: 6rem;
+    right: -10vw;
+    width: min(115vw, 620px);
+    height: min(115vw, 620px);
+    opacity: 0.4;
+  }
+
+  .fractal-overlay-fibonacci {
+    top: 5.5rem;
+    right: -6vw;
+    width: min(88vw, 440px);
+    height: min(92vw, 500px);
+    opacity: 0.36;
+  }
+
+  .fractal-overlay-sierpinski {
+    left: -2vw;
+    bottom: 8rem;
+    width: min(74vw, 320px);
+    height: min(66vw, 280px);
+    opacity: 0.42;
+  }
+
+  .fractal-overlay-morph {
+    right: -3vw;
+    bottom: 10rem;
+    width: min(52vw, 220px);
+    height: min(52vw, 220px);
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-hue-shift-blue,
+  .page-hue-shift-violet,
+  .fractal-motion-fibonacci,
+  .fractal-motion-sierpinski,
+  .fractal-motion-morph,
+  .fractal-morph-shape {
+    animation-duration: 32s;
+  }
+}

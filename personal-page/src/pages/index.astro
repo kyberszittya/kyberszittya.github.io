@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroMathOrnaments from '../components/HeroMathOrnaments.astro';
 import { dissertation, emailContacts, hero, overviewLinks, researchAreas, scholarMetrics, socialLinks } from '../data/profile';
 
 const students = await getCollection('students');
@@ -51,14 +52,7 @@ const heroStats = [
     </div>
 
     <div class="hero-side">
-      <div class="hero-fibonacci-shell" aria-hidden="true">
-        <span class="hero-fibonacci-arc hero-fibonacci-arc-1"></span>
-        <span class="hero-fibonacci-arc hero-fibonacci-arc-2"></span>
-        <span class="hero-fibonacci-arc hero-fibonacci-arc-3"></span>
-        <span class="hero-fibonacci-arc hero-fibonacci-arc-4"></span>
-      </div>
-      <div class="hero-orbit hero-orbit-one"></div>
-      <div class="hero-orbit hero-orbit-two"></div>
+      <HeroMathOrnaments />
       <div class="hero-card-stack">
         {heroStats.map((stat, index) => (
           <div class={`stat-card stat-card-${index + 1}`}>

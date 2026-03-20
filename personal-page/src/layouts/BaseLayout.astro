@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { collectBannerImages } from '../lib/bannerImages';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import MandelbrotBackground from '../components/MandelbrotBackground.astro';
+import FractalBackground from '../components/FractalBackground.astro';
 import NavMenu from '../components/NavMenu.astro';
 import { defaultLanguage, translations } from '../data/i18n';
 import { navigation } from '../data/navigation';
@@ -33,7 +33,7 @@ const bannerImages = await collectBannerImages(Astro.url.pathname);
         ))}
       </div>
     )}
-    <MandelbrotBackground />
+    <FractalBackground />
     <div class="page-glow page-glow-left" aria-hidden="true"></div>
     <div class="page-glow page-glow-right" aria-hidden="true"></div>
     <div class="site-frame">

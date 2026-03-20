@@ -1,0 +1,45 @@
+:root {
+  --phi: 1.618;
+  --phi-inverse: 0.618;
+  --fib-2: 0.5rem;
+  --fib-3: 0.8rem;
+  --fib-5: 1.3rem;
+  --fib-8: 2.1rem;
+  --fib-13: 3.4rem;
+  --fib-21: 5.5rem;
+  --bg: #0d3566;
+  --bg-deep: #211166;
+  --surface-light: rgba(13, 53, 102, 0.74);
+  --surface-soft: rgba(147, 157, 224, 0.12);
+  --surface-card: rgba(19, 34, 99, 0.78);
+  --surface-card-strong: rgba(18, 32, 88, 0.88);
+  --line: rgba(147, 157, 224, 0.26);
+  --text: #e9edff;
+  --muted: #939de0;
+  --accent: #48bce0;
+  --accent-strong: #488ce0;
+  --accent-secondary: #485ce0;
+  --accent-violet: #6548e0;
+  --accent-magenta: #984ae1;
+  --warm: #984ae1;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(72, 188, 224, 0.24), transparent 30%),
+    radial-gradient(circle at top right, rgba(152, 74, 225, 0.2), transparent 28%),
+    linear-gradient(180deg, #0d3566 0%, #211166 58%, #132263 100%);
+  color: var(--text);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.site-shell {
+  position: relative;
+  overflow-x: clip;
+}

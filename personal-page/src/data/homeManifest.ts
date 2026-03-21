@@ -1,14 +1,19 @@
 import {
   academicReachSection,
+  buildHomePrimaryCards,
   homeFeatureCards,
-  homePrimaryCards,
   overviewCards,
   overviewSection,
   researchHighlightSection,
 } from './home';
 import type { PageSection } from './pageSections';
 
-export function buildHomePageSections(introParagraphs: string[]): PageSection[] {
+type HomePageSectionInput = {
+  introParagraphs: string[];
+  homePrimaryCards: ReturnType<typeof buildHomePrimaryCards>;
+};
+
+export function buildHomePageSections({ introParagraphs, homePrimaryCards }: HomePageSectionInput): PageSection[] {
   return [
     {
       type: 'text',

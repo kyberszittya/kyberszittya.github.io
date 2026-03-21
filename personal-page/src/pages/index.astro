@@ -2,15 +2,38 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroMathOrnaments from '../components/HeroMathOrnaments.astro';
 import PageSectionRenderer from '../components/PageSectionRenderer.astro';
-import { buildHomeHeroStats, heroActions, heroSocialLabels } from '../data/home';
+import { buildHomeHeroStats, buildHomePrimaryCards, heroActions, heroSocialLabels } from '../data/home';
 import { buildHomePageSections } from '../data/homeManifest';
-import { hero, socialLinks } from '../data/site';
-import { getStudentMetrics } from '../lib/contentQueries';
+import { hero, researchAreas, socialLinks } from '../data/site';
+import { getPublishedBlogPosts, getExperienceRecords, getStudentMetrics } from '../lib/contentQueries';
+import { getPublications } from '../lib/publications';
 
-const { graduatedCount, graduatedPercentage } = await getStudentMetrics();
+const { totalCount, activeCount, graduatedCount, graduatedPercentage } = await getStudentMetrics();
+const publications = getPublications();
+const publicationCount = publications.length;
+const publicationPeriodCount = new Set(publications.map((publication) => publication.year ?? 'undated')).size;
+const publishedBlogCount = (await getPublishedBlogPosts()).length;
+const currentAffiliationCount = (await getExperienceRecords()).filter((entry) => entry.current).length;
+const researchTopicCount = researchAreas.length;
 const heroSocialLinks = socialLinks.filter((item) => heroSocialLabels.includes(item.label));
-const heroStats = buildHomeHeroStats({ graduatedStudentCount: graduatedCount, graduatedStudentPercentage: graduatedPercentage });
-const homeSections = buildHomePageSections(hero.intro);
+const heroStats = buildHomeHeroStats({
+  graduatedStudentCount: graduatedCount,
+  graduatedStudentPercentage: graduatedPercentage,
+  publicationCount,
+});
+const homePrimaryCards = buildHomePrimaryCards({
+  publicationCount,
+  publicationPeriodCount,
+  publishedBlogCount,
+  activeStudentCount: activeCount,
+  totalStudentCount: totalCount,
+  currentAffiliationCount,
+  researchTopicCount,
+});
+const homeSections = buildHomePageSections({
+  introParagraphs: hero.intro,
+  homePrimaryCards,
+});
 ---
 
 <BaseLayout title="Kyberszittya | Researcher & Engineer">

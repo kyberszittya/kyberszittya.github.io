@@ -1,13 +1,23 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import InfoCard from '../../components/InfoCard.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import StackList from '../../components/StackList.astro';
+import PageSectionRenderer from '../../components/PageSectionRenderer.astro';
+import { buildBlogPageSections } from '../../data/blogManifest';
 import { formatBlogDate, getPostSlug, getPublishedPosts } from '../../lib/blog';
 
 const posts = await getPublishedPosts();
-const featuredPost = posts.find((post) => post.featured) ?? posts[0];
-const latestPosts = featuredPost ? posts.filter((post) => post.id !== featuredPost.id) : posts;
+const blogSections = buildBlogPageSections(
+  posts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    summary: post.summary,
+    category: post.category,
+    tags: post.tags,
+    dateLabel: formatBlogDate(post.date),
+    href: `/blog/${getPostSlug(post)}`,
+    featured: post.featured,
+  })),
+);
 ---
 
 <BaseLayout title="Blog | Kyberszittya">
@@ -23,52 +33,7 @@ const latestPosts = featuredPost ? posts.filter((post) => post.id !== featuredPo
     ]}
   />
 
-  {featuredPost && (
-    <section class="card-grid-wide section-row section-row-blue">
-      <InfoCard
-        kicker="Featured post"
-        title={featuredPost.title}
-      >
-        <p>{featuredPost.summary}</p>
-        <StackList
-          items={[
-            {
-              title: 'Published',
-              text: formatBlogDate(featuredPost.date),
-            },
-            {
-              title: 'Category',
-              text: featuredPost.category,
-            },
-            {
-              title: 'Tags',
-              text: featuredPost.tags.join(', ') || 'None yet',
-            },
-          ]}
-        />
-        <p>
-          <a class="text-link" href={`/blog/${getPostSlug(featuredPost)}`}>Read featured post</a>
-        </p>
-      </InfoCard>
-    </section>
-  )}
-
-  <section class="card-grid section-row section-row-indigo">
-    {latestPosts.map((post) => (
-      <InfoCard>
-        <p class="section-label">{post.category}</p>
-        <h2>{post.title}</h2>
-        <p>{post.summary}</p>
-        <p><strong>Published:</strong> {formatBlogDate(post.date)}</p>
-        {post.tags.length > 0 && (
-          <div class="chip-row">
-            {post.tags.map((tag) => (
-              <span class="chip chip-blue">{tag}</span>
-            ))}
-          </div>
-        )}
-        <a class="text-link" href={`/blog/${getPostSlug(post)}`}>Open post</a>
-      </InfoCard>
-    ))}
-  </section>
+  {blogSections.map((section) => (
+    <PageSectionRenderer section={section} />
+  ))}
 </BaseLayout>

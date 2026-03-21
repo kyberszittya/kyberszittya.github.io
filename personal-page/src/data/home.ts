@@ -5,7 +5,7 @@ import {
   researchAreas,
   scholarMetrics,
   socialLinks,
-} from './profile';
+} from './site';
 
 type HomeMetricInput = {
   graduatedStudentCount: number;

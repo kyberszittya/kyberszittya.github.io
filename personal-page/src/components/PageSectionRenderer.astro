@@ -1,0 +1,162 @@
+---
+import InfoCard from './InfoCard.astro';
+import StackList from './StackList.astro';
+import SubjectSummaryCard from './SubjectSummaryCard.astro';
+import type { PageSection } from '../data/pageSections';
+
+type Props = {
+  section: PageSection;
+};
+
+const { section } = Astro.props;
+---
+
+{section.type === 'text' && (
+  <section class:list={['section-row', `section-row-${section.tone}`, section.sectionClassName]}>
+    <div class:list={[section.surfaceClassName]}>
+      <div class="section-heading">
+        {section.kicker && <p class="section-label" data-i18n={section.kickerKey}>{section.kicker}</p>}
+        <h2 data-i18n={section.titleKey}>{section.title}</h2>
+      </div>
+      <div class="copy-grid copy-grid-golden">
+        {section.paragraphs.map((paragraph) => (
+          <p data-i18n={paragraph.key}>{paragraph.text}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{section.type === 'stack-cards' && (
+  <section class:list={[section.layoutClassName, 'section-row', `section-row-${section.tone}`]}>
+    {section.cards.map((card) => (
+      <InfoCard kicker={card.kicker} kickerKey={card.kickerKey} title={card.title} titleKey={card.titleKey}>
+        {card.summary && <p>{card.summary}</p>}
+        {card.items && <StackList items={card.items} />}
+        {card.cta && (
+          <p>
+            <a class="text-link" href={card.cta.href}>{card.cta.label}</a>
+          </p>
+        )}
+      </InfoCard>
+    ))}
+  </section>
+)}
+
+{section.type === 'link-band' && (
+  <section class:list={[section.className, 'section-row', `section-row-${section.tone}`]}>
+    <InfoCard className="info-card-hero-reach info-card-hero-reach-wide">
+      <div class="floating-reach-copy">
+        <p class="section-label" data-i18n={section.kickerKey}>{section.kicker}</p>
+        <h2 data-i18n={section.titleKey}>{section.title}</h2>
+        <p class="floating-reach-summary" data-i18n={section.summaryKey}>{section.summary}</p>
+      </div>
+      <div class="chip-row chip-row-large chip-row-dock">
+        {section.links.map((item) => (
+          <a class="chip chip-link chip-link-large chip-link-dock" href={item.href} target="_blank" rel="noreferrer">{item.label}</a>
+        ))}
+      </div>
+    </InfoCard>
+  </section>
+)}
+
+{section.type === 'info-card-grid' && (
+  <section class:list={['section-row', `section-row-${section.tone}`]}>
+    {(section.kicker || section.title) && (
+      <div class="section-heading section-heading-on-dark">
+        {section.kicker && <p class="section-label" data-i18n={section.kickerKey}>{section.kicker}</p>}
+        {section.title && <h2 data-i18n={section.titleKey}>{section.title}</h2>}
+      </div>
+    )}
+    <div class={section.layoutClassName}>
+      {section.cards.map((card) => (
+        <InfoCard>
+          <h3>{card.title}</h3>
+          <p>{card.description}</p>
+          <a class="text-link" href={card.href} data-i18n={card.hrefKey}>
+            {card.hrefLabel}
+          </a>
+        </InfoCard>
+      ))}
+    </div>
+  </section>
+)}
+
+{section.type === 'article-card-grid' && (
+  <section class:list={['section-row', `section-row-${section.tone}`]}>
+    {(section.kicker || section.title) && (
+      <div class="section-heading section-heading-on-dark">
+        {section.kicker && <p class="section-label" data-i18n={section.kickerKey}>{section.kicker}</p>}
+        {section.title && <h2 data-i18n={section.titleKey}>{section.title}</h2>}
+      </div>
+    )}
+    <div class={section.layoutClassName}>
+      {section.cards.map((card) => (
+        <InfoCard>
+          {card.kicker && <p class="section-label" data-i18n={card.kickerKey}>{card.kicker}</p>}
+          <h2 data-i18n={card.titleKey}>{card.title}</h2>
+          <p>{card.summary}</p>
+          {card.meta && card.meta.length > 0 && (
+            <div class="stack-list compact">
+              {card.meta.map((item) => (
+                <p><strong>{item.label}:</strong> {item.value}</p>
+              ))}
+            </div>
+          )}
+          {card.chips && card.chips.length > 0 && (
+            <div class="chip-row">
+              {card.chips.map((chip) => (
+                <span class="chip chip-blue">{chip}</span>
+              ))}
+            </div>
+          )}
+          <a class="text-link" href={card.href} data-i18n={card.hrefKey}>{card.hrefLabel}</a>
+        </InfoCard>
+      ))}
+    </div>
+  </section>
+)}
+
+{section.type === 'detail-card-grid' && (
+  <section class:list={['section-row', `section-row-${section.tone}`]}>
+    <div class={section.layoutClassName}>
+      {section.cards.map((card) => (
+        <InfoCard as="section" id={card.id}>
+          <h2 data-i18n={card.titleKey}>{card.title}</h2>
+          {card.items && <StackList items={card.items} className="" />}
+          {card.body?.map((paragraph) => (
+            <p data-i18n={paragraph.key}>{paragraph.text}</p>
+          ))}
+          {card.subtitle && <h3 class="section-subtitle" data-i18n={card.subtitleKey}>{card.subtitle}</h3>}
+          {card.chips && card.chips.length > 0 && (
+            <div class="chip-row">
+              {card.chips.map((chip) => (
+                <span class="chip chip-blue">{chip}</span>
+              ))}
+            </div>
+          )}
+          {card.links?.map((link) => (
+            <p style="margin-top: 1rem;">
+              <a class="text-link" href={link.href} data-i18n={link.key}>{link.label}</a>
+            </p>
+          ))}
+        </InfoCard>
+      ))}
+    </div>
+  </section>
+)}
+
+{section.type === 'subject-summary-grid' && (
+  <section class:list={['section-row', `section-row-${section.tone}`]}>
+    <div class={section.layoutClassName}>
+      <InfoCard as="section" id={section.id}>
+        <h2 data-i18n={section.titleKey}>{section.title}</h2>
+        <div class="stack-list">
+          {section.subjects.map((subject) => (
+            <SubjectSummaryCard subject={subject} />
+          ))}
+        </div>
+      </InfoCard>
+    </div>
+  </section>
+)}

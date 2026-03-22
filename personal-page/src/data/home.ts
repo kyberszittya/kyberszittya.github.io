@@ -11,6 +11,10 @@ type HomeMetricInput = {
   graduatedStudentCount: number;
   graduatedStudentPercentage: number;
   publicationCount: number;
+  currentAffiliationCount: number;
+  activeStudentCount: number;
+  researchTopicCount: number;
+  publishedBlogCount: number;
 };
 
 type HomePrimaryCardInput = {
@@ -34,15 +38,25 @@ export const buildHomeHeroStats = ({
   graduatedStudentCount,
   graduatedStudentPercentage,
   publicationCount,
+  currentAffiliationCount,
+  activeStudentCount,
+  researchTopicCount,
+  publishedBlogCount,
 }: HomeMetricInput) => [
   { value: '211', label: 'citations', key: 'profile.stat.citations' },
   { value: '7', label: 'h-index', key: 'profile.stat.hindex' },
+  { value: '5', label: 'i10-index', key: 'profile.stat.i10index' },
   {
     value: `${graduatedStudentCount} · ${graduatedStudentPercentage}%`,
     label: 'graduated students',
     key: 'profile.stat.graduatedStudents',
   },
   { value: `${publicationCount}`, label: 'publication entries', key: 'profile.stat.publications' },
+  { value: `${currentAffiliationCount}`, label: 'active affiliations', key: 'profile.stat.affiliations' },
+  { value: `${activeStudentCount}`, label: 'active students', key: 'profile.stat.activeStudents' },
+  { value: `${researchTopicCount}`, label: 'research topics', key: 'profile.stat.researchTopics' },
+  { value: `${publishedBlogCount}`, label: 'published blog posts', key: 'profile.stat.blogPosts' },
+  { value: 'AI + Robotics', label: 'core domain', key: 'profile.stat.domain' },
   { value: 'IEEE + ACM', label: 'professional member', key: 'profile.stat.membership' },
 ];
 

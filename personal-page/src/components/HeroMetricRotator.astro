@@ -1,0 +1,88 @@
+---
+type HeroMetric = {
+  value: string;
+  label: string;
+  key: string;
+};
+
+type Props = {
+  metrics: HeroMetric[];
+  visibleCount?: number;
+  intervalMs?: number;
+};
+
+const { metrics, visibleCount = 4, intervalMs = 2400 } = Astro.props;
+const initialMetrics = metrics.slice(0, visibleCount);
+const metricsJson = JSON.stringify(metrics);
+---
+
+<hero-metric-rotator
+  class="hero-card-stack"
+  data-metrics={metricsJson}
+  data-visible-count={visibleCount}
+  data-interval-ms={intervalMs}
+>
+  <div class="hero-card-track">
+    {initialMetrics.map((stat, index) => (
+      <div class={`stat-card stat-card-${index + 1}`}>
+        <strong>{stat.value}</strong>
+        <span data-i18n={stat.key}>{stat.label}</span>
+      </div>
+    ))}
+  </div>
+</hero-metric-rotator>
+
+<script is:inline>
+  class HeroMetricRotatorElement extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.initialized === 'true') return;
+      this.dataset.initialized = 'true';
+
+      const track = this.querySelector('.hero-card-track');
+      if (!track) return;
+
+      const metrics = JSON.parse(this.dataset.metrics || '[]');
+      const visibleCount = Number(this.dataset.visibleCount || '4');
+      const intervalMs = Number(this.dataset.intervalMs || '2400');
+      const desktopMode = window.matchMedia('(min-width: 960px)').matches;
+
+      const renderMetrics = (items) => {
+        track.innerHTML = items
+          .map(
+            (stat, index) => `
+              <div class="stat-card stat-card-${index + 1}">
+                <strong>${stat.value}</strong>
+                <span data-i18n="${stat.key}">${stat.label}</span>
+              </div>
+            `,
+          )
+          .join('');
+      };
+
+      if (!Array.isArray(metrics) || metrics.length === 0) return;
+      renderMetrics(metrics.slice(0, visibleCount));
+
+      if (!desktopMode || metrics.length <= visibleCount) return;
+
+      let queue = [...metrics];
+      this._intervalId = window.setInterval(() => {
+        track.classList.add('is-swapping');
+        window.setTimeout(() => {
+          queue.push(queue.shift());
+          renderMetrics(queue.slice(0, visibleCount));
+          track.classList.remove('is-swapping');
+        }, 220);
+      }, intervalMs);
+    }
+
+    disconnectedCallback() {
+      if (this._intervalId) {
+        window.clearInterval(this._intervalId);
+      }
+    }
+  }
+
+  if (!customElements.get('hero-metric-rotator')) {
+    customElements.define('hero-metric-rotator', HeroMetricRotatorElement);
+  }
+</script>

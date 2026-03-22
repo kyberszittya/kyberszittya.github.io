@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroMetricRotator from '../components/HeroMetricRotator.astro';
 import HeroMathOrnaments from '../components/HeroMathOrnaments.astro';
 import PageSectionRenderer from '../components/PageSectionRenderer.astro';
 import { buildHomeHeroStats, buildHomePrimaryCards, heroActions, heroSocialLabels } from '../data/home';
@@ -20,6 +21,10 @@ const heroStats = buildHomeHeroStats({
   graduatedStudentCount: graduatedCount,
   graduatedStudentPercentage: graduatedPercentage,
   publicationCount,
+  currentAffiliationCount,
+  activeStudentCount: activeCount,
+  researchTopicCount,
+  publishedBlogCount,
 });
 const homePrimaryCards = buildHomePrimaryCards({
   publicationCount,
@@ -39,8 +44,10 @@ const homeSections = buildHomePageSections({
 <BaseLayout title="Kyberszittya | Researcher & Engineer">
   <section class="hero-panel hero-panel-fibonacci">
     <div class="hero-copy">
-      <p class="hero-kicker">{hero.handle}</p>
-      <h1 class="hero-title">{hero.name}</h1>
+      <div class="hero-title-row">
+        <h1 class="hero-title">{hero.name}</h1>
+        <p class="hero-kicker hero-kicker-inline">{hero.handle}</p>
+      </div>
       <p class="hero-role">{hero.role}</p>
       <p class="hero-tagline">{hero.tagline}</p>
       <p class="hero-summary" data-i18n="home.hero.summary">{hero.summary}</p>
@@ -67,14 +74,7 @@ const homeSections = buildHomePageSections({
 
     <div class="hero-side">
       <HeroMathOrnaments />
-      <div class="hero-card-stack">
-        {heroStats.map((stat, index) => (
-          <div class={`stat-card stat-card-${index + 1}`}>
-            <strong>{stat.value}</strong>
-            <span data-i18n={stat.key}>{stat.label}</span>
-          </div>
-        ))}
-      </div>
+      <HeroMetricRotator metrics={heroStats} visibleCount={4} intervalMs={2400} />
     </div>
   </section>
 

@@ -43,7 +43,7 @@ export const buildHomeHeroStats = ({
     key: 'profile.stat.graduatedStudents',
   },
   { value: `${publicationCount}`, label: 'publication entries', key: 'profile.stat.publications' },
-  { value: 'AI + Robotics', label: 'core domain', key: 'profile.stat.domain' },
+  { value: 'IEEE + ACM', label: 'professional member', key: 'profile.stat.membership' },
 ];
 
 export const overviewSection = {

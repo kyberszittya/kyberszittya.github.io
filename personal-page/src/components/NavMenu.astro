@@ -6,13 +6,25 @@ type Props = {
 };
 
 const { items } = Astro.props;
+const desktopItems = items.filter((item) => item.href !== '/');
+
+const navIcons: Record<string, string> = {
+  'nav.cv': '[]',
+  'nav.research': '{ }',
+  'nav.publications': '||',
+  'nav.blog': '//',
+  'nav.education': '++',
+  'nav.contact': '@',
+  'nav.arts': '<>',
+};
 ---
 
 <nav class="site-nav">
   <div class="nav-desktop" aria-label="Primary">
-    {items.map((item) => (
+    {desktopItems.map((item) => (
       <div class:list={['nav-item', item.children && 'has-children']}>
-        <a class="nav-link" href={item.href ?? '#'}>
+        <a class="nav-link" href={item.href ?? '#'} data-nav-icon={navIcons[item.key] ?? '::'}>
+          <span class="nav-link-icon" aria-hidden="true">{navIcons[item.key] ?? '::'}</span>
           <span data-i18n={item.key}>{item.label}</span>
           {item.children && <span class="nav-caret" aria-hidden="true">+</span>}
         </a>

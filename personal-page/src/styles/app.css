@@ -103,6 +103,7 @@
 .site-mark {
   display: inline-flex;
   flex-direction: column;
+  gap: 0.15rem;
   text-decoration: none;
   min-width: 0;
 }
@@ -119,6 +120,7 @@
   color: #f8fbff;
   font-size: 1.05rem;
   font-weight: 700;
+  line-height: 1.1;
   text-shadow: 0 0 18px rgba(72, 188, 224, 0.16);
 }
 
@@ -188,6 +190,7 @@
 .nav-link {
   display: inline-flex;
   align-items: center;
+  position: relative;
   gap: 0.55rem;
   padding: 0.65rem 0.82rem;
   border-radius: 999px;
@@ -195,12 +198,37 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 0.96rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.nav-link-icon {
+  position: absolute;
+  right: 0.55rem;
+  top: 50%;
+  transform: translate3d(0.35rem, -50%, 0) scale(0.9);
+  color: rgba(255, 255, 255, 0.08);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease,
+    color 180ms ease;
 }
 
 .nav-link:hover,
 .nav-item:hover > .nav-link {
   background: rgba(72, 188, 224, 0.12);
   color: #ffffff;
+}
+
+.nav-link:hover .nav-link-icon,
+.nav-item:hover > .nav-link .nav-link-icon {
+  opacity: 1;
+  transform: translate3d(0, -50%, 0) scale(1);
 }
 
 .nav-caret {
